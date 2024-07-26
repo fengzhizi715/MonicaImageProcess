@@ -53,6 +53,32 @@ JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getOpe
     return env->NewStringUTF(version.c_str());
 }
 
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_shearing
+        (JNIEnv* env, jobject,jbyteArray array, jfloat x, jfloat y) {
+
+    Mat image = byteArrayToMat(env,array);
+    Mat dst;
+
+    try {
+        dst = shearing(image,x,y);
+    } catch(...) {
+    }
+
+    jthrowable mException = NULL;
+    mException = env->ExceptionOccurred();
+
+    if (mException != NULL) {
+        env->ExceptionClear();
+        jclass exceptionClazz = env->FindClass("java/lang/Exception");
+        env->ThrowNew(exceptionClazz, "jni exception");
+        env->DeleteLocalRef(exceptionClazz);
+
+        return env->NewIntArray(0);
+    }
+
+    return matToIntArray(env,dst);
+}
+
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_equalizeHist
         (JNIEnv* env, jobject, jbyteArray array) {
 

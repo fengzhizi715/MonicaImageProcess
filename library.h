@@ -23,6 +23,13 @@ string getVersion();
 string getOpenCVVersion();
 
 /**
+ * 图像错切
+ * @param 沿 x 方向
+ * @param 沿 y 方向
+ */
+Mat shearing(Mat src, float x, float y);
+
+/**
  * 直方图均衡化
  */
 Mat equalizeHistImage(Mat src);

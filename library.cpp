@@ -178,11 +178,22 @@ namespace ACE {
 }
 
 string getVersion() {
-    return "v0.0.1";
+    return "v0.0.2";
 }
 
 string getOpenCVVersion() {
     return CV_VERSION;
+}
+
+Mat shearing(Mat src, float x, float y) {
+    int width = src.cols;
+    int height = src.rows;
+
+    Mat dst;
+    Mat warp_matrix = (cv::Mat_<float>(2, 3) <<1, x, 0, y, 1, 0);
+    warpAffine(src, dst, warp_matrix, Size(width, height), INTER_LINEAR);
+
+    return dst;
 }
 
 Mat equalizeHistImage(Mat src) {
