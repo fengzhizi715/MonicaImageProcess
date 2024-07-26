@@ -129,6 +129,30 @@ MonicaImageProcess/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MonicaImageProcess.dir/build.make CMakeFiles/MonicaImageProcess.dir/build
 .PHONY : MonicaImageProcess/fast
 
+FaceDetect.o: FaceDetect.cpp.o
+.PHONY : FaceDetect.o
+
+# target to build an object file
+FaceDetect.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MonicaImageProcess.dir/build.make CMakeFiles/MonicaImageProcess.dir/FaceDetect.cpp.o
+.PHONY : FaceDetect.cpp.o
+
+FaceDetect.i: FaceDetect.cpp.i
+.PHONY : FaceDetect.i
+
+# target to preprocess a source file
+FaceDetect.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MonicaImageProcess.dir/build.make CMakeFiles/MonicaImageProcess.dir/FaceDetect.cpp.i
+.PHONY : FaceDetect.cpp.i
+
+FaceDetect.s: FaceDetect.cpp.s
+.PHONY : FaceDetect.s
+
+# target to generate assembly for a file
+FaceDetect.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MonicaImageProcess.dir/build.make CMakeFiles/MonicaImageProcess.dir/FaceDetect.cpp.s
+.PHONY : FaceDetect.cpp.s
+
 jni/cn_netdiscovery_monica_opencv_ImageProcess.o: jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp.o
 .PHONY : jni/cn_netdiscovery_monica_opencv_ImageProcess.o
 
@@ -186,6 +210,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... MonicaImageProcess"
+	@echo "... FaceDetect.o"
+	@echo "... FaceDetect.i"
+	@echo "... FaceDetect.s"
 	@echo "... jni/cn_netdiscovery_monica_opencv_ImageProcess.o"
 	@echo "... jni/cn_netdiscovery_monica_opencv_ImageProcess.i"
 	@echo "... jni/cn_netdiscovery_monica_opencv_ImageProcess.s"
