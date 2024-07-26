@@ -4,6 +4,80 @@
 
 #include "FaceDetect.h"
 
+void FaceDetect::init(string faceProto,string faceModel,string ageProto,string ageModel,string genderProto,string genderModel) {
+
+    // Load Network
+    ageNet = readNet(ageModel, ageProto);
+    genderNet = readNet(genderModel, genderProto);
+    faceNet = readNet(faceModel, faceProto);
+
+    cout << "Using CPU device" << endl;
+    ageNet.setPreferableBackend(DNN_TARGET_CPU);
+    genderNet.setPreferableBackend(DNN_TARGET_CPU);
+    faceNet.setPreferableBackend(DNN_TARGET_CPU);
+}
+
+void FaceDetect::inferImage(Mat& src, Mat& dst) {
+
+    Scalar MODEL_MEAN_VALUES = Scalar(78.4263377603, 87.7689143744, 114.895847746);
+
+    vector<string> ageList = {"(0-2)", "(4-6)", "(8-12)", "(15-20)", "(25-32)",
+                              "(38-43)", "(48-53)", "(60-100)"};
+
+    vector<string> genderList = {"Male", "Female"};
+
+    int padding = 20;
+    vector<vector<int>> bboxes;
+
+    FaceDetect faceDetect = FaceDetect();
+    tie(dst, bboxes) = faceDetect.getFaceBox(faceNet, src, 0.7);
+
+    if(bboxes.size() == 0) {
+        cout << "No face detected..." << endl;
+        return;
+    }
+
+    for (auto it = begin(bboxes); it != end(bboxes); ++it) {
+        Rect rec(it->at(0) - padding, it->at(1) - padding, it->at(2) - it->at(0) + 2*padding, it->at(3) - it->at(1) + 2*padding);
+        Mat face = src(rec); // take the ROI of box on the frame
+
+        Mat blob;
+        blob = blobFromImage(face, 1, Size(227, 227), MODEL_MEAN_VALUES, false);
+        genderNet.setInput(blob);
+        // string gender_preds;
+        vector<float> genderPreds = genderNet.forward();
+        // printing gender here
+        // find max element index
+        // distance function does the argmax() work in C++
+        int max_index_gender = std::distance(genderPreds.begin(), max_element(genderPreds.begin(), genderPreds.end()));
+        string gender = genderList[max_index_gender];
+        cout << "Gender: " << gender << endl;
+
+        /* // Uncomment if you want to iterate through the gender_preds vector
+        for(auto it=begin(gender_preds); it != end(gender_preds); ++it) {
+          cout << *it << endl;
+        }
+        */
+
+        ageNet.setInput(blob);
+        vector<float> agePreds = ageNet.forward();
+        /* // uncomment below code if you want to iterate through the age_preds
+         * vector
+        cout << "PRINTING AGE_PREDS" << endl;
+        for(auto it = age_preds.begin(); it != age_preds.end(); ++it) {
+          cout << *it << endl;
+        }
+        */
+
+        // finding maximum indicd in the age_preds vector
+        int max_indice_age = std::distance(agePreds.begin(), max_element(agePreds.begin(), agePreds.end()));
+        string age = ageList[max_indice_age];
+        cout << "Age: " << age << endl;
+        string label = gender + ", " + age; // label
+        cv::putText(dst, label, Point(it->at(0), it->at(1) -15), cv::FONT_HERSHEY_SIMPLEX, 1, Scalar(0, 255, 0), 4, cv::LINE_AA);
+    }
+}
+
 tuple<Mat, vector<vector<int>>> FaceDetect::getFaceBox(Net net, Mat &frame, double conf_threshold) {
     Mat frameOpenCVDNN = frame.clone();
     int frameHeight = frameOpenCVDNN.rows;
