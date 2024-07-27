@@ -15,16 +15,15 @@ void FaceDetect::init(string faceProto,string faceModel,string ageProto,string a
     ageNet.setPreferableBackend(DNN_TARGET_CPU);
     genderNet.setPreferableBackend(DNN_TARGET_CPU);
     faceNet.setPreferableBackend(DNN_TARGET_CPU);
+
+    MODEL_MEAN_VALUES = Scalar(78.4263377603, 87.7689143744, 114.895847746);
+    ageList = {"(0-2)", "(4-6)", "(8-12)", "(15-20)", "(25-32)",
+                              "(38-43)", "(48-53)", "(60-100)"};
+
+    genderList = {"Male", "Female"};
 }
 
 void FaceDetect::inferImage(Mat& src, Mat& dst) {
-
-    Scalar MODEL_MEAN_VALUES = Scalar(78.4263377603, 87.7689143744, 114.895847746);
-
-    vector<string> ageList = {"(0-2)", "(4-6)", "(8-12)", "(15-20)", "(25-32)",
-                              "(38-43)", "(48-53)", "(60-100)"};
-
-    vector<string> genderList = {"Male", "Female"};
 
     int padding = 20;
     vector<vector<int>> bboxes;
@@ -34,6 +33,7 @@ void FaceDetect::inferImage(Mat& src, Mat& dst) {
 
     if(bboxes.size() == 0) {
         cout << "No face detected..." << endl;
+        dst = src;
         return;
     }
 
