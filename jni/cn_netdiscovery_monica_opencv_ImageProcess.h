@@ -33,6 +33,13 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_unsh
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_ace
         (JNIEnv* env, jobject,jbyteArray array, jint ratio, jint radius);
 
+JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceDetect
+        (JNIEnv* env, jobject,jstring jFaceProto, jstring jFaceModel,
+         jstring jAgeProto, jstring jAgeModel, jstring jGenderProto, jstring jGenderModel);
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_faceDetect
+        (JNIEnv* env, jobject,jbyteArray array);
+
 #ifdef __cplusplus
 }
 #endif

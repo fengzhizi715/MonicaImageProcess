@@ -4,6 +4,9 @@
 #include <iostream>
 #include "cn_netdiscovery_monica_opencv_ImageProcess.h"
 #include "../library.h"
+#include "../FaceDetect.h"
+
+FaceDetect faceDetect;
 
 Mat byteArrayToMat(JNIEnv* env, jbyteArray array) {
     //复制java数组到C++
@@ -191,6 +194,59 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_ace
 
     try {
         ace(image,dst,ratio,radius);
+    } catch(...) {
+    }
+
+    jthrowable mException = NULL;
+    mException = env->ExceptionOccurred();
+
+    if (mException != NULL) {
+        env->ExceptionClear();
+        jclass exceptionClazz = env->FindClass("java/lang/Exception");
+        env->ThrowNew(exceptionClazz, "jni exception");
+        env->DeleteLocalRef(exceptionClazz);
+
+        return env->NewIntArray(0);
+    }
+
+    return matToIntArray(env,dst);
+}
+
+JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceDetect
+        (JNIEnv* env, jobject,jstring jFaceProto, jstring jFaceModel,
+         jstring jAgeProto, jstring jAgeModel, jstring jGenderProto, jstring jGenderModel) {
+
+    const char* faceProto = env->GetStringUTFChars(jFaceProto, JNI_FALSE);
+    cout << "faceProto path :" << faceProto << endl;
+    const char* faceModel = env->GetStringUTFChars(jFaceModel, JNI_FALSE);
+    cout << "faceModel path :" << faceModel << endl;
+    const char* ageProto = env->GetStringUTFChars(jAgeProto, JNI_FALSE);
+    cout << "ageProto path :" << ageProto << endl;
+    const char* ageModel = env->GetStringUTFChars(jAgeModel, JNI_FALSE);
+    cout << "ageModel path :" << ageModel << endl;
+    const char* genderProto = env->GetStringUTFChars(jGenderProto, JNI_FALSE);
+    cout << "genderProto path :" << genderProto << endl;
+    const char* genderModel = env->GetStringUTFChars(jGenderModel, JNI_FALSE);
+    cout << "genderModel path :" << genderModel << endl;
+
+    faceDetect.init(faceProto,faceModel,ageProto,ageModel,genderProto,genderModel);
+
+    env->ReleaseStringUTFChars(jFaceProto, faceProto);
+    env->ReleaseStringUTFChars(jFaceModel, faceModel);
+    env->ReleaseStringUTFChars(jAgeProto, ageProto);
+    env->ReleaseStringUTFChars(jAgeModel, ageModel);
+    env->ReleaseStringUTFChars(jGenderProto, genderProto);
+    env->ReleaseStringUTFChars(jGenderModel, genderModel);
+}
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_faceDetect
+        (JNIEnv* env, jobject,jbyteArray array) {
+
+    Mat image = byteArrayToMat(env,array);
+    Mat dst;
+
+    try {
+        faceDetect.inferImage(image,dst);
     } catch(...) {
     }
 
