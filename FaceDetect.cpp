@@ -28,8 +28,7 @@ void FaceDetect::inferImage(Mat& src, Mat& dst) {
     int padding = 20;
     vector<vector<int>> bboxes;
 
-    FaceDetect faceDetect = FaceDetect();
-    tie(dst, bboxes) = faceDetect.getFaceBox(faceNet, src, 0.7);
+    tie(dst, bboxes) = getFaceBox(faceNet, src, 0.7);
 
     if(bboxes.size() == 0) {
         cout << "No face detected..." << endl;
