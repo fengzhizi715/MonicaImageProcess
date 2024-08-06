@@ -25,6 +25,9 @@ public:
     void inferImage(Mat& src, Mat& dst);
 
 private:
+    tuple<Mat, vector<vector<int>>> getFaceBox(Net net, Mat &frame, double conf_threshold);
+
+private:
     Net ageNet;
     Net genderNet;
     Net faceNet;
@@ -32,8 +35,6 @@ private:
     vector<string> ageList;
     vector<string> genderList;
     Scalar MODEL_MEAN_VALUES;
-
-    tuple<Mat, vector<vector<int>>> getFaceBox(Net net, Mat &frame, double conf_threshold);
 };
 
 
