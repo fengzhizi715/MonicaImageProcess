@@ -3,6 +3,8 @@ cmake-build-release/
 CMakeFiles/
 .idea/
 CMakeCache.txt
+Makefile
+cmake_install.cmake
 *.dylib
 
 ### Mac OS ###
