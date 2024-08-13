@@ -23,8 +23,8 @@ include_directories(jni)
 add_library(MonicaImageProcess SHARED library.cpp
         jni/cn_netdiscovery_monica_opencv_ImageProcess.h
         jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp
-        FaceDetect.cpp
-        FaceDetect.h)
+        faceDetect/FaceDetect.cpp
+        faceDetect/FaceDetect.h)
 
 target_link_libraries(MonicaImageProcess ${OpenCV_LIBS})
 

@@ -4,7 +4,7 @@
 #include <iostream>
 #include "cn_netdiscovery_monica_opencv_ImageProcess.h"
 #include "../library.h"
-#include "../FaceDetect.h"
+#include "../faceDetect/FaceDetect.h"
 
 FaceDetect faceDetect;
 
