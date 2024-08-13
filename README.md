@@ -9,5 +9,5 @@
 | 文件名                                                                                                      | 描述                   |
 |----------------------------------------------------------------------------------------------------------|----------------------|
 | library.h、library.cpp                                                                                    | 常规的使用 OpenCV 图像算法相关的 |
-| FaceDetect.h、FaceDetect.h                                                                                | 使用深度学习实现的人脸识别检测   |
+| faceDetect/FaceDetect.h </br>faceDetect/FaceDetect.h                                                     | 使用深度学习实现的人脸识别检测   |
 | jni/cn_netdiscovery_monica_opencv_ImageProcess.h </br>jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp | jni 对应用层暴露的接口        |
