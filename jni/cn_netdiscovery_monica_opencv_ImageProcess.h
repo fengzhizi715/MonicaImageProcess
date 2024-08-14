@@ -40,6 +40,12 @@ JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceD
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_faceDetect
         (JNIEnv* env, jobject,jbyteArray array);
 
+JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initSketchDrawing
+        (JNIEnv* env, jobject,jstring jModelPath);
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sketchDrawing
+        (JNIEnv* env, jobject,jbyteArray array);
+
 #ifdef __cplusplus
 }
 #endif

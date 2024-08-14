@@ -5,8 +5,10 @@
 #include "cn_netdiscovery_monica_opencv_ImageProcess.h"
 #include "../library.h"
 #include "../faceDetect/FaceDetect.h"
+#include "../sketchDrawing/InformativeDrawings.h"
 
 FaceDetect faceDetect;
+InformativeDrawings *informativeDrawings = nullptr;
 
 Mat byteArrayToMat(JNIEnv* env, jbyteArray array) {
     //复制java数组到C++
@@ -217,17 +219,11 @@ JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceD
          jstring jAgeProto, jstring jAgeModel, jstring jGenderProto, jstring jGenderModel) {
 
     const char* faceProto = env->GetStringUTFChars(jFaceProto, JNI_FALSE);
-    cout << "faceProto path :" << faceProto << endl;
     const char* faceModel = env->GetStringUTFChars(jFaceModel, JNI_FALSE);
-    cout << "faceModel path :" << faceModel << endl;
     const char* ageProto = env->GetStringUTFChars(jAgeProto, JNI_FALSE);
-    cout << "ageProto path :" << ageProto << endl;
     const char* ageModel = env->GetStringUTFChars(jAgeModel, JNI_FALSE);
-    cout << "ageModel path :" << ageModel << endl;
     const char* genderProto = env->GetStringUTFChars(jGenderProto, JNI_FALSE);
-    cout << "genderProto path :" << genderProto << endl;
     const char* genderModel = env->GetStringUTFChars(jGenderModel, JNI_FALSE);
-    cout << "genderModel path :" << genderModel << endl;
 
     faceDetect.init(faceProto,faceModel,ageProto,ageModel,genderProto,genderModel);
 
@@ -260,6 +256,47 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_face
         env->DeleteLocalRef(exceptionClazz);
 
         return env->NewIntArray(0);
+    }
+
+    return matToIntArray(env,dst);
+}
+
+JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initSketchDrawing
+        (JNIEnv* env, jobject,jstring jModelPath) {
+
+     const char* modelPath = env->GetStringUTFChars(jModelPath, JNI_FALSE);
+
+     informativeDrawings = new InformativeDrawings(modelPath);
+
+     env->ReleaseStringUTFChars(jModelPath, modelPath);
+}
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sketchDrawing
+        (JNIEnv* env, jobject,jbyteArray array) {
+
+    Mat image = byteArrayToMat(env,array);
+    Mat dst;
+
+    try {
+        dst = informativeDrawings -> detect(image);
+        resize(dst, dst, Size(image.cols, image.rows));
+    } catch(...) {
+    }
+
+    jthrowable mException = NULL;
+    mException = env->ExceptionOccurred();
+
+    if (mException != NULL) {
+       env->ExceptionClear();
+       jclass exceptionClazz = env->FindClass("java/lang/Exception");
+       env->ThrowNew(exceptionClazz, "jni exception");
+       env->DeleteLocalRef(exceptionClazz);
+
+       return env->NewIntArray(0);
+    }
+
+    if (dst.channels() == 1) {
+        cvtColor(dst,dst,COLOR_GRAY2BGR);
     }
 
     return matToIntArray(env,dst);
