@@ -12,18 +12,18 @@ SketchDrawing::SketchDrawing(string model_path): BaseOnnxRuntime(model_path)
     this->outWidth = output_node_dims[0][3];
 }
 
-Mat SketchDrawing::detect(Mat& srcimg)
+Mat SketchDrawing::detect(Mat& image)
 {
-    Mat dstimg;
-    resize(srcimg, dstimg, Size(this->inpWidth, this->inpHeight));
-    this->input_image_.resize(this->inpWidth * this->inpHeight * dstimg.channels());
+    Mat dst;
+    resize(image, dst, Size(this->inpWidth, this->inpHeight));
+    this->input_image_.resize(this->inpWidth * this->inpHeight * dst.channels());
     for (int c = 0; c < 3; c++)
     {
         for (int i = 0; i < this->inpHeight; i++)
         {
             for (int j = 0; j < this->inpWidth; j++)
             {
-                float pix = dstimg.ptr<uchar>(i)[j * 3 + 2 - c];
+                float pix = dst.ptr<uchar>(i)[j * 3 + 2 - c];
                 this->input_image_[c * this->inpHeight * this->inpWidth + i * this->inpWidth + j] = pix;
             }
         }
@@ -38,6 +38,7 @@ Mat SketchDrawing::detect(Mat& srcimg)
     Mat result(outHeight, outWidth, CV_32FC1, pred);
     result *= 255;
     result.convertTo(result, CV_8UC1);
-    resize(result, result, Size(srcimg.cols, srcimg.rows));
+    resize(result, result, Size(image.cols, image.rows));
+
     return result;
 }

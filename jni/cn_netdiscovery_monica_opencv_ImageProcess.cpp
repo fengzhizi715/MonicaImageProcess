@@ -112,7 +112,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_equa
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_gammaCorrection
-        (JNIEnv* env, jobject,jbyteArray array, jfloat k) {
+        (JNIEnv* env, jobject, jbyteArray array, jfloat k) {
 
     Mat image = byteArrayToMat(env,array);
     Mat dst;
@@ -138,7 +138,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_gamm
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_laplace
-        (JNIEnv* env, jobject,jbyteArray array) {
+        (JNIEnv* env, jobject, jbyteArray array) {
 
     Mat image = byteArrayToMat(env,array);
     Mat dst;
@@ -164,7 +164,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_lapl
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_unsharpMask
-        (JNIEnv* env, jobject,jbyteArray array, jint radius, jint threshold, jint amount) {
+        (JNIEnv* env, jobject, jbyteArray array, jint radius, jint threshold, jint amount) {
 
     Mat image = byteArrayToMat(env,array);
     Mat dst = Mat(image.size(), image.type());
@@ -190,7 +190,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_unsh
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_ace
-        (JNIEnv* env, jobject,jbyteArray array, jint ratio, jint radius) {
+        (JNIEnv* env, jobject, jbyteArray array, jint ratio, jint radius) {
 
     Mat image = byteArrayToMat(env,array);
     Mat dst;
@@ -216,7 +216,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_ace
 }
 
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceDetect
-        (JNIEnv* env, jobject,jstring jFaceProto, jstring jFaceModel,
+        (JNIEnv* env, jobject, jstring jFaceProto, jstring jFaceModel,
          jstring jAgeProto, jstring jAgeModel, jstring jGenderProto, jstring jGenderModel) {
 
     const char* faceProto = env->GetStringUTFChars(jFaceProto, JNI_FALSE);
@@ -279,7 +279,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sket
     Mat dst;
 
     try {
-        dst = sketchDrawing -> detect(image);
+        dst = sketchDrawing->detect(image);
         resize(dst, dst, Size(image.cols, image.rows));
     } catch(...) {
     }

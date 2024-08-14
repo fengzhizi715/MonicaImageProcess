@@ -22,8 +22,8 @@ using namespace Ort;
 class SketchDrawing: public BaseOnnxRuntime {
 
 public:
-    SketchDrawing(string modelpath);
-    Mat detect(Mat& cv_image);
+    SketchDrawing(string model_path);
+    Mat detect(Mat& image);
 
 private:
     vector<float> input_image_;
