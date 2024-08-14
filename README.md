@@ -6,9 +6,9 @@
 
 项目中各种文件的用途：
 
-| 文件名                                                                                                      | 描述                           |
-|----------------------------------------------------------------------------------------------------------|------------------------------|
-| library.h </br>library.cpp                                                                               | 常规使用 OpenCV 图像算法相关的          |
-| jni/cn_netdiscovery_monica_opencv_ImageProcess.h </br>jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp | jni 对应用层暴露的接口                |
-| faceDetect/FaceDetect.h </br>faceDetect/FaceDetect.cpp                                                   | 使用 dnn 加载模型实现的人脸识别检测         |
+| 文件名                                                                                                      | 描述                         |
+|----------------------------------------------------------------------------------------------------------|----------------------------|
+| library.h </br>library.cpp                                                                               | 常规使用 OpenCV 图像算法相关的        |
+| jni/cn_netdiscovery_monica_opencv_ImageProcess.h </br>jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp | jni 对应用层暴露的接口和实现           |
+| faceDetect/FaceDetect.h </br>faceDetect/FaceDetect.cpp                                                   | 使用 dnn 加载模型实现的人脸识别检测       |
 | sketchDrawing/InformativeDrawings.cpp  </br>sketchDrawing/InformativeDrawings.h                          | 使用 onnxruntime 加载模型实现生成素描画 |
