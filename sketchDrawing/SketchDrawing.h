@@ -2,8 +2,8 @@
 // Created by Tony on 2024/8/13.
 //
 
-#ifndef MONICAIMAGEPROCESS_INFORMATIVEDRAWINGS_H
-#define MONICAIMAGEPROCESS_INFORMATIVEDRAWINGS_H
+#ifndef MONICAIMAGEPROCESS_SKETCHRAWING_H
+#define MONICAIMAGEPROCESS_SKETCHRAWING_H
 
 #include <iostream>
 #include <fstream>
@@ -19,10 +19,10 @@ using namespace cv;
 using namespace std;
 using namespace Ort;
 
-class InformativeDrawings: public BaseOnnxRuntime {
+class SketchDrawing: public BaseOnnxRuntime {
 
 public:
-    InformativeDrawings(string modelpath);
+    SketchDrawing(string modelpath);
     Mat detect(Mat& cv_image);
 
 private:
@@ -33,4 +33,4 @@ private:
     int outHeight;
 };
 
-#endif //MONICAIMAGEPROCESS_INFORMATIVEDRAWINGS_H
+#endif // MONICAIMAGEPROCESS_SKETCHRAWING_H

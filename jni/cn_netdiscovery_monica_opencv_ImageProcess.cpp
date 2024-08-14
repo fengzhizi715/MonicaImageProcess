@@ -5,10 +5,10 @@
 #include "cn_netdiscovery_monica_opencv_ImageProcess.h"
 #include "../library.h"
 #include "../faceDetect/FaceDetect.h"
-#include "../sketchDrawing/InformativeDrawings.h"
+#include "../sketchDrawing/SketchDrawing.h"
 
 FaceDetect faceDetect;
-InformativeDrawings *informativeDrawings = nullptr;
+SketchDrawing *sketchDrawing = nullptr;
 
 Mat byteArrayToMat(JNIEnv* env, jbyteArray array) {
     //复制java数组到C++
@@ -266,7 +266,7 @@ JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initSketc
 
      const char* modelPath = env->GetStringUTFChars(jModelPath, JNI_FALSE);
 
-     informativeDrawings = new InformativeDrawings(modelPath);
+     sketchDrawing = new SketchDrawing(modelPath);
 
      env->ReleaseStringUTFChars(jModelPath, modelPath);
 }
@@ -278,7 +278,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sket
     Mat dst;
 
     try {
-        dst = informativeDrawings -> detect(image);
+        dst = sketchDrawing -> detect(image);
         resize(dst, dst, Size(image.cols, image.rows));
     } catch(...) {
     }

@@ -30,7 +30,7 @@ add_library(MonicaImageProcess SHARED library.cpp
         BaseOnnxRuntime.cpp BaseOnnxRuntime.h
         jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp jni/cn_netdiscovery_monica_opencv_ImageProcess.h
         faceDetect/FaceDetect.cpp faceDetect/FaceDetect.h
-        sketchDrawing/InformativeDrawings.cpp sketchDrawing/InformativeDrawings.h
+        sketchDrawing/SketchDrawing.cpp sketchDrawing/SketchDrawing.h
         )
 
 target_link_libraries(MonicaImageProcess ${OpenCV_LIBS})

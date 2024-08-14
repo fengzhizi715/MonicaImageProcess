@@ -2,9 +2,9 @@
 // Created by Tony on 2024/8/13.
 //
 
-#include "InformativeDrawings.h"
+#include "SketchDrawing.h"
 
-InformativeDrawings::InformativeDrawings(string model_path): BaseOnnxRuntime(model_path)
+SketchDrawing::SketchDrawing(string model_path): BaseOnnxRuntime(model_path)
 {
     this->inpHeight = input_node_dims[0][2];
     this->inpWidth = input_node_dims[0][3];
@@ -12,7 +12,7 @@ InformativeDrawings::InformativeDrawings(string model_path): BaseOnnxRuntime(mod
     this->outWidth = output_node_dims[0][3];
 }
 
-Mat InformativeDrawings::detect(Mat& srcimg)
+Mat SketchDrawing::detect(Mat& srcimg)
 {
     Mat dstimg;
     resize(srcimg, dstimg, Size(this->inpWidth, this->inpHeight));
