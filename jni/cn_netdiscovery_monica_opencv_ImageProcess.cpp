@@ -28,9 +28,10 @@ Mat byteArrayToMat(JNIEnv* env, jbyteArray array) {
 }
 
 jintArray matToIntArray(JNIEnv *env, const cv::Mat &image) {
-    jintArray resultImage = env->NewIntArray(image.total());
-    jint *_data = new jint[image.total()];
-    for (int i = 0; i < image.total(); i++) {
+    int size = image.total();
+    jintArray resultImage = env->NewIntArray(size);
+    jint *_data = new jint[size];
+    for (int i = 0; i < size; i++) {
         char r = image.data[3 * i + 2];
         char g = image.data[3 * i + 1];
         char b = image.data[3 * i + 0];
@@ -38,7 +39,7 @@ jintArray matToIntArray(JNIEnv *env, const cv::Mat &image) {
         _data[i] = (((jint) a << 24) & 0xFF000000) + (((jint) r << 16) & 0x00FF0000) +
                    (((jint) g << 8) & 0x0000FF00) + ((jint) b & 0x000000FF);
     }
-    env->SetIntArrayRegion(resultImage, 0, image.total(), _data);
+    env->SetIntArrayRegion(resultImage, 0, size, _data);
     delete[]_data;
 
     return resultImage;
