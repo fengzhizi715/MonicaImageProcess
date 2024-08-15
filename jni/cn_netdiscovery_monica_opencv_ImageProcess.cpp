@@ -280,7 +280,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sket
 
     try {
         dst = sketchDrawing->detect(image);
-        resize(dst, dst, Size(image.cols, image.rows));
     } catch(...) {
     }
 

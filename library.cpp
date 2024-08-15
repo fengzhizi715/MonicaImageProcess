@@ -178,7 +178,7 @@ namespace ACE {
 }
 
 string getVersion() {
-    return "v0.0.2";
+    return "v0.0.3";
 }
 
 string getOpenCVVersion() {
