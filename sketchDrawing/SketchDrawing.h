@@ -13,13 +13,13 @@
 #include <opencv2/highgui.hpp>
 //#include <cuda_provider_factory.h>
 #include <onnxruntime_cxx_api.h>
-#include "../BaseOnnxRuntime.h"
+#include "../OnnxRuntimeBase.h"
 
 using namespace cv;
 using namespace std;
 using namespace Ort;
 
-class SketchDrawing: public BaseOnnxRuntime {
+class SketchDrawing: public OnnxRuntimeBase {
 
 public:
     SketchDrawing(string model_path);

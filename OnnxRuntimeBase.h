@@ -10,12 +10,12 @@
 #include <vector>
 #include <onnxruntime_cxx_api.h>
 
-class BaseOnnxRuntime
+class OnnxRuntimeBase
 {
 
 public:
-    BaseOnnxRuntime(std::string model_path);
-    ~BaseOnnxRuntime();
+    OnnxRuntimeBase(std::string model_path);
+    ~OnnxRuntimeBase();
 
     Ort::Env env;
     Ort::Session *ort_session = nullptr;

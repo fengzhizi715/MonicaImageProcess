@@ -2,14 +2,14 @@
 // Created by Tony on 2024/8/12.
 //
 
-#include "BaseOnnxRuntime.h"
+#include "OnnxRuntimeBase.h"
 
 using namespace cv;
 using namespace std;
 using namespace Ort;
 
 
-BaseOnnxRuntime::BaseOnnxRuntime(string model_path)
+OnnxRuntimeBase::OnnxRuntimeBase(string model_path)
 {
     /// OrtStatus* status = OrtSessionOptionsAppendExecutionProvider_CUDA(sessionOptions, 0);   ///如果使用cuda加速，需要取消注释
 
@@ -44,7 +44,7 @@ BaseOnnxRuntime::BaseOnnxRuntime(string model_path)
     }
 }
 
-BaseOnnxRuntime::~BaseOnnxRuntime() {
+OnnxRuntimeBase::~OnnxRuntimeBase() {
     sessionOptions.release();
     ort_session -> release();
 }
