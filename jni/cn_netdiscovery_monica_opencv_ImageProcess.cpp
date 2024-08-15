@@ -170,7 +170,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_unsh
     Mat dst = Mat(image.size(), image.type());
 
     try {
-        unsharpMask(image,dst, 181, 0, 90);
+        unsharpMask(image,dst, radius, threshold, amount);
     } catch(...) {
     }
 
