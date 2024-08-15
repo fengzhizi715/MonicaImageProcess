@@ -13,16 +13,6 @@ using namespace std;
 using namespace cv;
 
 /**
- * 该算法库的版本号
- */
-string getVersion();
-
-/**
- * 当前使用的 OpenCV 的版本号
- */
-string getOpenCVVersion();
-
-/**
  * 图像错切
  * @param 沿 x 方向
  * @param 沿 y 方向

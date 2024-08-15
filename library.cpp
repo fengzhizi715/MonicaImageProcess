@@ -177,14 +177,6 @@ namespace ACE {
     }
 }
 
-string getVersion() {
-    return "v0.0.3";
-}
-
-string getOpenCVVersion() {
-    return CV_VERSION;
-}
-
 Mat shearing(Mat src, float x, float y) {
     int width = src.cols;
     int height = src.rows;

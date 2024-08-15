@@ -48,14 +48,14 @@ jintArray matToIntArray(JNIEnv *env, const cv::Mat &image) {
 JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getVersion
         (JNIEnv* env, jobject) {
 
-    string version = getVersion();
+    string version = "v0.0.3";
     return env->NewStringUTF(version.c_str());
 }
 
 JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getOpenCVVersion
         (JNIEnv* env, jobject) {
 
-    string version = getOpenCVVersion();
+    string version = CV_VERSION;
     return env->NewStringUTF(version.c_str());
 }
 
