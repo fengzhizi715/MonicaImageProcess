@@ -9,14 +9,16 @@ using namespace std;
 using namespace Ort;
 
 
-OnnxRuntimeBase::OnnxRuntimeBase(string model_path)
+OnnxRuntimeBase::OnnxRuntimeBase(string modelPath, const char* logid)
 {
     /// OrtStatus* status = OrtSessionOptionsAppendExecutionProvider_CUDA(sessionOptions, 0);   ///如果使用cuda加速，需要取消注释
 
     sessionOptions.SetGraphOptimizationLevel(ORT_ENABLE_BASIC);
     /// std::wstring widestr = std::wstring(model_path.begin(), model_path.end());  ////windows写法
     /// ort_session = new Session(env, widestr.c_str(), sessionOptions); ////windows写法
-    ort_session = new Session(env, model_path.c_str(), sessionOptions); ////linux写法
+
+    env = Ort::Env(ORT_LOGGING_LEVEL_WARNING, logid);
+    ort_session = new Session(env, modelPath.c_str(), sessionOptions); ////linux写法
 
     size_t numInputNodes = ort_session->GetInputCount();
     size_t numOutputNodes = ort_session->GetOutputCount();

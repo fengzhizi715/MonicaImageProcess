@@ -266,8 +266,8 @@ JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initSketc
         (JNIEnv* env, jobject,jstring jModelPath) {
 
      const char* modelPath = env->GetStringUTFChars(jModelPath, JNI_FALSE);
-
-     sketchDrawing = new SketchDrawing(modelPath);
+     const std::string& onnx_logid = "Sketch Drawing";
+     sketchDrawing = new SketchDrawing(modelPath, onnx_logid.c_str());
 
      env->ReleaseStringUTFChars(jModelPath, modelPath);
 }

@@ -14,7 +14,7 @@ class OnnxRuntimeBase
 {
 
 public:
-    OnnxRuntimeBase(std::string model_path);
+    OnnxRuntimeBase(std::string modelPath, const char* logid);
     ~OnnxRuntimeBase();
 
     Ort::Env env;

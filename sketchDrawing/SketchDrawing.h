@@ -22,7 +22,7 @@ using namespace Ort;
 class SketchDrawing: public OnnxRuntimeBase {
 
 public:
-    SketchDrawing(string model_path);
+    SketchDrawing(string modelPath, const char* logid);
     Mat detect(Mat& image);
 
 private:
