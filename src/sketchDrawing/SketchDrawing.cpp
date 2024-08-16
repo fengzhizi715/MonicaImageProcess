@@ -33,7 +33,7 @@ Mat SketchDrawing::detect(Mat& image)
     auto allocator_info = MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
     Value input_tensor_ = Value::CreateTensor<float>(allocator_info, input_image_.data(), input_image_.size(), input_shape_.data(), input_shape_.size());
 
-    vector<Value> ort_outputs = ort_session->Run(RunOptions{ nullptr }, &input_names[0], &input_tensor_, 1, output_names.data(), output_names.size());
+    vector<Value> ort_outputs = this -> forward(input_tensor_);
     float* pred = ort_outputs[0].GetTensorMutableData<float>();
     Mat result(outHeight, outWidth, CV_32FC1, pred);
     result *= 255;

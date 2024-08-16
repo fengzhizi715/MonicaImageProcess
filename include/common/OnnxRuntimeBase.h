@@ -18,9 +18,11 @@ public:
     OnnxRuntimeBase(std::string modelPath, const char* logId, const char* provider);
     ~OnnxRuntimeBase();
 
+    virtual std::vector<Ort::Value> forward(Ort::Value& inputTensors);
+
 protected:
     Ort::Env env;
-    Ort::Session *ort_session = nullptr;
+    Ort::Session ort_session{ nullptr };
     Ort::SessionOptions sessionOptions = Ort::SessionOptions();
     std::vector<char*> input_names;
     std::vector<char*> output_names;
