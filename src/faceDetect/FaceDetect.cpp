@@ -2,7 +2,7 @@
 // Created by Tony on 2024/7/26.
 //
 
-#include "FaceDetect.h"
+#include "../../include/faceDetect/FaceDetect.h"
 
 void FaceDetect::init(string faceProto,string faceModel,string ageProto,string ageModel,string genderProto,string genderModel) {
 

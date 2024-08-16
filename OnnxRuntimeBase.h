@@ -14,7 +14,7 @@ class OnnxRuntimeBase
 {
 
 public:
-    OnnxRuntimeBase(std::string modelPath, const char* logid);
+    OnnxRuntimeBase(std::string modelPath, const char* logId);
     ~OnnxRuntimeBase();
 
 protected:

@@ -4,8 +4,8 @@
 #include <iostream>
 #include "cn_netdiscovery_monica_opencv_ImageProcess.h"
 #include "../library.h"
-#include "../faceDetect/FaceDetect.h"
-#include "../sketchDrawing/SketchDrawing.h"
+#include "../include/faceDetect/FaceDetect.h"
+#include "../include/sketchDrawing/SketchDrawing.h"
 
 FaceDetect faceDetect;
 SketchDrawing *sketchDrawing = nullptr;

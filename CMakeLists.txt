@@ -29,8 +29,8 @@ find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 add_library(MonicaImageProcess SHARED library.cpp
         OnnxRuntimeBase.cpp OnnxRuntimeBase.h
         jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp jni/cn_netdiscovery_monica_opencv_ImageProcess.h
-        faceDetect/FaceDetect.cpp faceDetect/FaceDetect.h
-        sketchDrawing/SketchDrawing.cpp sketchDrawing/SketchDrawing.h
+        src/faceDetect/FaceDetect.cpp include/faceDetect/FaceDetect.h
+        src/sketchDrawing/SketchDrawing.cpp include/sketchDrawing/SketchDrawing.h
         )
 
 target_link_libraries(MonicaImageProcess ${OpenCV_LIBS})

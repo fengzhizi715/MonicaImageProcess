@@ -9,20 +9,20 @@ using namespace std;
 using namespace Ort;
 
 
-OnnxRuntimeBase::OnnxRuntimeBase(string modelPath, const char* logid)
+OnnxRuntimeBase::OnnxRuntimeBase(string modelPath, const char* logId)
 {
     /// OrtStatus* status = OrtSessionOptionsAppendExecutionProvider_CUDA(sessionOptions, 0);   ///如果使用cuda加速，需要取消注释
 
     sessionOptions.SetGraphOptimizationLevel(ORT_ENABLE_BASIC);
 
-    env = Ort::Env(ORT_LOGGING_LEVEL_WARNING, logid);
+    env = Ort::Env(ORT_LOGGING_LEVEL_WARNING, logId);
 
     const char* model_path = "";
     #ifdef _WIN32
         auto modelPathW = get_win_path(modelPath);  // For Windows (wstring)
         model_path = modelPathW.c_str();
     #else
-        model_path = modelPath.c_str(); // For Linux、MacOS (string)
+        model_path = modelPath.c_str();             // For Linux、MacOS (string)
     #endif
 
     ort_session = new Session(env, model_path, sessionOptions);
