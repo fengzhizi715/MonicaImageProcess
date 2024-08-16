@@ -4,6 +4,7 @@
 #include <iostream>
 #include "cn_netdiscovery_monica_opencv_ImageProcess.h"
 #include "../include/library.h"
+#include "../include/Constants.h"
 #include "../include/faceDetect/FaceDetect.h"
 #include "../include/sketchDrawing/SketchDrawing.h"
 
@@ -267,7 +268,8 @@ JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initSketc
 
      const char* modelPath = env->GetStringUTFChars(jModelPath, JNI_FALSE);
      const std::string& onnx_logid = "Sketch Drawing";
-     sketchDrawing = new SketchDrawing(modelPath, onnx_logid.c_str());
+     const std::string& onnx_provider = OnnxProviders::CPU;
+     sketchDrawing = new SketchDrawing(modelPath, onnx_logid.c_str(), onnx_provider.c_str());
 
      env->ReleaseStringUTFChars(jModelPath, modelPath);
 }

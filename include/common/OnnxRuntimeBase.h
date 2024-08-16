@@ -9,12 +9,13 @@
 #include <opencv2/highgui.hpp>
 #include <vector>
 #include <onnxruntime_cxx_api.h>
+#include <onnxruntime_c_api.h>
 
 class OnnxRuntimeBase
 {
 
 public:
-    OnnxRuntimeBase(std::string modelPath, const char* logId);
+    OnnxRuntimeBase(std::string modelPath, const char* logId, const char* provider);
     ~OnnxRuntimeBase();
 
 protected:

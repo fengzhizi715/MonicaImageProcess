@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 project(MonicaImageProcess)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 # 添加 OpenCV 的配置
 find_package(OpenCV REQUIRED)
@@ -26,12 +26,13 @@ include_directories(${ONNXRUNTIME_ROOT}/include/)
 # 查找ONNX Runtime库文件
 find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
-add_library(MonicaImageProcess SHARED src/library.cpp
+add_library(MonicaImageProcess SHARED
+        src/library.cpp include/library.h
         src/common/OnnxRuntimeBase.cpp include/common/OnnxRuntimeBase.h
         jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp jni/cn_netdiscovery_monica_opencv_ImageProcess.h
         src/faceDetect/FaceDetect.cpp include/faceDetect/FaceDetect.h
         src/sketchDrawing/SketchDrawing.cpp include/sketchDrawing/SketchDrawing.h
-        )
+        include/Constants.h)
 
 target_link_libraries(MonicaImageProcess ${OpenCV_LIBS})
 target_link_libraries(MonicaImageProcess /Users/Tony/onnxruntime/onnxruntime-osx-x86_64-1.10.0/lib/libonnxruntime.1.10.0.dylib)

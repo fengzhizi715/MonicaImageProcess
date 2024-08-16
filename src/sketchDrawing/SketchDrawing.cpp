@@ -4,7 +4,7 @@
 
 #include "../../include/sketchDrawing/SketchDrawing.h"
 
-SketchDrawing::SketchDrawing(string modelPath, const char* logId): OnnxRuntimeBase(modelPath, logId)
+SketchDrawing::SketchDrawing(string modelPath, const char* logId, const char* provider): OnnxRuntimeBase(modelPath, logId, provider)
 {
     this->inpHeight = input_node_dims[0][2];
     this->inpWidth = input_node_dims[0][3];
