@@ -13,8 +13,6 @@ using namespace Ort;
 
 OnnxRuntimeBase::OnnxRuntimeBase(string modelPath, const char* logId, const char* provider)
 {
-    /// OrtStatus* status = OrtSessionOptionsAppendExecutionProvider_CUDA(sessionOptions, 0);   ///如果使用cuda加速，需要取消注释
-
     sessionOptions.SetGraphOptimizationLevel(ORT_ENABLE_BASIC);
 
     env = Ort::Env(ORT_LOGGING_LEVEL_WARNING, logId);
@@ -25,22 +23,21 @@ OnnxRuntimeBase::OnnxRuntimeBase(string modelPath, const char* logId, const char
     if (provider == OnnxProviders::CUDA.c_str()) {
         if (cudaAvailable == availableProviders.end()) {
             std::cout << "CUDA is not supported by your ONNXRuntime build. Fallback to CPU." << std::endl;
-            //std::cout << "Inference device: CPU" << std::endl;
+            std::cout << "Inference device: CPU" << std::endl;
         }
         else {
-            //std::cout << "Inference device: GPU" << std::endl;
+            std::cout << "Inference device: GPU" << std::endl;
             sessionOptions.AppendExecutionProvider_CUDA(cudaOption);
         }
     }
     else if (provider == OnnxProviders::CPU.c_str()) {
         // "cpu" by default
+        std::cout << "Inference device: CPU" << std::endl;
     }
     else
     {
         throw std::runtime_error("NotImplemented provider=" + std::string(provider));
     }
-
-    std::cout << "Inference device: " << std::string(provider) << std::endl;
 
     const char* model_path = "";
     #ifdef _WIN32
