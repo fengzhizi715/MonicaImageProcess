@@ -3,7 +3,7 @@
 //
 #include <iostream>
 #include "cn_netdiscovery_monica_opencv_ImageProcess.h"
-#include "../library.h"
+#include "../include/library.h"
 #include "../include/faceDetect/FaceDetect.h"
 #include "../include/sketchDrawing/SketchDrawing.h"
 

@@ -26,7 +26,7 @@ include_directories(${ONNXRUNTIME_ROOT}/include/)
 # 查找ONNX Runtime库文件
 find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
-add_library(MonicaImageProcess SHARED library.cpp
+add_library(MonicaImageProcess SHARED src/library.cpp
         src/common/OnnxRuntimeBase.cpp include/common/OnnxRuntimeBase.h
         jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp jni/cn_netdiscovery_monica_opencv_ImageProcess.h
         src/faceDetect/FaceDetect.cpp include/faceDetect/FaceDetect.h
