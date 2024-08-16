@@ -17,6 +17,7 @@ public:
     OnnxRuntimeBase(std::string modelPath, const char* logid);
     ~OnnxRuntimeBase();
 
+protected:
     Ort::Env env;
     Ort::Session *ort_session = nullptr;
     Ort::SessionOptions sessionOptions = Ort::SessionOptions();
