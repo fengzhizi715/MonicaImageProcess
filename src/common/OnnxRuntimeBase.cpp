@@ -2,7 +2,7 @@
 // Created by Tony on 2024/8/12.
 //
 
-#include "OnnxRuntimeBase.h"
+#include "../../include/common/OnnxRuntimeBase.h"
 
 using namespace cv;
 using namespace std;
