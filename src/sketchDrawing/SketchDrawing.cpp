@@ -3,6 +3,7 @@
 //
 
 #include "../../include/sketchDrawing/SketchDrawing.h"
+#include "../../include/utils/Timer.h"
 
 SketchDrawing::SketchDrawing(string modelPath, const char* logId, const char* provider): OnnxRuntimeBase(modelPath, logId, provider)
 {
@@ -14,6 +15,7 @@ SketchDrawing::SketchDrawing(string modelPath, const char* logId, const char* pr
 
 Mat SketchDrawing::detect(Mat& image)
 {
+    double inferenceTime = 0.0;
     Mat dst;
     resize(image, dst, Size(this->inpWidth, this->inpHeight));
     this->input_image_.resize(this->inpWidth * this->inpHeight * dst.channels());
@@ -33,7 +35,12 @@ Mat SketchDrawing::detect(Mat& image)
     auto allocator_info = MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
     Value input_tensor_ = Value::CreateTensor<float>(allocator_info, input_image_.data(), input_image_.size(), input_shape_.data(), input_shape_.size());
 
+    Timer inferenceTimer = Timer(inferenceTime, true);
     vector<Value> ort_outputs = this -> forward(input_tensor_);
+    inferenceTimer.Stop();
+
+    std::cout << (inferenceTime * 1000.0) << "ms inference" << std::endl;
+
     float* pred = ort_outputs[0].GetTensorMutableData<float>();
     Mat result(outHeight, outWidth, CV_32FC1, pred);
     result *= 255;
