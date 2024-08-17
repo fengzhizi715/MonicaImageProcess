@@ -36,4 +36,4 @@ add_library(MonicaImageProcess SHARED
         src/utils/Timer.cpp include/utils/Timer.h)
 
 target_link_libraries(MonicaImageProcess ${OpenCV_LIBS})
-target_link_libraries(MonicaImageProcess /Users/Tony/onnxruntime/onnxruntime-osx-x86_64-1.10.0/lib/libonnxruntime.1.10.0.dylib)
+target_link_libraries(MonicaImageProcess ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
