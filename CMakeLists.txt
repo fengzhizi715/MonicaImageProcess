@@ -32,7 +32,8 @@ add_library(MonicaImageProcess SHARED
         jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp jni/cn_netdiscovery_monica_opencv_ImageProcess.h
         src/faceDetect/FaceDetect.cpp include/faceDetect/FaceDetect.h
         src/sketchDrawing/SketchDrawing.cpp include/sketchDrawing/SketchDrawing.h
-        include/Constants.h)
+        include/Constants.h
+        src/utils/Timer.cpp include/utils/Timer.h)
 
 target_link_libraries(MonicaImageProcess ${OpenCV_LIBS})
 target_link_libraries(MonicaImageProcess /Users/Tony/onnxruntime/onnxruntime-osx-x86_64-1.10.0/lib/libonnxruntime.1.10.0.dylib)
