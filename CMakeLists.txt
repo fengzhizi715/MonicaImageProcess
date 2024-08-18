@@ -33,7 +33,8 @@ add_library(MonicaImageProcess SHARED
         src/faceDetect/FaceDetect.cpp include/faceDetect/FaceDetect.h
         src/sketchDrawing/SketchDrawing.cpp include/sketchDrawing/SketchDrawing.h
         include/Constants.h
-        src/utils/Timer.cpp include/utils/Timer.h)
+        src/utils/Timer.cpp include/utils/Timer.h
+        src/utils/Utils.cpp include/utils/Utils.h)
 
 target_link_libraries(MonicaImageProcess ${OpenCV_LIBS})
 target_link_libraries(MonicaImageProcess ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
