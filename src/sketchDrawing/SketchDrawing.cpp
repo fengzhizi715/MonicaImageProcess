@@ -38,11 +38,11 @@ Mat SketchDrawing::detect(Mat& image)
 
     auto allocator_info = MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
     Value input_tensor_ = Value::CreateTensor<float>(allocator_info, input_image_.data(), input_image_.size(), input_shape_.data(), input_shape_.size());
-    preprocessTimer.Stop();
+    preprocessTimer.stop();
 
     Timer inferenceTimer = Timer(inferenceTime, true);
     vector<Value> ort_outputs = this -> forward(input_tensor_);
-    inferenceTimer.Stop();
+    inferenceTimer.stop();
 
     Timer postprocessTimer = Timer(postprocessTime, true);
 
@@ -51,7 +51,7 @@ Mat SketchDrawing::detect(Mat& image)
     result *= 255;
     result.convertTo(result, CV_8UC1);
     resize(result, result, Size(image.cols, image.rows));
-    postprocessTimer.Stop();
+    postprocessTimer.stop();
 
     std::cout << std::fixed << std::setprecision(1);
     std::cout << "image: " << image.rows << "x" << image.cols <<" "<< (preprocessTime + inferenceTime + postprocessTime) * 1000.0 << "ms" << std::endl;

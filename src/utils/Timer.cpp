@@ -12,7 +12,7 @@ Timer::Timer(double& accumulator, bool isEnabled)
 }
 
 // Stop the timer and update the accumulator
-void Timer::Stop() {
+void Timer::stop() {
     if (isEnabled) {
         auto end = std::chrono::high_resolution_clock::now();
         double duration = std::chrono::duration<double>(end - start).count();

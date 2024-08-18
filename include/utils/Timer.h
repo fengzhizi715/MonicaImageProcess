@@ -10,7 +10,7 @@
 class Timer {
 public:
     Timer(double& accumulator, bool isEnabled = true);
-    void Stop();
+    void stop();
 
 private:
     double& accumulator;
