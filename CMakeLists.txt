@@ -3,6 +3,34 @@ project(MonicaImageProcess)
 
 set(CMAKE_CXX_STANDARD 17)
 
+message(STATUS "===============================")
+MESSAGE(STATUS "current operation system is ${CMAKE_SYSTEM}")
+message(STATUS "current operation system name is ${CMAKE_SYSTEM_NAME}")
+
+if(CMAKE_CL_64)
+    set(CURRENT_PLATFORM "x64")
+    message(STATUS "Current Platform is ${CURRENT_PLATFORM}")
+else(CMAKE_CL_64)
+    set(CURRENT_PLATFORM "x86")
+    message(STATUS "Current Platform is ${CURRENT_PLATFORM}")
+endif(CMAKE_CL_64)
+
+if(CMAKE_CROSSCOMPILING)
+    message(STATUS "Cross Comliling!!!,  ARM")
+    set(CURRENT_SYSTEM "Arm")
+else()
+    message(STATUS "No Cross Comliling!!!")
+
+    #根据不同平台给CURRENT_SYSTEM命名
+    if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+        set(CURRENT_SYSTEM "Linux")
+    elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
+        set(CURRENT_SYSTEM "Windows")
+    elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+        set(CURRENT_SYSTEM "MacOS")
+    endif()
+endif()
+
 # 添加 OpenCV 的配置
 find_package(OpenCV REQUIRED)
 # 打印OpenCV版本
