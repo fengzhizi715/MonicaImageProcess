@@ -16,10 +16,10 @@ else(CMAKE_CL_64)
 endif(CMAKE_CL_64)
 
 if(CMAKE_CROSSCOMPILING)
-    message(STATUS "Cross Comliling!!!,  ARM")
+    message(STATUS "Cross Compiling!!!,  ARM")
     set(CURRENT_SYSTEM "Arm")
 else()
-    message(STATUS "No Cross Comliling!!!")
+    message(STATUS "No Cross Compiling!!!")
 
     #根据不同平台给CURRENT_SYSTEM命名
     if(CMAKE_SYSTEM_NAME MATCHES "Linux")
