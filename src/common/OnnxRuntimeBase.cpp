@@ -40,15 +40,12 @@ OnnxRuntimeBase::OnnxRuntimeBase(string modelPath, const char* logId, const char
         throw std::runtime_error("NotImplemented provider=" + std::string(provider));
     }
 
-    const char* model_path = "";
     #ifdef _WIN32
         auto modelPathW = get_win_path(modelPath);  // For Windows (wstring)
-        model_path = modelPathW.c_str();
+        ort_session = Ort::Session(env, modelPathW.c_str(), sessionOptions);
     #else
-        model_path = modelPath.c_str();             // For Linux、MacOS (string)
+        ort_session = Ort::Session(env, modelPath.c_str(), sessionOptions);  // For Linux、MacOS (string)
     #endif
-
-    ort_session = Ort::Session(env, model_path, sessionOptions);
 
     size_t numInputNodes = ort_session.GetInputCount();
     size_t numOutputNodes = ort_session.GetOutputCount();
