@@ -83,7 +83,6 @@ tuple<Mat, vector<vector<int>>> FaceDetect::getFaceBox(Net net, Mat &frame, doub
     int frameWidth = frameOpenCVDNN.cols;
     double inScaleFactor = 1.0;
     Size size = Size(300, 300);
-     // std::vector<int> meanVal = {104, 117, 123};
     Scalar meanVal = Scalar(104, 117, 123);
 
     cv::Mat inputBlob;
