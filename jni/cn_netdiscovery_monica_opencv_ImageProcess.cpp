@@ -7,9 +7,13 @@
 #include "../include/Constants.h"
 #include "../include/faceDetect/FaceDetect.h"
 #include "../include/sketchDrawing/SketchDrawing.h"
+#include "../include/faceSwap/Yolov8Face.h"
+#include "../include/faceSwap/Face68Landmarks.h"
 
 FaceDetect faceDetect;
 SketchDrawing *sketchDrawing = nullptr;
+Yolov8Face *yolov8Face = nullptr;
+Face68Landmarks *face68Landmarks = nullptr;
 
 Mat byteArrayToMat(JNIEnv* env, jbyteArray array) {
     //复制java数组到C++
@@ -299,6 +303,61 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sket
 
     if (dst.channels() == 1) {
         cvtColor(dst,dst,COLOR_GRAY2BGR);
+    }
+
+    return matToIntArray(env,dst);
+}
+
+JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceSwap
+         (JNIEnv* env, jobject,jstring jYolov8FaceModelPath, jstring jFace68LandmarksModePath) {
+
+    const char* yolov8FaceModelPath = env->GetStringUTFChars(jYolov8FaceModelPath, JNI_FALSE);
+    const char* face68LandmarksModePath = env->GetStringUTFChars(jFace68LandmarksModePath, JNI_FALSE);
+
+    const std::string& yolov8FaceLogId = "yolov8Face";
+    const std::string& face68LandmarksLogId = "face68Landmarks";
+
+    const std::string& onnx_provider = OnnxProviders::CPU;
+    yolov8Face = new Yolov8Face(yolov8FaceModelPath, yolov8FaceLogId.c_str(), onnx_provider.c_str());
+    face68Landmarks = new Face68Landmarks(face68LandmarksModePath, face68LandmarksLogId.c_str(), onnx_provider.c_str());
+
+    env->ReleaseStringUTFChars(jYolov8FaceModelPath, yolov8FaceModelPath);
+    env->ReleaseStringUTFChars(jFace68LandmarksModePath, face68LandmarksModePath);
+}
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_faceLandMark
+        (JNIEnv* env, jobject,jbyteArray array) {
+
+    Mat image = byteArrayToMat(env,array);
+    Mat dst;
+
+    try {
+        vector<Bbox> boxes;
+        yolov8Face->detect(image, boxes);
+        dst = image.clone();
+        for (auto box: boxes) {
+            rectangle(dst, cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax), Scalar(0, 255, 0), 4, 8, 0);
+
+            vector<Point2f> face_landmark_5of68;
+            vector<Point2f> face68landmarks = face68Landmarks->detect(image, box, face_landmark_5of68);
+            for (auto point : face_landmark_5of68)
+            {
+                circle(dst, cv::Point(point.x, point.y), 4, Scalar(0, 0, 255), -1);
+            }
+         }
+    } catch(...) {
+    }
+
+    jthrowable mException = NULL;
+    mException = env->ExceptionOccurred();
+
+    if (mException != NULL) {
+        env->ExceptionClear();
+        jclass exceptionClazz = env->FindClass("java/lang/Exception");
+        env->ThrowNew(exceptionClazz, "jni exception");
+        env->DeleteLocalRef(exceptionClazz);
+
+        return env->NewIntArray(0);
     }
 
     return matToIntArray(env,dst);
