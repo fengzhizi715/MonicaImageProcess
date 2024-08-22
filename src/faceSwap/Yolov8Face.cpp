@@ -5,29 +5,29 @@
 #include "../../include/utils/Utils.h"
 #include "../../include/faceSwap/Yolov8Face.h"
 
-Yolov8Face::Yolov8Face(string modelPath, const char* logId, const char* provider, const float conf_thres, const float iou_thresh): OnnxRuntimeBase(modelPath, logId, provider)
+Yolov8Face::Yolov8Face(string modelPath, const char* logId, const char* provider, const float conf_thresh, const float iou_thresh): OnnxRuntimeBase(modelPath, logId, provider)
 {
     this->input_height = input_node_dims[0][2];
     this->input_width = input_node_dims[0][3];
-    this->conf_threshold = conf_thres;
+    this->conf_threshold = conf_thresh;
     this->iou_threshold = iou_thresh;
 }
 
-void Yolov8Face::preprocess(Mat srcimg)
+void Yolov8Face::preprocess(Mat src)
 {
-    const int height = srcimg.rows;
-    const int width = srcimg.cols;
-    Mat temp_image = srcimg.clone();
+    const int height = src.rows;
+    const int width = src.cols;
+    Mat temp = src.clone();
     if (height > this->input_height || width > this->input_width)
     {
         const float scale = std::min((float)this->input_height / height, (float)this->input_width / width);
         Size new_size = Size(int(width * scale), int(height * scale));
-        resize(srcimg, temp_image, new_size);
+        resize(src, temp, new_size);
     }
-    this->ratio_height = (float)height / temp_image.rows;
-    this->ratio_width = (float)width / temp_image.cols;
+    this->ratio_height = (float)height / temp.rows;
+    this->ratio_width = (float)width / temp.cols;
     Mat input_img;
-    copyMakeBorder(temp_image, input_img, 0, this->input_height - temp_image.rows, 0, this->input_width - temp_image.cols, BORDER_CONSTANT, 0);
+    copyMakeBorder(temp, input_img, 0, this->input_height - temp.rows, 0, this->input_width - temp.cols, BORDER_CONSTANT, 0);
 
     vector<cv::Mat> bgrChannels(3);
     split(input_img, bgrChannels);
@@ -44,10 +44,10 @@ void Yolov8Face::preprocess(Mat srcimg)
     memcpy(this->input_image.data() + image_area * 2, (float *)bgrChannels[2].data, single_chn_size);
 }
 
-////只返回检测框,因为在下游的模块里,置信度和5个关键点这两个信息在后续的模块里没有用到
-void Yolov8Face::detect(Mat srcimg, std::vector<Bbox> &boxes)
+//只返回检测框,因为在下游的模块里,置信度和5个关键点这两个信息在后续的模块里没有用到
+void Yolov8Face::detect(Mat src, std::vector<Bbox> &boxes)
 {
-    this->preprocess(srcimg);
+    this->preprocess(src);
     std::vector<int64_t> input_img_shape = {1, 3, this->input_height, this->input_width};
     Value input_tensor_ = Value::CreateTensor<float>(memory_info_handler, this->input_image.data(), this->input_image.size(), input_img_shape.data(), input_img_shape.size());
     vector<Value> ort_outputs = this -> forward(input_tensor_);
