@@ -61,6 +61,7 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CURRENT_PLATFORM} MATCHES "x86")
             jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp jni/cn_netdiscovery_monica_opencv_ImageProcess.h
             src/faceDetect/FaceDetect.cpp include/faceDetect/FaceDetect.h
             src/sketchDrawing/SketchDrawing.cpp include/sketchDrawing/SketchDrawing.h
+            src/faceSwap/Yolov8Face.cpp include/faceSwap/Yolov8Face.h
             include/Constants.h
             src/utils/Timer.cpp include/utils/Timer.h
             src/utils/Utils.cpp include/utils/Utils.h)
