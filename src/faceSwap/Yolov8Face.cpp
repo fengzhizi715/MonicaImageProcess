@@ -50,8 +50,8 @@ void Yolov8Face::detect(Mat srcimg, std::vector<Bbox> &boxes)
     this->preprocess(srcimg);
     std::vector<int64_t> input_img_shape = {1, 3, this->input_height, this->input_width};
     Value input_tensor_ = Value::CreateTensor<float>(memory_info_handler, this->input_image.data(), this->input_image.size(), input_img_shape.data(), input_img_shape.size());
-    Ort::RunOptions runOptions;
-    vector<Value> ort_outputs = this->ort_session.Run(runOptions, this->input_names.data(), &input_tensor_, 1, this->output_names.data(), output_names.size());
+    vector<Value> ort_outputs = this -> forward(input_tensor_);
+
     float *pdata = ort_outputs[0].GetTensorMutableData<float>(); /// 形状是(1, 20, 8400),不考虑第0维batchsize，每一列的长度20,前4个元素是检测框坐标(cx,cy,w,h)，第4个元素是置信度，剩下的15个元素是5个关键点坐标x,y和置信度
     const int num_box = ort_outputs[0].GetTensorTypeAndShapeInfo().GetShape()[2];
     vector<Bbox> bounding_box_raw;
