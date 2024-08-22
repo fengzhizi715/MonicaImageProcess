@@ -26,11 +26,11 @@ void Yolov8Face::preprocess(Mat src)
     }
     this->ratio_height = (float)height / temp.rows;
     this->ratio_width = (float)width / temp.cols;
-    Mat input_img;
-    copyMakeBorder(temp, input_img, 0, this->input_height - temp.rows, 0, this->input_width - temp.cols, BORDER_CONSTANT, 0);
+    Mat input;
+    copyMakeBorder(temp, input, 0, this->input_height - temp.rows, 0, this->input_width - temp.cols, BORDER_CONSTANT, 0);
 
     vector<cv::Mat> bgrChannels(3);
-    split(input_img, bgrChannels);
+    split(input, bgrChannels);
     for (int c = 0; c < 3; c++)
     {
         bgrChannels[c].convertTo(bgrChannels[c], CV_32FC1, 1 / 128.0, -127.5 / 128.0);
@@ -61,14 +61,14 @@ void Yolov8Face::detect(Mat src, std::vector<Bbox> &boxes)
         const float score = pdata[4 * num_box + i];
         if (score > this->conf_threshold)
         {
-            float xmin = (pdata[i] - 0.5 * pdata[2 * num_box + i]) * this->ratio_width;            ///(cx,cy,w,h)转到(x,y,w,h)并还原到原图
-            float ymin = (pdata[num_box + i] - 0.5 * pdata[3 * num_box + i]) * this->ratio_height; ///(cx,cy,w,h)转到(x,y,w,h)并还原到原图
-            float xmax = (pdata[i] + 0.5 * pdata[2 * num_box + i]) * this->ratio_width;            ///(cx,cy,w,h)转到(x,y,w,h)并还原到原图
-            float ymax = (pdata[num_box + i] + 0.5 * pdata[3 * num_box + i]) * this->ratio_height; ///(cx,cy,w,h)转到(x,y,w,h)并还原到原图
-            ////坐标的越界检查保护，可以添加一下
+            float xmin = (pdata[i] - 0.5 * pdata[2 * num_box + i]) * this->ratio_width;            // (cx,cy,w,h)转到(x,y,w,h)并还原到原图
+            float ymin = (pdata[num_box + i] - 0.5 * pdata[3 * num_box + i]) * this->ratio_height; // (cx,cy,w,h)转到(x,y,w,h)并还原到原图
+            float xmax = (pdata[i] + 0.5 * pdata[2 * num_box + i]) * this->ratio_width;            // (cx,cy,w,h)转到(x,y,w,h)并还原到原图
+            float ymax = (pdata[num_box + i] + 0.5 * pdata[3 * num_box + i]) * this->ratio_height; // (cx,cy,w,h)转到(x,y,w,h)并还原到原图
+            // 坐标的越界检查保护，可以添加一下
             bounding_box_raw.emplace_back(Bbox{xmin, ymin, xmax, ymax});
             score_raw.emplace_back(score);
-            /// 剩下的5个关键点坐标的计算,暂时不写,因为在下游的模块里没有用到5个关键点坐标信息
+            // 剩下的5个关键点坐标的计算,暂时不写,因为在下游的模块里没有用到5个关键点坐标信息
         }
     }
     vector<int> keep_inds = nms(bounding_box_raw, score_raw, this->iou_threshold);
