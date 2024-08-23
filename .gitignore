@@ -1,11 +1,13 @@
 cmake-build-debug/
 cmake-build-release/
 CMakeFiles/
+.cmake/
 .idea/
 CMakeCache.txt
 Makefile
 cmake_install.cmake
 *.dylib
+build.ninja
 
 ### Mac OS ###
 .DS_Store
