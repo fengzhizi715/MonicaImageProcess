@@ -10,9 +10,9 @@
 #include "../include/faceSwap/Yolov8Face.h"
 #include "../include/faceSwap/Face68Landmarks.h"
 
-FaceDetect *faceDetect = nullptr;
-SketchDrawing *sketchDrawing = nullptr;
-Yolov8Face *yolov8Face = nullptr;
+FaceDetect      *faceDetect = nullptr;
+SketchDrawing   *sketchDrawing = nullptr;
+Yolov8Face      *yolov8Face = nullptr;
 Face68Landmarks *face68Landmarks = nullptr;
 
 Mat byteArrayToMat(JNIEnv* env, jbyteArray array) {
