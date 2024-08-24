@@ -11,7 +11,7 @@ Face68Landmarks::Face68Landmarks(string modelPath, const char* logId, const char
     this->input_width = input_node_dims[0][3];
 }
 
-void Face68Landmarks::preprocess(Mat srcimg, const Bbox bounding_box)
+void Face68Landmarks::preprocess(Mat src, const Bbox bounding_box)
 {
     float sub_max = max(bounding_box.xmax - bounding_box.xmin, bounding_box.ymax - bounding_box.ymin);
     const float scale = 195.f / sub_max;
@@ -19,7 +19,7 @@ void Face68Landmarks::preprocess(Mat srcimg, const Bbox bounding_box)
     ////python程序里的warp_face_by_translation函数////
     Mat affine_matrix = (Mat_<float>(2, 3) << scale, 0.f, translation[0], 0.f, scale, translation[1]);
     Mat crop_img;
-    warpAffine(srcimg, crop_img, affine_matrix, Size(256, 256));
+    warpAffine(src, crop_img, affine_matrix, Size(256, 256));
     ////python程序里的warp_face_by_translation函数////
     cv::invertAffineTransform(affine_matrix, this->inv_affine_matrix);
 
@@ -38,9 +38,9 @@ void Face68Landmarks::preprocess(Mat srcimg, const Bbox bounding_box)
     memcpy(this->input_image.data() + image_area * 2, (float *)bgrChannels[2].data, single_chn_size);
 }
 
-vector<Point2f> Face68Landmarks::detect(Mat srcimg, const Bbox bounding_box, vector<Point2f> &face_landmark_5of68)
+vector<Point2f> Face68Landmarks::detect(Mat src, const Bbox bounding_box, vector<Point2f> &face_landmark_5of68)
 {
-    this->preprocess(srcimg, bounding_box);
+    this->preprocess(src, bounding_box);
 
     std::vector<int64_t> input_img_shape = {1, 3, this->input_height, this->input_width};
     Value input_tensor_ = Value::CreateTensor<float>(memory_info_handler, this->input_image.data(), this->input_image.size(), input_img_shape.data(), input_img_shape.size());

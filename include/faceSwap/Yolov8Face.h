@@ -19,6 +19,7 @@ class Yolov8Face: public OnnxRuntimeBase
 {
 public:
     Yolov8Face(std::string modelPath, const char* logId, const char* provider, const float conf_thresh=0.5, const float iou_thresh=0.4);
+
     void detect(cv::Mat src, std::vector<Bbox> &boxes);   // 只返回检测框,置信度和5个关键点这两个信息在后续的模块里没有用到
 
 private:
@@ -31,4 +32,5 @@ private:
     float conf_threshold;
     float iou_threshold;
 };
+
 #endif //MONICAIMAGEPROCESS_YOLOV8FACE_H
