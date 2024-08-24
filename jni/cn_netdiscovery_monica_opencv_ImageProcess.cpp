@@ -285,7 +285,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sket
     Mat dst;
 
     try {
-        dst = sketchDrawing->detect(image);
+        sketchDrawing-> inferImage(image, dst);
     } catch(...) {
     }
 

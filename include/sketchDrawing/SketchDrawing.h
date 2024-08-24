@@ -23,7 +23,8 @@ class SketchDrawing: public OnnxRuntimeBase {
 
 public:
     SketchDrawing(std::string modelPath, const char* logId, const char* provider);
-    Mat detect(Mat& image);
+
+    void inferImage(Mat& src, Mat& dst);
 
 private:
     vector<float> input_image_;

@@ -13,23 +13,23 @@ SketchDrawing::SketchDrawing(string modelPath, const char* logId, const char* pr
     this->outWidth = output_node_dims[0][3];
 }
 
-Mat SketchDrawing::detect(Mat& image)
+void SketchDrawing::inferImage(Mat& src, Mat& dst)
 {
     double preprocessTime = 0.0;
     double inferenceTime = 0.0;
     double postprocessTime = 0.0;
 
     Timer preprocessTimer = Timer(preprocessTime, true);
-    Mat dst;
-    resize(image, dst, Size(this->inpWidth, this->inpHeight));
-    this->input_image_.resize(this->inpWidth * this->inpHeight * dst.channels());
+    Mat temp;
+    resize(src, temp, Size(this->inpWidth, this->inpHeight));
+    this->input_image_.resize(this->inpWidth * this->inpHeight * temp.channels());
     for (int c = 0; c < 3; c++)
     {
         for (int i = 0; i < this->inpHeight; i++)
         {
             for (int j = 0; j < this->inpWidth; j++)
             {
-                float pix = dst.ptr<uchar>(i)[j * 3 + 2 - c];
+                float pix = temp.ptr<uchar>(i)[j * 3 + 2 - c];
                 this->input_image_[c * this->inpHeight * this->inpWidth + i * this->inpWidth + j] = pix;
             }
         }
@@ -47,17 +47,15 @@ Mat SketchDrawing::detect(Mat& image)
     Timer postprocessTimer = Timer(postprocessTime, true);
 
     float* pred = ort_outputs[0].GetTensorMutableData<float>();
-    Mat result(outHeight, outWidth, CV_32FC1, pred);
-    result *= 255;
-    result.convertTo(result, CV_8UC1);
-    resize(result, result, Size(image.cols, image.rows));
+    dst = Mat(outHeight, outWidth, CV_32FC1, pred);
+    dst *= 255;
+    dst.convertTo(dst, CV_8UC1);
+    resize(dst, dst, Size(src.cols, src.rows));
     postprocessTimer.stop();
 
     std::cout << std::fixed << std::setprecision(1);
-    std::cout << "image: " << image.rows << "x" << image.cols <<" "<< (preprocessTime + inferenceTime + postprocessTime) * 1000.0 << "ms" << std::endl;
+    std::cout << "image: " << src.rows << "x" << src.cols <<" "<< (preprocessTime + inferenceTime + postprocessTime) * 1000.0 << "ms" << std::endl;
     std::cout << "speed: " << (preprocessTime * 1000.0) << "ms preprocess, ";
     std::cout << (inferenceTime * 1000.0) << "ms inference, ";
     std::cout << (postprocessTime * 1000.0) << "ms postprocess per image " << std::endl;
-
-    return result;
 }
