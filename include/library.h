@@ -25,6 +25,11 @@ Mat shearing(Mat src, float x, float y);
 Mat equalizeHistImage(Mat src);
 
 /**
+ * 限制对比度自适应直方图均衡
+ */
+void clahe(Mat& src, Mat& dst, double clipLimit, int size);
+
+/**
  * gamma 校正
  */
 void gammaCorrection(Mat& src, Mat& dst, float K);

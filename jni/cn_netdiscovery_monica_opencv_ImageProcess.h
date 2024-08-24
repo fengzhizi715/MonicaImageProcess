@@ -21,6 +21,9 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_shea
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_equalizeHist
         (JNIEnv* env, jobject,jbyteArray array);
 
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_clahe
+        (JNIEnv* env, jobject,jbyteArray array,jdouble clipLimit,jint size);
+
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_gammaCorrection
         (JNIEnv* env, jobject,jbyteArray array, jfloat k);
 

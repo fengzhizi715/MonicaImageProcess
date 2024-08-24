@@ -116,6 +116,31 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_equa
     return matToIntArray(env,dst);
 }
 
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_clahe
+        (JNIEnv* env, jobject, jbyteArray array, jdouble clipLimit, jint size) {
+
+    Mat image = byteArrayToMat(env,array);
+    Mat dst;
+    try {
+        clahe(image, dst, clipLimit, size);
+    } catch(...) {
+    }
+
+    jthrowable mException = NULL;
+    mException = env->ExceptionOccurred();
+
+    if (mException != NULL) {
+        env->ExceptionClear();
+        jclass exceptionClazz = env->FindClass("java/lang/Exception");
+        env->ThrowNew(exceptionClazz, "jni exception");
+        env->DeleteLocalRef(exceptionClazz);
+
+        return env->NewIntArray(0);
+    }
+
+    return matToIntArray(env,dst);
+}
+
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_gammaCorrection
         (JNIEnv* env, jobject, jbyteArray array, jfloat k) {
 
