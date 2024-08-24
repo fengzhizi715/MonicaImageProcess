@@ -20,7 +20,7 @@ using namespace std;
 class FaceDetect {
 
 public:
-    void init(string faceProto,string faceModel,string ageProto,string ageModel,string genderProto,string genderModel);
+    FaceDetect(string faceProto,string faceModel,string ageProto,string ageModel,string genderProto,string genderModel);
 
     void inferImage(Mat& src, Mat& dst);
 

@@ -4,7 +4,7 @@
 
 #include "../../include/faceDetect/FaceDetect.h"
 
-void FaceDetect::init(string faceProto,string faceModel,string ageProto,string ageModel,string genderProto,string genderModel) {
+FaceDetect::FaceDetect(string faceProto,string faceModel,string ageProto,string ageModel,string genderProto,string genderModel) {
 
     // Load Network
     ageNet = readNet(ageModel, ageProto);

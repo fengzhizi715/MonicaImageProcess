@@ -10,7 +10,7 @@
 #include "../include/faceSwap/Yolov8Face.h"
 #include "../include/faceSwap/Face68Landmarks.h"
 
-FaceDetect faceDetect;
+FaceDetect *faceDetect = nullptr;
 SketchDrawing *sketchDrawing = nullptr;
 Yolov8Face *yolov8Face = nullptr;
 Face68Landmarks *face68Landmarks = nullptr;
@@ -231,7 +231,7 @@ JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceD
     const char* genderProto = env->GetStringUTFChars(jGenderProto, JNI_FALSE);
     const char* genderModel = env->GetStringUTFChars(jGenderModel, JNI_FALSE);
 
-    faceDetect.init(faceProto,faceModel,ageProto,ageModel,genderProto,genderModel);
+    faceDetect = new FaceDetect(faceProto,faceModel,ageProto,ageModel,genderProto,genderModel);
 
     env->ReleaseStringUTFChars(jFaceProto, faceProto);
     env->ReleaseStringUTFChars(jFaceModel, faceModel);
@@ -248,7 +248,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_face
     Mat dst;
 
     try {
-        faceDetect.inferImage(image,dst);
+        faceDetect->inferImage(image,dst);
     } catch(...) {
     }
 
