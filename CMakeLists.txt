@@ -56,9 +56,10 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
             src/faceSwap/Yolov8Face.cpp include/faceSwap/Yolov8Face.h
             src/faceSwap/Face68Landmarks.cpp include/faceSwap/Face68Landmarks.h
             src/faceSwap/FaceEmbdding.cpp include/faceSwap/FaceEmbdding.h
+            src/faceSwap/FaceSwap.cpp include/faceSwap/FaceSwap.h
             src/utils/Timer.cpp include/utils/Timer.h
             src/utils/Utils.cpp include/utils/Utils.h
-            include/Constants.h)
+            include/Constants.h )
 
     target_link_libraries(MonicaImageProcess ${OpenCV_LIBS})
     target_link_libraries(MonicaImageProcess ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
@@ -80,6 +81,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
             src/faceSwap/Yolov8Face.cpp include/faceSwap/Yolov8Face.h
             src/faceSwap/Face68Landmarks.cpp include/faceSwap/Face68Landmarks.h
             src/faceSwap/FaceEmbdding.cpp include/faceSwap/FaceEmbdding.h
+            src/faceSwap/FaceSwap.cpp include/faceSwap/FaceSwap.h
             src/utils/Timer.cpp include/utils/Timer.h
             src/utils/Utils.cpp include/utils/Utils.h
             include/Constants.h)
