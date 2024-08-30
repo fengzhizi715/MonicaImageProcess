@@ -9,11 +9,17 @@
 #include "../include/sketchDrawing/SketchDrawing.h"
 #include "../include/faceSwap/Yolov8Face.h"
 #include "../include/faceSwap/Face68Landmarks.h"
+#include "../include/faceSwap/FaceEmbdding.h"
+#include "../include/faceSwap/FaceSwap.h"
+#include "../include/faceSwap/FaceEnhance.h"
 
 FaceDetect      *faceDetect = nullptr;
 SketchDrawing   *sketchDrawing = nullptr;
 Yolov8Face      *yolov8Face = nullptr;
 Face68Landmarks *face68Landmarks = nullptr;
+FaceEmbdding    *faceEmbdding = nullptr;
+FaceSwap        *faceSwap = nullptr;
+FaceEnhance     *faceEnhance = nullptr;
 
 Mat byteArrayToMat(JNIEnv* env, jbyteArray array) {
     //复制java数组到C++
@@ -334,17 +340,28 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sket
 }
 
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceSwap
-         (JNIEnv* env, jobject,jstring jYolov8FaceModelPath, jstring jFace68LandmarksModePath) {
+         (JNIEnv* env, jobject,jstring jYolov8FaceModelPath, jstring jFace68LandmarksModePath,
+          jstring jFaceEmbddingModePath, jstring jFaceSwapModePath, jstring jFaceEnhanceModePath){
 
     const char* yolov8FaceModelPath = env->GetStringUTFChars(jYolov8FaceModelPath, JNI_FALSE);
     const char* face68LandmarksModePath = env->GetStringUTFChars(jFace68LandmarksModePath, JNI_FALSE);
+    const char* faceEmbddingModePath = env->GetStringUTFChars(jFaceEmbddingModePath, JNI_FALSE);
+    const char* faceSwapModePath = env->GetStringUTFChars(jFaceSwapModePath, JNI_FALSE);
+    const char* faceEnhanceModePath = env->GetStringUTFChars(jFaceEnhanceModePath, JNI_FALSE);
 
     const std::string& yolov8FaceLogId = "yolov8Face";
     const std::string& face68LandmarksLogId = "face68Landmarks";
+    const std::string& faceEmbddingLogId = "faceEmbdding";
+    const std::string& faceSwapLogId = "faceSwap";
+    const std::string& faceEnhanceLogId = "faceEnhance";
 
     const std::string& onnx_provider = OnnxProviders::CPU;
-    yolov8Face = new Yolov8Face(yolov8FaceModelPath, yolov8FaceLogId.c_str(), onnx_provider.c_str());
+    yolov8Face      = new Yolov8Face(yolov8FaceModelPath, yolov8FaceLogId.c_str(), onnx_provider.c_str());
     face68Landmarks = new Face68Landmarks(face68LandmarksModePath, face68LandmarksLogId.c_str(), onnx_provider.c_str());
+    yolov8Face      = new Yolov8Face(yolov8FaceModelPath, yolov8FaceLogId.c_str(), onnx_provider.c_str());
+    faceEmbdding    = new FaceEmbdding(faceEmbddingModePath, faceEmbddingLogId.c_str(), onnx_provider.c_str());
+    faceSwap        = new FaceSwap(faceSwapModePath, faceSwapLogId.c_str(), onnx_provider.c_str());
+    faceEnhance     = new FaceEnhance(faceEnhanceModePath, faceEnhanceLogId.c_str(), onnx_provider.c_str());
 
     env->ReleaseStringUTFChars(jYolov8FaceModelPath, yolov8FaceModelPath);
     env->ReleaseStringUTFChars(jFace68LandmarksModePath, face68LandmarksModePath);
@@ -383,6 +400,33 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_face
         env->DeleteLocalRef(exceptionClazz);
 
         return env->NewIntArray(0);
+    }
+
+    return matToIntArray(env,dst);
+}
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_faceSwap
+        (JNIEnv* env, jobject,jbyteArray arraySrc, jbyteArray arrayTarget) {
+    Mat src = byteArrayToMat(env,arraySrc);
+    Mat target = byteArrayToMat(env,arrayTarget);
+
+    vector<Bbox> boxes;
+    yolov8Face->detect(src, boxes);
+    int position = 0; // 一张图片里可能有多个人脸，这里只考虑1个人脸的情况
+
+    Bbox firstBox = boxes[position];
+
+    vector<Point2f> face_landmark_5of68;
+    vector<Point2f> face68landmarks = face68Landmarks->detect(src, boxes[position], face_landmark_5of68);
+    vector<float> source_face_embedding = faceEmbdding->detect(src, face_landmark_5of68);
+    yolov8Face -> detect(target, boxes);
+    Mat dst = target.clone();
+    for (auto box: boxes) {
+        vector<Point2f> target_landmark_5;
+        face68Landmarks->detect(dst, box, target_landmark_5);
+
+        Mat swap = faceSwap->process(dst, source_face_embedding, target_landmark_5);
+        dst = faceEnhance->process(swap, target_landmark_5);
     }
 
     return matToIntArray(env,dst);

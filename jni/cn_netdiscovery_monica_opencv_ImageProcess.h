@@ -50,10 +50,13 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sket
         (JNIEnv* env, jobject,jbyteArray array);
 
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceSwap
-        (JNIEnv* env, jobject,jstring jYolov8FaceModelPath, jstring jFace68LandmarksModePath);
+        (JNIEnv* env, jobject,jstring jYolov8FaceModelPath, jstring jFace68LandmarksModePath, jstring jFaceEmbddingModePath, jstring jFaceSwapModePath, jstring jFaceEnhanceModePath);
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_faceLandMark
         (JNIEnv* env, jobject,jbyteArray array);
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_faceSwap
+        (JNIEnv* env, jobject,jbyteArray arraySrc, jbyteArray arrayTarget);
 
 #ifdef __cplusplus
 }
