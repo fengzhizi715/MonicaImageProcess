@@ -199,6 +199,8 @@ Mat equalizeHistImage(Mat src) {
             equalizeHist(imageRGB[i], imageRGB[i]);
         }
         merge(imageRGB, 3, src);
+    } else if (channel == 1){
+        equalizeHist(src, src);
     }
 
     return src;
