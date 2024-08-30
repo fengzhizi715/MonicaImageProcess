@@ -57,9 +57,10 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
             src/faceSwap/Face68Landmarks.cpp include/faceSwap/Face68Landmarks.h
             src/faceSwap/FaceEmbdding.cpp include/faceSwap/FaceEmbdding.h
             src/faceSwap/FaceSwap.cpp include/faceSwap/FaceSwap.h
+            src/faceSwap/FaceEnhance.cpp include/faceSwap/FaceEnhance.h
             src/utils/Timer.cpp include/utils/Timer.h
             src/utils/Utils.cpp include/utils/Utils.h
-            include/Constants.h include/faceSwap/FaceEnhance.h src/faceSwap/FaceEnhance.cpp)
+            include/Constants.h)
 
     target_link_libraries(MonicaImageProcess ${OpenCV_LIBS})
     target_link_libraries(MonicaImageProcess ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
@@ -82,9 +83,10 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
             src/faceSwap/Face68Landmarks.cpp include/faceSwap/Face68Landmarks.h
             src/faceSwap/FaceEmbdding.cpp include/faceSwap/FaceEmbdding.h
             src/faceSwap/FaceSwap.cpp include/faceSwap/FaceSwap.h
+            src/faceSwap/FaceEnhance.cpp include/faceSwap/FaceEnhance.h
             src/utils/Timer.cpp include/utils/Timer.h
             src/utils/Utils.cpp include/utils/Utils.h
-            include/Constants.h include/faceSwap/FaceEnhance.h)
+            include/Constants.h)
 
     target_link_libraries(MonicaImageProcess_aarch64 ${OpenCV_LIBS})
     target_link_libraries(MonicaImageProcess_aarch64 ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
