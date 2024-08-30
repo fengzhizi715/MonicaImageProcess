@@ -15,6 +15,9 @@ JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getVer
 JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getOpenCVVersion
         (JNIEnv* env, jobject);
 
+JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getONNXRuntimeVersion
+        (JNIEnv* env, jobject);
+
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_shearing
         (JNIEnv* env, jobject,jbyteArray array, jfloat x, jfloat y);
 

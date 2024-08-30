@@ -12,6 +12,7 @@
 #include "../include/faceSwap/FaceEmbdding.h"
 #include "../include/faceSwap/FaceSwap.h"
 #include "../include/faceSwap/FaceEnhance.h"
+#include <onnxruntime_cxx_api.h>
 
 FaceDetect      *faceDetect = nullptr;
 SketchDrawing   *sketchDrawing = nullptr;
@@ -68,6 +69,13 @@ JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getOpe
 
     string version = CV_VERSION;
     return env->NewStringUTF(version.c_str());
+}
+
+JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getONNXRuntimeVersion
+        (JNIEnv* env, jobject) {
+
+    const char* version = OrtGetApiBase()->GetVersionString();
+    return env->NewStringUTF(version);
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_shearing
