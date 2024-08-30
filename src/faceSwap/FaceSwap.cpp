@@ -7,7 +7,7 @@ using namespace cv;
 using namespace std;
 using namespace Ort;
 
-FaceSwap::FaceSwap(string modelPath, const char* logId, const char* provider): OnnxRuntimeBase(modelPath, logId, provider)
+FaceSwap::FaceSwap(string modelPath, string modePath2, const char* logId, const char* provider): OnnxRuntimeBase(modelPath, logId, provider)
 {
     this->input_height = input_node_dims[0][2];
     this->input_width = input_node_dims[0][3];
@@ -15,7 +15,7 @@ FaceSwap::FaceSwap(string modelPath, const char* logId, const char* provider): O
     const int length = this->len_feature*this->len_feature;
     this->model_matrix = new float[length];
     cout<<"start read model_matrix.bin"<<endl;
-    FILE* fp = fopen("model_matrix.bin", "rb");
+    FILE* fp = fopen(modePath2.c_str(), "rb");
     fread(this->model_matrix, sizeof(float), length, fp);//导入数据
     fclose(fp);//关闭文件
     cout<<"read model_matrix.bin finish"<<endl;
