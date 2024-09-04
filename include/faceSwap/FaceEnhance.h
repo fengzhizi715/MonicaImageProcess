@@ -15,6 +15,7 @@ class FaceEnhance: public OnnxRuntimeBase
 {
 public:
     FaceEnhance(std::string modelPath, const char* logId, const char* provider);
+
     cv::Mat process(cv::Mat target_img, const std::vector<cv::Point2f> target_landmark_5);
 
 private:

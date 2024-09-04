@@ -14,8 +14,10 @@
 class FaceSwap: public OnnxRuntimeBase
 {
 public:
-    FaceSwap(std::string modelPath, std::string modelPath2, const char* logId, const char* provider);;
+    FaceSwap(std::string modelPath, std::string modelPath2, const char* logId, const char* provider);
+
     cv::Mat process(cv::Mat target_img, const std::vector<float> source_face_embedding, const std::vector<cv::Point2f> target_landmark_5);
+
     ~FaceSwap();  // 析构函数, 释放内存
 
 private:

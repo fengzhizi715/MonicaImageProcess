@@ -15,6 +15,7 @@ class FaceEmbdding: public OnnxRuntimeBase
 {
 public:
     FaceEmbdding(std::string modelPath, const char* logId, const char* provider);
+
     std::vector<float> detect(cv::Mat srcimg, const std::vector<cv::Point2f> face_landmark_5);
 
 private:
