@@ -394,7 +394,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_face
             rectangle(dst, cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax), Scalar(0, 255, 0), 4, 8, 0);
 
             vector<Point2f> face_landmark_5of68;
-            vector<Point2f> face68landmarks = face68Landmarks->detect(image, box, face_landmark_5of68);
+            face68Landmarks->detect(image, box, face_landmark_5of68);
             for (auto point : face_landmark_5of68)
             {
                 circle(dst, cv::Point(point.x, point.y), 4, Scalar(0, 0, 255), -1);
@@ -430,7 +430,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_face
     Bbox firstBox = boxes[position];
 
     vector<Point2f> face_landmark_5of68;
-    vector<Point2f> face68landmarks = face68Landmarks->detect(src, boxes[position], face_landmark_5of68);
+    face68Landmarks->detect(src, boxes[position], face_landmark_5of68);
     vector<float> source_face_embedding = faceEmbdding->detect(src, face_landmark_5of68);
     yolov8Face -> detect(target, boxes);
     Mat dst = target.clone();
