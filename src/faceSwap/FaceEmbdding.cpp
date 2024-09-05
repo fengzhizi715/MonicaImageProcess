@@ -19,10 +19,10 @@ FaceEmbdding::FaceEmbdding(string modelPath, const char* logId, const char* prov
     this->normed_template.emplace_back(Point2f(70.72989952, 92.20409968));
 }
 
-void FaceEmbdding::preprocess(Mat srcimg, const vector<Point2f> face_landmark_5)
+void FaceEmbdding::preprocess(Mat src, const vector<Point2f> face_landmark_5)
 {
     Mat crop_img;
-    warp_face_by_face_landmark_5(srcimg, crop_img, face_landmark_5, this->normed_template, Size(112, 112));
+    warp_face_by_face_landmark_5(src, crop_img, face_landmark_5, this->normed_template, Size(112, 112));
     /*vector<uchar> inliers(face_landmark_5.size(), 0);
     Mat affine_matrix = cv::estimateAffinePartial2D(face_landmark_5, this->normed_template, cv::noArray(), cv::RANSAC, 100.0);
     Mat crop_img;
@@ -44,9 +44,9 @@ void FaceEmbdding::preprocess(Mat srcimg, const vector<Point2f> face_landmark_5)
     memcpy(this->input_image.data() + image_area * 2, (float *)bgrChannels[0].data, single_chn_size);
 }
 
-vector<float> FaceEmbdding::detect(Mat srcimg, const vector<Point2f> face_landmark_5)
+vector<float> FaceEmbdding::detect(Mat src, const vector<Point2f> face_landmark_5)
 {
-    this->preprocess(srcimg, face_landmark_5);
+    this->preprocess(src, face_landmark_5);
 
     std::vector<int64_t> input_img_shape = {1, 3, this->input_height, this->input_width};
     Value input_tensor_ = Value::CreateTensor<float>(memory_info_handler, this->input_image.data(), this->input_image.size(), input_img_shape.data(), input_img_shape.size());

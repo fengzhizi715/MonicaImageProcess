@@ -16,12 +16,13 @@ class FaceSwap: public OnnxRuntimeBase
 public:
     FaceSwap(std::string modelPath, std::string modelPath2, const char* logId, const char* provider);
 
-    cv::Mat process(cv::Mat target_img, const std::vector<float> source_face_embedding, const std::vector<cv::Point2f> target_landmark_5);
+    cv::Mat process(cv::Mat target, const std::vector<float> source_face_embedding, const std::vector<cv::Point2f> target_landmark_5);
 
     ~FaceSwap();  // 析构函数, 释放内存
 
 private:
-    void preprocess(cv::Mat target_img, const std::vector<cv::Point2f> face_landmark_5, const std::vector<float> source_face_embedding, cv::Mat& affine_matrix, cv::Mat& box_mask);
+    void preprocess(cv::Mat target, const std::vector<cv::Point2f> face_landmark_5, const std::vector<float> source_face_embedding, cv::Mat& affine_matrix, cv::Mat& box_mask);
+
     std::vector<float> input_image;
     std::vector<float> input_embedding;
     int input_height;
@@ -33,7 +34,6 @@ private:
     const int FACE_MASK_PADDING[4] = {0, 0, 0, 0};
     const float INSWAPPER_128_MODEL_MEAN[3] = {0.0, 0.0, 0.0};
     const float INSWAPPER_128_MODEL_STD[3] = {1.0, 1.0, 1.0};
-
 };
 
 #endif //MONICAIMAGEPROCESS_FACESWAP_H

@@ -16,10 +16,10 @@ class FaceEmbdding: public OnnxRuntimeBase
 public:
     FaceEmbdding(std::string modelPath, const char* logId, const char* provider);
 
-    std::vector<float> detect(cv::Mat srcimg, const std::vector<cv::Point2f> face_landmark_5);
+    std::vector<float> detect(cv::Mat src, const std::vector<cv::Point2f> face_landmark_5);
 
 private:
-    void preprocess(cv::Mat img, const std::vector<cv::Point2f> face_landmark_5);
+    void preprocess(cv::Mat src, const std::vector<cv::Point2f> face_landmark_5);
     std::vector<float> input_image;
     int input_height;
     int input_width;

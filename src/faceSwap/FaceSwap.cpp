@@ -35,10 +35,10 @@ FaceSwap::~FaceSwap()
     this->normed_template.clear();
 }
 
-void FaceSwap::preprocess(Mat srcimg, const vector<Point2f> face_landmark_5, const vector<float> source_face_embedding, Mat& affine_matrix, Mat& box_mask)
+void FaceSwap::preprocess(Mat target, const vector<Point2f> face_landmark_5, const vector<float> source_face_embedding, Mat& affine_matrix, Mat& box_mask)
 {
     Mat crop_img;
-    affine_matrix = warp_face_by_face_landmark_5(srcimg, crop_img, face_landmark_5, this->normed_template, Size(128, 128));
+    affine_matrix = warp_face_by_face_landmark_5(target, crop_img, face_landmark_5, this->normed_template, Size(128, 128));
     const int crop_size[2] = {crop_img.cols, crop_img.rows};
     box_mask = create_static_box_mask(crop_size, this->FACE_MASK_BLUR, this->FACE_MASK_PADDING);
 
@@ -74,11 +74,11 @@ void FaceSwap::preprocess(Mat srcimg, const vector<Point2f> face_landmark_5, con
     }
 }
 
-Mat FaceSwap::process(Mat target_img, const vector<float> source_face_embedding, const vector<Point2f> target_landmark_5)
+Mat FaceSwap::process(Mat target, const vector<float> source_face_embedding, const vector<Point2f> target_landmark_5)
 {
     Mat affine_matrix;
     Mat box_mask;
-    this->preprocess(target_img, target_landmark_5, source_face_embedding, affine_matrix, box_mask);
+    this->preprocess(target, target_landmark_5, source_face_embedding, affine_matrix, box_mask);
 
     std::vector<Ort::Value> inputs_tensor;
     std::vector<int64_t> input_img_shape = {1, 3, this->input_height, this->input_width};
@@ -116,6 +116,6 @@ Mat FaceSwap::process(Mat target_img, const vector<float> source_face_embedding,
 
     box_mask.setTo(0, box_mask < 0);
     box_mask.setTo(1, box_mask > 1);
-    Mat dstimg = paste_back(target_img, result, box_mask, affine_matrix);
-    return dstimg;
+    Mat dst = paste_back(target, result, box_mask, affine_matrix);
+    return dst;
 }
