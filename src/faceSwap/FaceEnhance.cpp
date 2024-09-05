@@ -20,10 +20,10 @@ FaceEnhance::FaceEnhance(string modelPath, const char* logId, const char* provid
     this->normed_template.emplace_back(Point2f(313.0890496,  371.1511808));
 }
 
-void FaceEnhance::preprocess(Mat srcimg, const vector<Point2f> face_landmark_5, Mat& affine_matrix, Mat& box_mask)
+void FaceEnhance::preprocess(Mat targetImage, const vector<Point2f> face_landmark_5, Mat& affine_matrix, Mat& box_mask)
 {
     Mat crop_img;
-    affine_matrix = warp_face_by_face_landmark_5(srcimg, crop_img, face_landmark_5, this->normed_template, Size(512, 512));
+    affine_matrix = warp_face_by_face_landmark_5(targetImage, crop_img, face_landmark_5, this->normed_template, Size(512, 512));
     const int crop_size[2] = {crop_img.cols, crop_img.rows};
     box_mask = create_static_box_mask(crop_size, this->FACE_MASK_BLUR, this->FACE_MASK_PADDING);
 
@@ -42,11 +42,11 @@ void FaceEnhance::preprocess(Mat srcimg, const vector<Point2f> face_landmark_5, 
     memcpy(this->input_image.data() + image_area * 2, (float *)bgrChannels[0].data, single_chn_size);
 }
 
-Mat FaceEnhance::process(Mat target_img, const vector<Point2f> target_landmark_5)
+Mat FaceEnhance::process(Mat targetImage, const vector<Point2f> target_landmark_5)
 {
     Mat affine_matrix;
     Mat box_mask;
-    this->preprocess(target_img, target_landmark_5, affine_matrix, box_mask);
+    this->preprocess(targetImage, target_landmark_5, affine_matrix, box_mask);
 
     std::vector<int64_t> input_img_shape = {1, 3, this->input_height, this->input_width};
     Value input_tensor_ = Value::CreateTensor<float>(memory_info_handler, this->input_image.data(), this->input_image.size(), input_img_shape.data(), input_img_shape.size());
@@ -91,7 +91,7 @@ Mat FaceEnhance::process(Mat target_img, const vector<Point2f> target_landmark_5
 
     box_mask.setTo(0, box_mask < 0);
     box_mask.setTo(1, box_mask > 1);
-    Mat paste_frame = paste_back(target_img, result, box_mask, affine_matrix);
-    Mat dstimg = blend_frame(target_img, paste_frame);
-    return dstimg;
+    Mat paste_frame = paste_back(targetImage, result, box_mask, affine_matrix);
+    Mat dst = blend_frame(targetImage, paste_frame);
+    return dst;
 }
