@@ -419,7 +419,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_face
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_faceSwap
-        (JNIEnv* env, jobject,jbyteArray arraySrc, jbyteArray arrayTarget) {
+        (JNIEnv* env, jobject,jbyteArray arraySrc, jbyteArray arrayTarget, jboolean status) {
     Mat src = byteArrayToMat(env,arraySrc);
     Mat target = byteArrayToMat(env,arrayTarget);
 
@@ -434,12 +434,23 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_face
     vector<float> source_face_embedding = faceEmbdding->detect(src, face_landmark_5of68);
     yolov8Face -> detect(target, boxes);
     Mat dst = target.clone();
-    for (auto box: boxes) {
-        vector<Point2f> target_landmark_5;
-        face68Landmarks->detect(dst, box, target_landmark_5);
 
-        Mat swap = faceSwap->process(dst, source_face_embedding, target_landmark_5);
-        dst = faceEnhance->process(swap, target_landmark_5);
+    if (!boxes.empty()) {
+        if (status) {
+            for (auto box: boxes) {
+                vector<Point2f> target_landmark_5;
+                face68Landmarks->detect(dst, box, target_landmark_5);
+
+                Mat swap = faceSwap->process(dst, source_face_embedding, target_landmark_5);
+                dst = faceEnhance->process(swap, target_landmark_5);
+            }
+        } else {
+            Bbox  box = boxes[0];
+            vector<Point2f> target_landmark_5;
+            face68Landmarks->detect(dst, box, target_landmark_5);
+            Mat swap = faceSwap->process(dst, source_face_embedding, target_landmark_5);
+            dst = faceEnhance->process(swap, target_landmark_5);
+        }
     }
 
     return matToIntArray(env,dst);

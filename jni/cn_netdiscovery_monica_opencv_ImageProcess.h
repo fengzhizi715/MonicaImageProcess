@@ -60,7 +60,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_face
         (JNIEnv* env, jobject,jbyteArray array);
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_faceSwap
-        (JNIEnv* env, jobject,jbyteArray arraySrc, jbyteArray arrayTarget);
+        (JNIEnv* env, jobject,jbyteArray arraySrc, jbyteArray arrayTarget, jboolean status);
 
 #ifdef __cplusplus
 }
