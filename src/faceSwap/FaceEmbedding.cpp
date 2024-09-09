@@ -1,13 +1,13 @@
 //
 // Created by Tony on 2024/8/30.
 //
-#include "../../include/faceSwap/FaceEmbdding.h"
+#include "../../include/faceSwap/FaceEmbedding.h"
 
 using namespace cv;
 using namespace std;
 using namespace Ort;
 
-FaceEmbdding::FaceEmbdding(string modelPath, const char* logId, const char* provider): OnnxRuntimeBase(modelPath, logId, provider)
+FaceEmbdding::FaceEmbedding(string modelPath, const char* logId, const char* provider): OnnxRuntimeBase(modelPath, logId, provider)
 {
     this->input_height = input_node_dims[0][2];
     this->input_width = input_node_dims[0][3];
@@ -19,7 +19,7 @@ FaceEmbdding::FaceEmbdding(string modelPath, const char* logId, const char* prov
     this->normed_template.emplace_back(Point2f(70.72989952, 92.20409968));
 }
 
-void FaceEmbdding::preprocess(Mat src, const vector<Point2f> face_landmark_5)
+void FaceEmbedding::preprocess(Mat src, const vector<Point2f> face_landmark_5)
 {
     Mat crop_img;
     warp_face_by_face_landmark_5(src, crop_img, face_landmark_5, this->normed_template, Size(112, 112));
@@ -44,7 +44,7 @@ void FaceEmbdding::preprocess(Mat src, const vector<Point2f> face_landmark_5)
     memcpy(this->input_image.data() + image_area * 2, (float *)bgrChannels[0].data, single_chn_size);
 }
 
-vector<float> FaceEmbdding::detect(Mat src, const vector<Point2f> face_landmark_5)
+vector<float> FaceEmbedding::detect(Mat src, const vector<Point2f> face_landmark_5)
 {
     this->preprocess(src, face_landmark_5);
 

@@ -11,10 +11,10 @@
 #include "../common/OnnxRuntimeBase.h"
 #include "../utils/Utils.h"
 
-class FaceEmbdding: public OnnxRuntimeBase
+class FaceEmbedding: public OnnxRuntimeBase
 {
 public:
-    FaceEmbdding(std::string modelPath, const char* logId, const char* provider);
+    FaceEmbedding(std::string modelPath, const char* logId, const char* provider);
 
     std::vector<float> detect(cv::Mat src, const std::vector<cv::Point2f> face_landmark_5);
 

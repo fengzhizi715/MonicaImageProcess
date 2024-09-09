@@ -9,7 +9,7 @@
 #include "../include/sketchDrawing/SketchDrawing.h"
 #include "../include/faceSwap/Yolov8Face.h"
 #include "../include/faceSwap/Face68Landmarks.h"
-#include "../include/faceSwap/FaceEmbdding.h"
+#include "../include/faceSwap/FaceEmbedding.h"
 #include "../include/faceSwap/FaceSwap.h"
 #include "../include/faceSwap/FaceEnhance.h"
 #include <onnxruntime_cxx_api.h>

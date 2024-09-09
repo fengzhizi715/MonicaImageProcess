@@ -55,7 +55,7 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
             src/sketchDrawing/SketchDrawing.cpp include/sketchDrawing/SketchDrawing.h
             src/faceSwap/Yolov8Face.cpp include/faceSwap/Yolov8Face.h
             src/faceSwap/Face68Landmarks.cpp include/faceSwap/Face68Landmarks.h
-            src/faceSwap/FaceEmbdding.cpp include/faceSwap/FaceEmbdding.h
+            src/faceSwap/FaceEmbedding.cpp include/faceSwap/FaceEmbedding.h
             src/faceSwap/FaceSwap.cpp include/faceSwap/FaceSwap.h
             src/faceSwap/FaceEnhance.cpp include/faceSwap/FaceEnhance.h
             src/utils/Timer.cpp include/utils/Timer.h
@@ -81,7 +81,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
             src/sketchDrawing/SketchDrawing.cpp include/sketchDrawing/SketchDrawing.h
             src/faceSwap/Yolov8Face.cpp include/faceSwap/Yolov8Face.h
             src/faceSwap/Face68Landmarks.cpp include/faceSwap/Face68Landmarks.h
-            src/faceSwap/FaceEmbdding.cpp include/faceSwap/FaceEmbdding.h
+            src/faceSwap/FaceEmbedding.cpp include/faceSwap/FaceEmbedding.h
             src/faceSwap/FaceSwap.cpp include/faceSwap/FaceSwap.h
             src/faceSwap/FaceEnhance.cpp include/faceSwap/FaceEnhance.h
             src/utils/Timer.cpp include/utils/Timer.h
