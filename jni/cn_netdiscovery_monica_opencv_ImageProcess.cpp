@@ -349,18 +349,18 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sket
 
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceSwap
          (JNIEnv* env, jobject,jstring jYolov8FaceModelPath, jstring jFace68LandmarksModePath,
-          jstring jFaceEmbddingModePath, jstring jFaceSwapModePath, jstring jFaceSwapModePath2, jstring jFaceEnhanceModePath){
+          jstring jFaceEmbeddingModePath, jstring jFaceSwapModePath, jstring jFaceSwapModePath2, jstring jFaceEnhanceModePath){
 
     const char* yolov8FaceModelPath = env->GetStringUTFChars(jYolov8FaceModelPath, JNI_FALSE);
     const char* face68LandmarksModePath = env->GetStringUTFChars(jFace68LandmarksModePath, JNI_FALSE);
-    const char* faceEmbddingModePath = env->GetStringUTFChars(jFaceEmbddingModePath, JNI_FALSE);
+    const char* faceEmbeddingModePath = env->GetStringUTFChars(jFaceEmbeddingModePath, JNI_FALSE);
     const char* faceSwapModePath = env->GetStringUTFChars(jFaceSwapModePath, JNI_FALSE);
     const char* faceSwapModePath2 = env->GetStringUTFChars(jFaceSwapModePath2, JNI_FALSE);
     const char* faceEnhanceModePath = env->GetStringUTFChars(jFaceEnhanceModePath, JNI_FALSE);
 
     const std::string& yolov8FaceLogId = "yolov8Face";
     const std::string& face68LandmarksLogId = "face68Landmarks";
-    const std::string& faceEmbddingLogId = "faceEmbdding";
+    const std::string& faceEmbeddingLogId = "faceEmbedding";
     const std::string& faceSwapLogId = "faceSwap";
     const std::string& faceEnhanceLogId = "faceEnhance";
 
@@ -368,13 +368,13 @@ JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceS
     yolov8Face      = new Yolov8Face(yolov8FaceModelPath, yolov8FaceLogId.c_str(), onnx_provider.c_str());
     face68Landmarks = new Face68Landmarks(face68LandmarksModePath, face68LandmarksLogId.c_str(), onnx_provider.c_str());
     yolov8Face      = new Yolov8Face(yolov8FaceModelPath, yolov8FaceLogId.c_str(), onnx_provider.c_str());
-    faceEmbedding    = new FaceEmbedding(faceEmbddingModePath, faceEmbddingLogId.c_str(), onnx_provider.c_str());
+    faceEmbedding    = new FaceEmbedding(faceEmbeddingModePath, faceEmbeddingLogId.c_str(), onnx_provider.c_str());
     faceSwap        = new FaceSwap(faceSwapModePath, faceSwapModePath2, faceSwapLogId.c_str(), onnx_provider.c_str());
     faceEnhance     = new FaceEnhance(faceEnhanceModePath, faceEnhanceLogId.c_str(), onnx_provider.c_str());
 
     env->ReleaseStringUTFChars(jYolov8FaceModelPath, yolov8FaceModelPath);
     env->ReleaseStringUTFChars(jFace68LandmarksModePath, face68LandmarksModePath);
-    env->ReleaseStringUTFChars(jFaceEmbddingModePath, faceEmbddingModePath);
+    env->ReleaseStringUTFChars(jFaceEmbeddingModePath, faceEmbeddingModePath);
     env->ReleaseStringUTFChars(jFaceSwapModePath, faceSwapModePath);
     env->ReleaseStringUTFChars(jFaceSwapModePath2, faceSwapModePath2);
     env->ReleaseStringUTFChars(jFaceEnhanceModePath, faceEnhanceModePath);
