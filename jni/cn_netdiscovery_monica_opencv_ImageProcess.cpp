@@ -18,7 +18,7 @@ FaceDetect      *faceDetect = nullptr;
 SketchDrawing   *sketchDrawing = nullptr;
 Yolov8Face      *yolov8Face = nullptr;
 Face68Landmarks *face68Landmarks = nullptr;
-FaceEmbdding    *faceEmbdding = nullptr;
+FaceEmbedding    *faceEmbedding = nullptr;
 FaceSwap        *faceSwap = nullptr;
 FaceEnhance     *faceEnhance = nullptr;
 
@@ -368,7 +368,7 @@ JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceS
     yolov8Face      = new Yolov8Face(yolov8FaceModelPath, yolov8FaceLogId.c_str(), onnx_provider.c_str());
     face68Landmarks = new Face68Landmarks(face68LandmarksModePath, face68LandmarksLogId.c_str(), onnx_provider.c_str());
     yolov8Face      = new Yolov8Face(yolov8FaceModelPath, yolov8FaceLogId.c_str(), onnx_provider.c_str());
-    faceEmbdding    = new FaceEmbdding(faceEmbddingModePath, faceEmbddingLogId.c_str(), onnx_provider.c_str());
+    faceEmbedding    = new FaceEmbedding(faceEmbddingModePath, faceEmbddingLogId.c_str(), onnx_provider.c_str());
     faceSwap        = new FaceSwap(faceSwapModePath, faceSwapModePath2, faceSwapLogId.c_str(), onnx_provider.c_str());
     faceEnhance     = new FaceEnhance(faceEnhanceModePath, faceEnhanceLogId.c_str(), onnx_provider.c_str());
 
@@ -431,7 +431,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_face
 
     vector<Point2f> face_landmark_5of68;
     face68Landmarks->detect(src, boxes[position], face_landmark_5of68);
-    vector<float> source_face_embedding = faceEmbdding->detect(src, face_landmark_5of68);
+    vector<float> source_face_embedding = faceEmbedding->detect(src, face_landmark_5of68);
     yolov8Face -> detect(target, boxes);
     Mat dst = target.clone();
 

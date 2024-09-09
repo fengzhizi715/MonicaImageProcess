@@ -7,7 +7,7 @@ using namespace cv;
 using namespace std;
 using namespace Ort;
 
-FaceEmbdding::FaceEmbedding(string modelPath, const char* logId, const char* provider): OnnxRuntimeBase(modelPath, logId, provider)
+FaceEmbedding::FaceEmbedding(string modelPath, const char* logId, const char* provider): OnnxRuntimeBase(modelPath, logId, provider)
 {
     this->input_height = input_node_dims[0][2];
     this->input_width = input_node_dims[0][3];

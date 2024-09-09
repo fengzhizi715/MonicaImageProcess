@@ -2,8 +2,8 @@
 // Created by Tony on 2024/8/30.
 //
 
-#ifndef MONICAIMAGEPROCESS_FACEEMBDDING_H
-#define MONICAIMAGEPROCESS_FACEEMBDDING_H
+#ifndef MONICAIMAGEPROCESS_FACEEMBEDDING_H
+#define MONICAIMAGEPROCESS_FACEEMBEDDING_H
 
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
@@ -26,4 +26,4 @@ private:
     std::vector<cv::Point2f> normed_template;
 };
 
-#endif //MONICAIMAGEPROCESS_FACEEMBDDING_H
+#endif //MONICAIMAGEPROCESS_FACEEMBEDDING_H
