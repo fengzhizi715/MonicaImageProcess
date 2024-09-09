@@ -13,3 +13,8 @@
 | src/common/OnnxRuntimeBase.cpp                                                                           | 封装 OnnxRuntime 的基类              |
 | src/faceDetect/FaceDetect.cpp                                                                            | 使用 OpenCV 的 dnn 模块加载模型实现的人脸识别检测 |
 | src/sketchDrawing/InformativeDrawings.cpp                                                                | 使用 OnnxRuntime 加载模型实现生成素描画      |
+| src/faceSwap/Face68Landmarks.cpp                                                                | 使用 OnnxRuntime 加载模型实现查找人脸的关键点   |
+| src/faceSwap/FaceEmbdding.cpp                                                                | 使用 OnnxRuntime 加载模型人脸图像映射       |
+| src/faceSwap/FaceEnhance.cpp                                                                | 使用 OnnxRuntime 加载模型实现人脸增强       |
+| src/faceSwap/FaceSwap.cpp                                                                | 使用 OnnxRuntime 加载模型实现人脸替换       |
+| src/faceSwap/Yolov8Face.cpp                                                                | 使用 OnnxRuntime 加载模型实现人脸检测       |
