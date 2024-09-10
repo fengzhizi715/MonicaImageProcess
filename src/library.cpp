@@ -210,28 +210,37 @@ Mat equalizeHistImage(Mat src) {
  * 限制对比度自适应直方图均衡
  */
 void clahe(Mat& src, Mat& dst, double clipLimit, int size) {
-    // 将图像转换为 LAB 色彩空间
-    cv::Mat lab_image;
-    cv::cvtColor(src, lab_image, cv::COLOR_BGR2Lab);
+    int channel = src.channels();
 
-    // 分离 LAB 图像的通道
-    std::vector<cv::Mat> lab_planes(3);
-    cv::split(lab_image, lab_planes);
+    if (channel == 3) {
+        // 将图像转换为 LAB 色彩空间
+        cv::Mat lab_image;
+        cv::cvtColor(src, lab_image, cv::COLOR_BGR2Lab);
 
-    // 创建 CLAHE 对象并设置参数
-    cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE();
-    clahe->setClipLimit(clipLimit);                 // 设置对比度限制
-    clahe->setTilesGridSize(cv::Size(size, size));  // 设置网格大小
+        // 分离 LAB 图像的通道
+        std::vector<cv::Mat> lab_planes(3);
+        cv::split(lab_image, lab_planes);
 
-    // 对 L 通道应用 CLAHE
-    clahe->apply(lab_planes[0], lab_planes[0]);
+        // 创建 CLAHE 对象并设置参数
+        cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE();
+        clahe->setClipLimit(clipLimit);                 // 设置对比度限制
+        clahe->setTilesGridSize(cv::Size(size, size));  // 设置网格大小
 
-    // 合并处理后的 LAB 通道
-    cv::Mat merged_lab_image;
-    cv::merge(lab_planes, merged_lab_image);
+        // 对 L 通道应用 CLAHE
+        clahe->apply(lab_planes[0], lab_planes[0]);
 
-    // 将 LAB 图像转换回 BGR 色彩空间
-    cv::cvtColor(merged_lab_image, dst, cv::COLOR_Lab2BGR);
+        // 合并处理后的 LAB 通道
+        cv::Mat merged_lab_image;
+        cv::merge(lab_planes, merged_lab_image);
+
+        // 将 LAB 图像转换回 BGR 色彩空间
+        cv::cvtColor(merged_lab_image, dst, cv::COLOR_Lab2BGR);
+    } else {
+        cv::Ptr<CLAHE> clahe = cv::createCLAHE();
+        clahe->setClipLimit(clipLimit);                 // 设置对比度限制
+        clahe->setTilesGridSize(cv::Size(size, size));  // 设置网格大小
+        clahe->apply(src, dst);
+    }
 }
 
 void gammaCorrection(Mat& src, Mat& dst, float K) {
