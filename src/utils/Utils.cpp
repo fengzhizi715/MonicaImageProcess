@@ -135,7 +135,7 @@ Mat paste_back(Mat temp_vision_frame, Mat crop_vision_frame, Mat crop_mask, Mat 
 Mat blend_frame(Mat temp_vision_frame, Mat paste_vision_frame, const int FACE_ENHANCER_BLEND)
 {
     const float face_enhancer_blend = 1 - ((float)FACE_ENHANCER_BLEND / 100.f);
-    Mat dstimg;
-    cv::addWeighted(temp_vision_frame, face_enhancer_blend, paste_vision_frame, 1 - face_enhancer_blend, 0, dstimg);
-    return dstimg;
+    Mat dst;
+    cv::addWeighted(temp_vision_frame, face_enhancer_blend, paste_vision_frame, 1 - face_enhancer_blend, 0, dst);
+    return dst;
 }
