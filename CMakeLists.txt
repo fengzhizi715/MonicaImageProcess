@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
-project(MonicaImageProcess)
+project(MonicaImageProcess LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -47,7 +47,7 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
     # 查找ONNX Runtime库文件
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
-    add_library(MonicaImageProcess SHARED
+    add_library(${PROJECT_NAME} SHARED
             src/library.cpp include/library.h
             src/common/OnnxRuntimeBase.cpp include/common/OnnxRuntimeBase.h
             jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp jni/cn_netdiscovery_monica_opencv_ImageProcess.h
@@ -62,8 +62,8 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
             src/utils/Utils.cpp include/utils/Utils.h
             include/Constants.h)
 
-    target_link_libraries(MonicaImageProcess ${OpenCV_LIBS})
-    target_link_libraries(MonicaImageProcess ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
+    target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+    target_link_libraries(${PROJECT_NAME} ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
 
 elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "arm64")
     # 指定ONNX Runtime的路径
