@@ -8,6 +8,10 @@
 #include <iostream>
 #include <vector>
 #include "opencv2/opencv.hpp"
+#include <jni.h>
+
+using namespace std;
+using namespace cv;
 
 typedef struct
 {
@@ -16,6 +20,10 @@ typedef struct
     float xmax;
     float ymax;
 } Bbox;
+
+cv::Mat byteArrayToMat(JNIEnv* env, jbyteArray array);
+
+jintArray matToIntArray(JNIEnv *env, const cv::Mat &image);
 
 std::wstring get_win_path(const std::string& path);
 

@@ -12,6 +12,7 @@
 #include "../include/faceSwap/FaceEmbedding.h"
 #include "../include/faceSwap/FaceSwap.h"
 #include "../include/faceSwap/FaceEnhance.h"
+#include "../include/utils/Utils.h"
 #include <onnxruntime_cxx_api.h>
 
 FaceDetect      *faceDetect = nullptr;
@@ -22,40 +23,6 @@ FaceEmbedding    *faceEmbedding = nullptr;
 FaceSwap        *faceSwap = nullptr;
 FaceEnhance     *faceEnhance = nullptr;
 
-Mat byteArrayToMat(JNIEnv* env, jbyteArray array) {
-    //复制java数组到C++
-    jsize len = env->GetArrayLength(array);
-    signed char* pData = new  signed char[len];
-    env->GetByteArrayRegion(array, 0, len, pData);
-
-    // 解码内存数据，变成cv::Mat数据
-    cv::Mat image;
-    vector<uchar> datas;
-    for (int i = 0; i < len; ++i) {
-        datas.push_back(pData[i]);
-    }
-    image = cv::imdecode(datas, IMREAD_COLOR);
-
-    return image;
-}
-
-jintArray matToIntArray(JNIEnv *env, const cv::Mat &image) {
-    int size = image.total();
-    jintArray resultImage = env->NewIntArray(size);
-    jint *_data = new jint[size];
-    for (int i = 0; i < size; i++) {
-        char r = image.data[3 * i + 2];
-        char g = image.data[3 * i + 1];
-        char b = image.data[3 * i + 0];
-        char a = (char)255;
-        _data[i] = (((jint) a << 24) & 0xFF000000) + (((jint) r << 16) & 0x00FF0000) +
-                   (((jint) g << 8) & 0x0000FF00) + ((jint) b & 0x000000FF);
-    }
-    env->SetIntArrayRegion(resultImage, 0, size, _data);
-    delete[]_data;
-
-    return resultImage;
-}
 
 JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getVersion
         (JNIEnv* env, jobject) {
