@@ -331,7 +331,7 @@ JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceS
     yolov8Face      = new Yolov8Face(yolov8FaceModelPath, yolov8FaceLogId.c_str(), onnx_provider.c_str());
     face68Landmarks = new Face68Landmarks(face68LandmarksModePath, face68LandmarksLogId.c_str(), onnx_provider.c_str());
     yolov8Face      = new Yolov8Face(yolov8FaceModelPath, yolov8FaceLogId.c_str(), onnx_provider.c_str());
-    faceEmbedding    = new FaceEmbedding(faceEmbeddingModePath, faceEmbeddingLogId.c_str(), onnx_provider.c_str());
+    faceEmbedding   = new FaceEmbedding(faceEmbeddingModePath, faceEmbeddingLogId.c_str(), onnx_provider.c_str());
     faceSwap        = new FaceSwap(faceSwapModePath, faceSwapModePath2, faceSwapLogId.c_str(), onnx_provider.c_str());
     faceEnhance     = new FaceEnhance(faceEnhanceModePath, faceEnhanceLogId.c_str(), onnx_provider.c_str());
 
