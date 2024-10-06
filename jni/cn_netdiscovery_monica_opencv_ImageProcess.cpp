@@ -307,10 +307,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sket
        return env->NewIntArray(0);
     }
 
-    if (dst.channels() == 1) {
-        cvtColor(dst,dst,COLOR_GRAY2BGR);
-    }
-
     return matToIntArray(env,dst);
 }
 
