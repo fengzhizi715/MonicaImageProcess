@@ -63,7 +63,6 @@ jintArray binaryMatToIntArray(JNIEnv *env, const cv::Mat binary) {
     int size = width * height;
 
     jintArray resultImage = env->NewIntArray(size);
-
     jint* intArray = new jint[size];
     for (int i = 0; i < size; i++) {
         intArray[i] = (binary.data[i] == 255) ? 0xFFFFFF : 0x000000;  // 0xFFFFFF 表示白色，0x000000 表示黑色
