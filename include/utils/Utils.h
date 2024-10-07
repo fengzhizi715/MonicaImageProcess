@@ -25,6 +25,8 @@ cv::Mat byteArrayToMat(JNIEnv* env, jbyteArray array);
 
 jintArray matToIntArray(JNIEnv *env, const cv::Mat &image);
 
+jintArray binaryMatToIntArray(JNIEnv *env, const cv::Mat binary);
+
 std::wstring get_win_path(const std::string& path);
 
 float GetIoU(const Bbox box1, const Bbox box2);

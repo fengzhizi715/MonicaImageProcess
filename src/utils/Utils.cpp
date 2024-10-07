@@ -56,6 +56,24 @@ jintArray matToIntArray(JNIEnv *env, const cv::Mat &image) {
     }
 }
 
+jintArray binaryMatToIntArray(JNIEnv *env, const cv::Mat binary) {
+
+    int width = binary.cols;
+    int height = binary.rows;
+    int size = width * height;
+
+    jintArray resultImage = env->NewIntArray(size);
+
+    jint* intArray = new jint[size];
+    for (int i = 0; i < size; i++) {
+        intArray[i] = (binary.data[i] == 255) ? 0xFFFFFF : 0x000000;  // 0xFFFFFF 表示白色，0x000000 表示黑色
+    }
+    env->SetIntArrayRegion(resultImage, 0, size, intArray);
+    delete[] intArray;
+
+    return resultImage;
+}
+
 std::wstring get_win_path(const std::string& modelPath) {
     return std::wstring(modelPath.begin(), modelPath.end());
 }

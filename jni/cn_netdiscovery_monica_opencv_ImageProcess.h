@@ -42,8 +42,13 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_ace
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cvtGray
         (JNIEnv* env, jobject,jbyteArray array);
 
-// 调用深度学习模型相关
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_binary
+        (JNIEnv* env, jobject,jbyteArray array);
 
+
+//-------------------------------------------------------------------
+// 调用深度学习模型相关
+//-------------------------------------------------------------------
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceDetect
         (JNIEnv* env, jobject,jstring jFaceProto, jstring jFaceModel,
          jstring jAgeProto, jstring jAgeModel, jstring jGenderProto, jstring jGenderModel);
