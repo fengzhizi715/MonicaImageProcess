@@ -236,17 +236,20 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cvtG
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_binary
-        (JNIEnv* env, jobject,jbyteArray array) {
+        (JNIEnv* env, jobject,jbyteArray array,jint typeSelect,jint thresholdSelect) {
+
      Mat image = byteArrayToMat(env,array);
+
+     int type = typeSelect|thresholdSelect;
 
      Mat thresh;
      int channels = image.channels();
      if (channels == 3) {
          Mat gray;
          cvtColor(image,gray,COLOR_BGR2GRAY);
-         threshold(gray, thresh,0,255, THRESH_BINARY|THRESH_OTSU);
+         threshold(gray, thresh,0,255, type);
      } else if (channels == 1) {
-         threshold(image, thresh,0,255, THRESH_BINARY|THRESH_OTSU);
+         threshold(image, thresh,0,255, type);
      }
 
      return binaryMatToIntArray(env,thresh);

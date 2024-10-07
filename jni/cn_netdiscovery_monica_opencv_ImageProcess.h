@@ -43,7 +43,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cvtG
         (JNIEnv* env, jobject,jbyteArray array);
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_binary
-        (JNIEnv* env, jobject,jbyteArray array);
+        (JNIEnv* env, jobject,jbyteArray array,jint typeSelect,jint thresholdSelect);
 
 
 //-------------------------------------------------------------------
