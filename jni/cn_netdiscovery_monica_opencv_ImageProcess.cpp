@@ -19,7 +19,7 @@ FaceDetect      *faceDetect = nullptr;
 SketchDrawing   *sketchDrawing = nullptr;
 Yolov8Face      *yolov8Face = nullptr;
 Face68Landmarks *face68Landmarks = nullptr;
-FaceEmbedding    *faceEmbedding = nullptr;
+FaceEmbedding   *faceEmbedding = nullptr;
 FaceSwap        *faceSwap = nullptr;
 FaceEnhance     *faceEnhance = nullptr;
 
@@ -224,6 +224,15 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_ace
     }
 
     return matToIntArray(env,dst);
+}
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cvtGray
+        (JNIEnv* env, jobject,jbyteArray array) {
+    Mat image = byteArrayToMat(env,array);
+    Mat gray;
+    cvtColor(image,gray,COLOR_BGR2GRAY);
+
+    return matToIntArray(env,gray);
 }
 
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceDetect
