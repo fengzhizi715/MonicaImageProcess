@@ -42,8 +42,12 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_ace
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cvtGray
         (JNIEnv* env, jobject,jbyteArray array);
 
-JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_binary
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_threshold
         (JNIEnv* env, jobject,jbyteArray array,jint typeSelect,jint thresholdSelect);
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_adaptiveThreshold
+        (JNIEnv* env, jobject,jbyteArray array,jint adaptiveMethodSelect, jint typeSelect,jint blockSize, jint c);
+
 
 
 //-------------------------------------------------------------------

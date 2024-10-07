@@ -235,9 +235,8 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cvtG
     return matToIntArray(env,gray);
 }
 
-JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_binary
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_threshold
         (JNIEnv* env, jobject,jbyteArray array,jint typeSelect,jint thresholdSelect) {
-
      Mat image = byteArrayToMat(env,array);
 
      int type = typeSelect|thresholdSelect;
@@ -253,6 +252,25 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_bina
      }
 
      return binaryMatToIntArray(env,thresh);
+}
+
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_adaptiveThreshold
+        (JNIEnv* env, jobject,jbyteArray array,jint adaptiveMethodSelect, jint typeSelect,jint blockSize, jint c) {
+     Mat image = byteArrayToMat(env,array);
+
+     Mat dst;
+     int maxVal = 255;
+     int channels = image.channels();
+     if (channels == 3) {
+         Mat gray;
+         cvtColor(image,gray,COLOR_BGR2GRAY);
+         adaptiveThreshold(gray, dst, maxVal, adaptiveMethodSelect,typeSelect, blockSize,c);
+     } else if (channels == 1) {
+         adaptiveThreshold(image, dst, maxVal, adaptiveMethodSelect,typeSelect, blockSize,c);
+     }
+
+     return binaryMatToIntArray(env,dst);
 }
 
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceDetect
