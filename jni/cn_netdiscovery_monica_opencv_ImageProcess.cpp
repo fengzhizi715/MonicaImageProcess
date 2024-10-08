@@ -236,10 +236,10 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cvtG
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_threshold
-        (JNIEnv* env, jobject,jbyteArray array,jint typeSelect,jint thresholdSelect) {
+        (JNIEnv* env, jobject,jbyteArray array,jint thresholdType1,jint thresholdType2) {
      Mat image = byteArrayToMat(env,array);
 
-     int type = typeSelect|thresholdSelect;
+     int type = thresholdType1|thresholdType2;
 
      Mat thresh;
      int channels = image.channels();
@@ -256,7 +256,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_thre
 
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_adaptiveThreshold
-        (JNIEnv* env, jobject,jbyteArray array,jint adaptiveMethodSelect, jint typeSelect,jint blockSize, jint c) {
+        (JNIEnv* env, jobject,jbyteArray array,jint adaptiveMethod, jint thresholdType,jint blockSize, jint c) {
      Mat image = byteArrayToMat(env,array);
 
      Mat dst;
@@ -265,9 +265,9 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_adap
      if (channels == 3) {
          Mat gray;
          cvtColor(image,gray,COLOR_BGR2GRAY);
-         adaptiveThreshold(gray, dst, maxVal, adaptiveMethodSelect,typeSelect, blockSize,c);
+         adaptiveThreshold(gray, dst, maxVal, adaptiveMethod,thresholdType, blockSize,c);
      } else if (channels == 1) {
-         adaptiveThreshold(image, dst, maxVal, adaptiveMethodSelect,typeSelect, blockSize,c);
+         adaptiveThreshold(image, dst, maxVal, adaptiveMethod,thresholdType, blockSize,c);
      }
 
      return binaryMatToIntArray(env,dst);
@@ -279,8 +279,8 @@ JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceD
 
     const char* faceProto = env->GetStringUTFChars(jFaceProto, JNI_FALSE);
     const char* faceModel = env->GetStringUTFChars(jFaceModel, JNI_FALSE);
-    const char* ageProto = env->GetStringUTFChars(jAgeProto, JNI_FALSE);
-    const char* ageModel = env->GetStringUTFChars(jAgeModel, JNI_FALSE);
+    const char* ageProto  = env->GetStringUTFChars(jAgeProto, JNI_FALSE);
+    const char* ageModel  = env->GetStringUTFChars(jAgeModel, JNI_FALSE);
     const char* genderProto = env->GetStringUTFChars(jGenderProto, JNI_FALSE);
     const char* genderModel = env->GetStringUTFChars(jGenderModel, JNI_FALSE);
 
