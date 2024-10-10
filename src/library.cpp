@@ -341,3 +341,8 @@ void sobel(Mat gray, Mat& dst) {
 
     add(dstSobelX,dstSobelX,dst);
 }
+
+void laplace(Mat gray, Mat& dst) {
+    Laplacian(gray, dst, CV_16S, 3);
+    convertScaleAbs(dst, dst);
+}

@@ -64,5 +64,10 @@ void prewitt(Mat gray, Mat& dst);
  */
 void sobel(Mat gray, Mat& dst);
 
+/**
+ * laplace 算子
+ */
+void laplace(Mat gray, Mat& dst);
+
 
 #endif //MONICAIMAGEPROCESS_LIBRARY_H
