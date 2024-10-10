@@ -49,4 +49,10 @@ void unsharpMask(const Mat& src, Mat& dst, int radius, int threshold, int amount
  */
 void ace(Mat& src, Mat& dst, int ratio, int radius);
 
+/**
+ * roberts 算子
+ */
+void roberts(Mat gray, Mat& dst);
+
+
 #endif //MONICAIMAGEPROCESS_LIBRARY_H

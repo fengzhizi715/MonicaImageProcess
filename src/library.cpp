@@ -297,3 +297,19 @@ void unsharpMask(const Mat& src, Mat& dst, int radius, int threshold, int amount
 void ace(Mat& src, Mat& dst, int ratio, int radius) {
     dst = ACE::getACE(src, ratio, radius);
 }
+
+void roberts(Mat gray, Mat& dst) {
+    Mat kernelRoX = (cv::Mat_<float>(2,2) << -1,0,0,1);
+    Mat kernelRoY = (cv::Mat_<float>(2,2) << 0,-1,1,0);
+
+    Mat dstRoX;
+    Mat dstRoY;
+
+    cv::filter2D(gray,dstRoX,-1,kernelRoX);
+    cv::filter2D(gray,dstRoY,-1,kernelRoY);
+
+    dstRoX = cv::abs(dstRoX);
+    dstRoY = cv::abs(dstRoY);
+
+    add(dstRoX,dstRoY,dst);
+}
