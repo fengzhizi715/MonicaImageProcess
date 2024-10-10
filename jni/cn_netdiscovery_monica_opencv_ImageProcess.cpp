@@ -312,6 +312,20 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_lapl
     return matToIntArray(env,dst);
 }
 
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_canny
+        (JNIEnv* env, jobject,jbyteArray array,jdouble threshold1,jdouble threshold2,jint apertureSize) {
+    Mat image = byteArrayToMat(env,array);
+
+    int channels = image.channels();
+    if (channels == 3) {
+        cvtColor(image,image,COLOR_BGR2GRAY);
+    }
+
+    Mat dst;
+    sobel(image, dst);
+    return matToIntArray(env,dst);
+}
+
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceDetect
         (JNIEnv* env, jobject, jstring jFaceProto, jstring jFaceModel,
          jstring jAgeProto, jstring jAgeModel, jstring jGenderProto, jstring jGenderModel) {

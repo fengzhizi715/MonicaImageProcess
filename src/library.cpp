@@ -346,3 +346,7 @@ void laplace(Mat gray, Mat& dst) {
     Laplacian(gray, dst, CV_16S, 3);
     convertScaleAbs(dst, dst);
 }
+
+void canny(Mat gray, Mat& dst, double threshold1, double threshold2, int apertureSize) {
+    Canny(gray, dst, threshold1, threshold2, apertureSize);
+}

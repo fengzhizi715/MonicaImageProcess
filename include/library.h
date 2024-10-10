@@ -69,5 +69,10 @@ void sobel(Mat gray, Mat& dst);
  */
 void laplace(Mat gray, Mat& dst);
 
+/**
+ * canny 算子
+ */
+void canny(Mat gray, Mat& dst, double threshold1, double threshold2, int apertureSize);
+
 
 #endif //MONICAIMAGEPROCESS_LIBRARY_H
