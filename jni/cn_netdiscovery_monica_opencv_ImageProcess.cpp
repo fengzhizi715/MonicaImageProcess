@@ -26,28 +26,24 @@ FaceEnhance     *faceEnhance = nullptr;
 
 JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getVersion
         (JNIEnv* env, jobject) {
-
     string version = "v0.1.0";
     return env->NewStringUTF(version.c_str());
 }
 
 JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getOpenCVVersion
         (JNIEnv* env, jobject) {
-
     string version = CV_VERSION;
     return env->NewStringUTF(version.c_str());
 }
 
 JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getONNXRuntimeVersion
         (JNIEnv* env, jobject) {
-
     const char* version = OrtGetApiBase()->GetVersionString();
     return env->NewStringUTF(version);
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_shearing
         (JNIEnv* env, jobject,jbyteArray array, jfloat x, jfloat y) {
-
     Mat image = byteArrayToMat(env,array);
     Mat dst;
 
@@ -73,7 +69,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_shea
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_equalizeHist
         (JNIEnv* env, jobject, jbyteArray array) {
-
     Mat image = byteArrayToMat(env,array);
     Mat dst;
 
@@ -99,7 +94,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_equa
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_clahe
         (JNIEnv* env, jobject, jbyteArray array, jdouble clipLimit, jint size) {
-
     Mat image = byteArrayToMat(env,array);
     Mat dst;
     try {
@@ -124,7 +118,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_clah
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_gammaCorrection
         (JNIEnv* env, jobject, jbyteArray array, jfloat k) {
-
     Mat image = byteArrayToMat(env,array);
     Mat dst;
 
@@ -150,7 +143,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_gamm
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_laplace
         (JNIEnv* env, jobject, jbyteArray array) {
-
     Mat image = byteArrayToMat(env,array);
     Mat dst;
 
@@ -176,7 +168,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_lapl
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_unsharpMask
         (JNIEnv* env, jobject, jbyteArray array, jint radius, jint threshold, jint amount) {
-
     Mat image = byteArrayToMat(env,array);
     Mat dst = Mat(image.size(), image.type());
 
@@ -202,7 +193,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_unsh
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_ace
         (JNIEnv* env, jobject, jbyteArray array, jint ratio, jint radius) {
-
     Mat image = byteArrayToMat(env,array);
     Mat dst;
 
@@ -244,16 +234,12 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_thre
      Mat thresh;
      int channels = image.channels();
      if (channels == 3) {
-         Mat gray;
-         cvtColor(image,gray,COLOR_BGR2GRAY);
-         threshold(gray, thresh,0,255, type);
-     } else if (channels == 1) {
-         threshold(image, thresh,0,255, type);
+         cvtColor(image,image,COLOR_BGR2GRAY);
      }
 
+     threshold(image, thresh,0,255, type);
      return binaryMatToIntArray(env,thresh);
 }
-
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_adaptiveThreshold
         (JNIEnv* env, jobject,jbyteArray array,jint adaptiveMethod, jint thresholdType,jint blockSize, jint c) {
@@ -263,15 +249,19 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_adap
      int maxVal = 255;
      int channels = image.channels();
      if (channels == 3) {
-         Mat gray;
-         cvtColor(image,gray,COLOR_BGR2GRAY);
-         adaptiveThreshold(gray, dst, maxVal, adaptiveMethod,thresholdType, blockSize,c);
-     } else if (channels == 1) {
-         adaptiveThreshold(image, dst, maxVal, adaptiveMethod,thresholdType, blockSize,c);
+         cvtColor(image,image,COLOR_BGR2GRAY);
      }
 
+     adaptiveThreshold(image, dst, maxVal, adaptiveMethod,thresholdType, blockSize,c);
      return binaryMatToIntArray(env,dst);
 }
+
+//JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_roberts
+//        (JNIEnv* env, jobject,jbyteArray array) {
+//    Mat image = byteArrayToMat(env,array);
+//
+//
+//}
 
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceDetect
         (JNIEnv* env, jobject, jstring jFaceProto, jstring jFaceModel,
