@@ -313,3 +313,19 @@ void roberts(Mat gray, Mat& dst) {
 
     add(dstRoX,dstRoY,dst);
 }
+
+void prewitt(Mat gray, Mat& dst) {
+    Mat kernelPrewittX = (cv::Mat_<float>(3,3) << -1,0,1,-1,0,1,-1,0,1);
+    Mat kernelPrewittY = (cv::Mat_<float>(3,3) << -1,-1,-1,0,0,0,1,1,1);
+
+    Mat dstPrewittX;
+    Mat dstPrewittY;
+
+    cv::filter2D(gray,dstPrewittX,-1,kernelPrewittX);
+    cv::filter2D(gray,dstPrewittY,-1,kernelPrewittY);
+
+    dstPrewittX = cv::abs(dstPrewittX);
+    dstPrewittY = cv::abs(dstPrewittY);
+
+    add(dstPrewittX,dstPrewittY,dst);
+}

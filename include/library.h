@@ -54,5 +54,10 @@ void ace(Mat& src, Mat& dst, int ratio, int radius);
  */
 void roberts(Mat gray, Mat& dst);
 
+/**
+ * prewitt 算子
+ */
+void prewitt(Mat gray, Mat& dst);
+
 
 #endif //MONICAIMAGEPROCESS_LIBRARY_H
