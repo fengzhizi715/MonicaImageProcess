@@ -37,7 +37,7 @@ void gammaCorrection(Mat& src, Mat& dst, float K);
 /**
  * laplace 锐化，主要是 8 邻域卷积核
  */
-void laplace(Mat& src, Mat& dst);
+void laplaceSharpening(Mat& src, Mat& dst);
 
 /**
  * USM 锐化

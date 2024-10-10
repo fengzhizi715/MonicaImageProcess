@@ -141,13 +141,13 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_gamm
     return matToIntArray(env,dst);
 }
 
-JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_laplace
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_laplaceSharpening
         (JNIEnv* env, jobject, jbyteArray array) {
     Mat image = byteArrayToMat(env,array);
     Mat dst;
 
     try {
-        laplace(image,dst);
+        laplaceSharpening(image,dst);
     } catch(...) {
     }
 

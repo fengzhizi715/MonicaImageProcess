@@ -262,7 +262,7 @@ void gammaCorrection(Mat& src, Mat& dst, float K) {
     }
 }
 
-void laplace(Mat& src, Mat& dst) {
+void laplaceSharpening(Mat& src, Mat& dst) {
 
     cv::Mat kernel = (Mat_<char>(3, 3) << -1, -1, -1, -1, 9, -1, -1, -1, -1);
     cv::filter2D(src, dst, CV_8UC3, kernel);
