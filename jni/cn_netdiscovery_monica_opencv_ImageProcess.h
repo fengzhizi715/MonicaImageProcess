@@ -54,6 +54,9 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_robe
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_prewitt
         (JNIEnv* env, jobject,jbyteArray array);
 
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sobel
+        (JNIEnv* env, jobject,jbyteArray array);
+
 
 
 //-------------------------------------------------------------------

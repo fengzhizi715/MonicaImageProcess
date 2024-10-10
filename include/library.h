@@ -59,5 +59,10 @@ void roberts(Mat gray, Mat& dst);
  */
 void prewitt(Mat gray, Mat& dst);
 
+/**
+ * sobel 算子
+ */
+void sobel(Mat gray, Mat& dst);
+
 
 #endif //MONICAIMAGEPROCESS_LIBRARY_H

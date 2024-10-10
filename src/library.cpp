@@ -329,3 +329,15 @@ void prewitt(Mat gray, Mat& dst) {
 
     add(dstPrewittX,dstPrewittY,dst);
 }
+
+void sobel(Mat gray, Mat& dst) {
+    Mat dstSobelX;
+    Mat dstSobelY;
+
+    Sobel(gray, dstSobelX, CV_16S, 1, 0, 3);
+    Sobel(gray, dstSobelY, CV_16S, 0, 1, 3);
+    convertScaleAbs(dstSobelX, dstSobelX);
+    convertScaleAbs(dstSobelY, dstSobelY);
+
+    add(dstSobelX,dstSobelX,dst);
+}
