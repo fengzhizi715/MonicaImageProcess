@@ -347,6 +347,12 @@ void laplace(Mat gray, Mat& dst) {
     convertScaleAbs(dst, dst);
 }
 
+void log(Mat gray, Mat& dst) {
+    GaussianBlur(gray, gray, cv::Size(3, 3), 0 ,0);
+    Laplacian(gray, dst, CV_16S, 3);
+    convertScaleAbs(dst, dst);
+}
+
 void canny(Mat gray, Mat& dst, double threshold1, double threshold2, int apertureSize) {
     Canny(gray, dst, threshold1, threshold2, apertureSize);
 }

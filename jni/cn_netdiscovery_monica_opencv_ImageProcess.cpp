@@ -322,7 +322,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_log
     }
 
     Mat dst;
-    sobel(image, dst);
+    log(image, dst);
     return matToIntArray(env,dst);
 }
 
