@@ -337,7 +337,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cann
 
     Mat dst;
     canny(image, dst, threshold1, threshold2, apertureSize);
-    return matToIntArray(env,dst);
+    return binaryMatToIntArray(env,dst);
 }
 
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceDetect
