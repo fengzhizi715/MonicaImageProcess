@@ -308,6 +308,20 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_lapl
     }
 
     Mat dst;
+    laplace(image, dst);
+    return matToIntArray(env,dst);
+}
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_log
+        (JNIEnv* env, jobject,jbyteArray array) {
+    Mat image = byteArrayToMat(env,array);
+
+    int channels = image.channels();
+    if (channels == 3) {
+       cvtColor(image,image,COLOR_BGR2GRAY);
+    }
+
+    Mat dst;
     sobel(image, dst);
     return matToIntArray(env,dst);
 }
@@ -322,7 +336,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cann
     }
 
     Mat dst;
-    sobel(image, dst);
+    canny(image, dst, threshold1, threshold2, apertureSize);
     return matToIntArray(env,dst);
 }
 
