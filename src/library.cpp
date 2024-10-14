@@ -353,6 +353,17 @@ void log(Mat gray, Mat& dst) {
     convertScaleAbs(dst, dst);
 }
 
+void dog(Mat gray, Mat& dst, double sigma1, double sigma2, int size) {
+    // 使用不同的 sigma ，实现不同尺度特征
+    Mat blurred1, blurred2;
+    GaussianBlur(gray, blurred1, Size(size,size), sigma1, sigma1);
+    GaussianBlur(gray, blurred2, Size(size,size), sigma2, sigma2);
+
+    // 通过差分计算 DoG 图像
+    absdiff(blurred1, blurred2, dst);
+    normalize(dst, dst, 0, 255, NORM_MINMAX, CV_8UC1);
+}
+
 void canny(Mat gray, Mat& dst, double threshold1, double threshold2, int apertureSize) {
     Canny(gray, dst, threshold1, threshold2, apertureSize);
 }
