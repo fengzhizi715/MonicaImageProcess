@@ -260,13 +260,8 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_inRa
         (JNIEnv* env, jobject,jbyteArray array,jint hmin,jint smin,jint vmin,jint hmax,jint smax,jint vmax) {
     Mat image = byteArrayToMat(env,array);
 
-    cvtColor(image,image,COLOR_BGR2HSV);
-
-    cv::Scalar lower(hmin, smin, vmin);
-    cv::Scalar upper(hmax, smax, vmax);
-
     Mat dst;
-    inRange(image, lower, upper, dst); // 通过 inRange 函数实现二值化
+    inRange(image, dst, hmin, smin, vmin, hmax, smax, vmax);
     return binaryMatToIntArray(env,dst);
 }
 

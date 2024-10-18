@@ -79,12 +79,15 @@ void log(Mat gray, Mat& dst);
  */
 void dog(Mat gray, Mat& dst, double sigma1, double sigma2, int size);
 
-
-
 /**
  * canny 算子
  */
 void canny(Mat gray, Mat& dst, double threshold1, double threshold2, int apertureSize);
+
+/**
+ * inRange 颜色分割
+ */
+void inRange(Mat image , Mat& dst, int hmin, int smin, int vmin, int hmax, int smax, int vmax);
 
 
 #endif //MONICAIMAGEPROCESS_LIBRARY_H

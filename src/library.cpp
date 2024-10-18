@@ -367,3 +367,12 @@ void dog(Mat gray, Mat& dst, double sigma1, double sigma2, int size) {
 void canny(Mat gray, Mat& dst, double threshold1, double threshold2, int apertureSize) {
     Canny(gray, dst, threshold1, threshold2, apertureSize);
 }
+
+void inRange(Mat image , Mat& dst, int hmin, int smin, int vmin, int hmax, int smax, int vmax) {
+    cvtColor(image,image,COLOR_BGR2HSV);
+
+    cv::Scalar lower(hmin, smin, vmin);
+    cv::Scalar upper(hmax, smax, vmax);
+
+    inRange(image, lower, upper, dst); // 通过 inRange 函数实现二值化
+}
