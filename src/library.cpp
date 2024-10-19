@@ -317,7 +317,10 @@ void roberts(Mat image, Mat& dst) {
     add(dstRoX,dstRoY,dst);
 }
 
-void prewitt(Mat gray, Mat& dst) {
+void prewitt(Mat image, Mat& dst) {
+    Mat gray;
+    cvtColor(image,gray,COLOR_BGR2GRAY);
+
     Mat kernelPrewittX = (cv::Mat_<float>(3,3) << -1,0,1,-1,0,1,-1,0,1);
     Mat kernelPrewittY = (cv::Mat_<float>(3,3) << -1,-1,-1,0,0,0,1,1,1);
 
@@ -333,7 +336,10 @@ void prewitt(Mat gray, Mat& dst) {
     add(dstPrewittX,dstPrewittY,dst);
 }
 
-void sobel(Mat gray, Mat& dst) {
+void sobel(Mat image, Mat& dst) {
+    Mat gray;
+    cvtColor(image,gray,COLOR_BGR2GRAY);
+
     Mat dstSobelX;
     Mat dstSobelY;
 
