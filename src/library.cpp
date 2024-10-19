@@ -298,7 +298,10 @@ void ace(Mat& src, Mat& dst, int ratio, int radius) {
     dst = ACE::getACE(src, ratio, radius);
 }
 
-void roberts(Mat gray, Mat& dst) {
+void roberts(Mat image, Mat& dst) {
+    Mat gray;
+    cvtColor(image,gray,COLOR_BGR2GRAY);
+
     Mat kernelRoX = (cv::Mat_<float>(2,2) << -1,0,0,1);
     Mat kernelRoY = (cv::Mat_<float>(2,2) << 0,-1,1,0);
 

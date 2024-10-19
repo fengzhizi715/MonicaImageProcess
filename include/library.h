@@ -52,42 +52,42 @@ void ace(Mat& src, Mat& dst, int ratio, int radius);
 /**
  * roberts 算子
  */
-void roberts(Mat gray, Mat& dst);
+void roberts(Mat image, Mat& dst);
 
 /**
  * prewitt 算子
  */
-void prewitt(Mat gray, Mat& dst);
+void prewitt(Mat image, Mat& dst);
 
 /**
  * sobel 算子
  */
-void sobel(Mat gray, Mat& dst);
+void sobel(Mat image, Mat& dst);
 
 /**
  * laplace 算子
  */
-void laplace(Mat gray, Mat& dst);
+void laplace(Mat image, Mat& dst);
 
 /**
  * LoG 算子
  */
-void log(Mat gray, Mat& dst);
+void log(Mat image, Mat& dst);
 
 /**
  * DoG 算子
  */
-void dog(Mat gray, Mat& dst, double sigma1, double sigma2, int size);
+void dog(Mat image, Mat& dst, double sigma1, double sigma2, int size);
 
 /**
  * canny 算子
  */
-void canny(Mat gray, Mat& dst, double threshold1, double threshold2, int apertureSize);
+void canny(Mat image, Mat& dst, double threshold1, double threshold2, int apertureSize);
 
 /**
  * inRange 颜色分割
  */
-void inRange(Mat image , Mat& dst, int hmin, int smin, int vmin, int hmax, int smax, int vmax);
+void inRange(Mat image, Mat& dst, int hmin, int smin, int vmin, int hmax, int smax, int vmax);
 
 
 #endif //MONICAIMAGEPROCESS_LIBRARY_H

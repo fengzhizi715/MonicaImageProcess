@@ -269,11 +269,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_robe
         (JNIEnv* env, jobject,jbyteArray array) {
     Mat image = byteArrayToMat(env,array);
 
-    int channels = image.channels();
-    if (channels == 3) {
-        cvtColor(image,image,COLOR_BGR2GRAY);
-    }
-
     Mat dst;
     roberts(image, dst);
     return matToIntArray(env,dst);
