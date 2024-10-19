@@ -296,11 +296,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_lapl
         (JNIEnv* env, jobject,jbyteArray array) {
     Mat image = byteArrayToMat(env,array);
 
-    int channels = image.channels();
-    if (channels == 3) {
-        cvtColor(image,image,COLOR_BGR2GRAY);
-    }
-
     Mat dst;
     laplace(image, dst);
     return matToIntArray(env,dst);
@@ -309,11 +304,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_lapl
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_log
         (JNIEnv* env, jobject,jbyteArray array) {
     Mat image = byteArrayToMat(env,array);
-
-    int channels = image.channels();
-    if (channels == 3) {
-       cvtColor(image,image,COLOR_BGR2GRAY);
-    }
 
     Mat dst;
     log(image, dst);
@@ -324,11 +314,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_dog
         (JNIEnv* env, jobject,jbyteArray array, jdouble sigma1, jdouble sigma2, jint size) {
     Mat image = byteArrayToMat(env,array);
 
-    int channels = image.channels();
-    if (channels == 3) {
-       cvtColor(image,image,COLOR_BGR2GRAY);
-    }
-
     Mat dst;
     dog(image, dst, sigma1, sigma2, size);
     return matToIntArray(env,dst);
@@ -337,11 +322,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_dog
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_canny
         (JNIEnv* env, jobject,jbyteArray array,jdouble threshold1,jdouble threshold2,jint apertureSize) {
     Mat image = byteArrayToMat(env,array);
-
-    int channels = image.channels();
-    if (channels == 3) {
-        cvtColor(image,image,COLOR_BGR2GRAY);
-    }
 
     Mat dst;
     canny(image, dst, threshold1, threshold2, apertureSize);

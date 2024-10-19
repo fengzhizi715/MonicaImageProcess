@@ -351,18 +351,27 @@ void sobel(Mat image, Mat& dst) {
     add(dstSobelX,dstSobelX,dst);
 }
 
-void laplace(Mat gray, Mat& dst) {
+void laplace(Mat image, Mat& dst) {
+    Mat gray;
+    cvtColor(image,gray,COLOR_BGR2GRAY);
+
     Laplacian(gray, dst, CV_16S, 3);
     convertScaleAbs(dst, dst);
 }
 
-void log(Mat gray, Mat& dst) {
+void log(Mat image, Mat& dst) {
+    Mat gray;
+    cvtColor(image,gray,COLOR_BGR2GRAY);
+
     GaussianBlur(gray, gray, cv::Size(3, 3), 0 ,0);
     Laplacian(gray, dst, CV_16S, 3);
     convertScaleAbs(dst, dst);
 }
 
-void dog(Mat gray, Mat& dst, double sigma1, double sigma2, int size) {
+void dog(Mat image, Mat& dst, double sigma1, double sigma2, int size) {
+    Mat gray;
+    cvtColor(image,gray,COLOR_BGR2GRAY);
+
     // 使用不同的 sigma ，实现不同尺度特征
     Mat blurred1, blurred2;
     GaussianBlur(gray, blurred1, Size(size,size), sigma1, sigma1);
@@ -373,7 +382,10 @@ void dog(Mat gray, Mat& dst, double sigma1, double sigma2, int size) {
     normalize(dst, dst, 0, 255, NORM_MINMAX, CV_8UC1);
 }
 
-void canny(Mat gray, Mat& dst, double threshold1, double threshold2, int apertureSize) {
+void canny(Mat image, Mat& dst, double threshold1, double threshold2, int apertureSize) {
+    Mat gray;
+    cvtColor(image,gray,COLOR_BGR2GRAY);
+
     Canny(gray, dst, threshold1, threshold2, apertureSize);
 }
 
