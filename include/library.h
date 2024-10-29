@@ -13,6 +13,17 @@ using namespace std;
 using namespace cv;
 
 typedef struct {
+    double minPerimeter;
+    double maxPerimeter;
+    double minArea;
+    double maxArea;
+    double minRoundness;
+    double maxRoundness;
+    double minAspectRatio;
+    double maxAspectRatio;
+} ContourFilterSettings;
+
+typedef struct {
     bool showOriginalImage;
     bool showBoundingRect;
     bool showMinAreaRect;
@@ -99,7 +110,7 @@ void inRange(Mat image, Mat& dst, int hmin, int smin, int vmin, int hmax, int sm
 /**
  * 轮廓分析
  */
-void contourAnalysis(Mat& src, Mat& binary, ContourDisplaySettings contourDisplaySettings);
+void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterSettings, ContourDisplaySettings contourDisplaySettings);
 
 
 #endif //MONICAIMAGEPROCESS_LIBRARY_H

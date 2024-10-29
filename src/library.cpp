@@ -399,7 +399,7 @@ void inRange(Mat image , Mat& dst, int hmin, int smin, int vmin, int hmax, int s
     inRange(image, lower, upper, dst); // 通过 inRange 函数实现二值化
 }
 
-void contourAnalysis(Mat& src, Mat& binary, ContourDisplaySettings contourDisplaySettings) {
+void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterSettings, ContourDisplaySettings contourDisplaySettings){
     vector<vector<Point>> contours;
     vector<Vec4i> hierarchy;
 
@@ -413,7 +413,6 @@ void contourAnalysis(Mat& src, Mat& binary, ContourDisplaySettings contourDispla
         if (area < 1000) {
             continue;
         }
-        cout << "area = " << area << ", length = " << length << endl;
 
         if (contourDisplaySettings.showBoundingRect) {
             Rect rect = boundingRect(contours[i]);

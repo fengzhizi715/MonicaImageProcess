@@ -72,8 +72,8 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_dog
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_canny
         (JNIEnv* env, jobject,jbyteArray array,jdouble threshold1,jdouble threshold2,jint apertureSize);
 
-JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_findContours
-        (JNIEnv* env, jobject,jbyteArray srcArray, jbyteArray binaryArray, jobject jobj);
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_contourAnalysis
+        (JNIEnv* env, jobject,jbyteArray srcArray, jbyteArray binaryArray, jobject jobj1, jobject jobj2);
 
 
 
