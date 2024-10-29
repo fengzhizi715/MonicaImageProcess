@@ -5,6 +5,22 @@
 #include <string>
 #include "../../include/utils/Utils.h"
 
+Mat byteArrayTo8UC1Mat(JNIEnv* env, jbyteArray array) {
+    jsize len = env->GetArrayLength(array);
+    signed char* pData = new  signed char[len];
+    env->GetByteArrayRegion(array, 0, len, pData);
+
+    // 解码内存数据，变成cv::Mat数据
+    cv::Mat image;
+    vector<uchar> datas;
+    for (int i = 0; i < len; ++i) {
+        datas.push_back(pData[i]);
+    }
+    image = cv::imdecode(datas, IMREAD_GRAYSCALE);
+
+    return image;
+}
+
 Mat byteArrayToMat(JNIEnv* env, jbyteArray array) {
     //复制java数组到C++
     jsize len = env->GetArrayLength(array);

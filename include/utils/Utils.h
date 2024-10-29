@@ -21,6 +21,8 @@ typedef struct
     float ymax;
 } Bbox;
 
+cv::Mat byteArrayTo8UC1Mat(JNIEnv* env, jbyteArray array);
+
 cv::Mat byteArrayToMat(JNIEnv* env, jbyteArray array);
 
 jintArray matToIntArray(JNIEnv *env, const cv::Mat &image);
