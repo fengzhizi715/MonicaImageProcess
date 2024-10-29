@@ -89,6 +89,10 @@ jintArray binaryMatToIntArray(JNIEnv *env, const cv::Mat binary) {
     return resultImage;
 }
 
+bool ascendSort(vector<Point> a, vector<Point> b) {
+    return contourArea(a) > contourArea(b);
+}
+
 std::wstring get_win_path(const std::string& modelPath) {
     return std::wstring(modelPath.begin(), modelPath.end());
 }
