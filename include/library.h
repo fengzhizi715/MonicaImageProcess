@@ -12,6 +12,13 @@
 using namespace std;
 using namespace cv;
 
+typedef struct {
+    bool showOriginalImage;
+    bool showBoundingRect;
+    bool showMinAreaRect;
+    bool showCenter;
+} ContourDisplaySettings;
+
 /**
  * 图像错切
  * @param 沿 x 方向
