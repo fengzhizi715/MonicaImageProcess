@@ -96,5 +96,10 @@ void canny(Mat image, Mat& dst, double threshold1, double threshold2, int apertu
  */
 void inRange(Mat image, Mat& dst, int hmin, int smin, int vmin, int hmax, int smax, int vmax);
 
+/**
+ * 轮廓分析
+ */
+void contourAnalysis(Mat& src, Mat& binary, ContourDisplaySettings contourDisplaySettings);
+
 
 #endif //MONICAIMAGEPROCESS_LIBRARY_H

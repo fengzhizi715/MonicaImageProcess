@@ -328,6 +328,34 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cann
     return binaryMatToIntArray(env,dst);
 }
 
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_findContours
+        (JNIEnv* env, jobject,jbyteArray srcArray, jbyteArray binaryArray, jobject jobj) {
+    ContourDisplaySettings contourDisplaySettings;
+
+    Mat src = byteArrayToMat(env, srcArray);
+    Mat binary = byteArrayTo8UC1Mat(env,binaryArray);
+
+    // 获取jclass的实例
+    jclass jcls = env->FindClass("cn/netdiscovery/monica/ui/controlpanel/ai/experiment/model/ContourDisplaySettings");
+    jfieldID showOriginalImageId = env->GetFieldID(jcls, "showOriginalImage", "Z");
+    jfieldID showBoundingRectId = env->GetFieldID(jcls, "showBoundingRect", "Z");
+    jfieldID showMinAreaRectId = env->GetFieldID(jcls, "showMinAreaRect", "Z");
+    jfieldID showCenterId = env->GetFieldID(jcls, "showCenter", "Z");
+
+    contourDisplaySettings.showOriginalImage = env->GetBooleanField(jobj, showOriginalImageId);
+    contourDisplaySettings.showBoundingRect = env->GetBooleanField(jobj, showBoundingRectId);
+    contourDisplaySettings.showMinAreaRect = env->GetBooleanField(jobj, showMinAreaRectId);
+    contourDisplaySettings.showCenter = env->GetBooleanField(jobj, showCenterId);
+
+    contourAnalysis(src, binary, contourDisplaySettings);
+
+    if (contourDisplaySettings.showOriginalImage) {
+        return matToIntArray(env,src);
+    } else {
+        return binaryMatToIntArray(env, binary);
+    }
+}
+
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceDetect
         (JNIEnv* env, jobject, jstring jFaceProto, jstring jFaceModel,
          jstring jAgeProto, jstring jAgeModel, jstring jGenderProto, jstring jGenderModel) {

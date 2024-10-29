@@ -1,4 +1,5 @@
 #include "../include/library.h"
+#include "../include/utils/Utils.h"
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -396,4 +397,48 @@ void inRange(Mat image , Mat& dst, int hmin, int smin, int vmin, int hmax, int s
     cv::Scalar upper(hmax, smax, vmax);
 
     inRange(image, lower, upper, dst); // 通过 inRange 函数实现二值化
+}
+
+void contourAnalysis(Mat& src, Mat& binary, ContourDisplaySettings contourDisplaySettings) {
+    vector<vector<Point>> contours;
+    vector<Vec4i> hierarchy;
+
+    findContours(binary, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+    sort(contours.begin(), contours.end(), ascendSort);//ascending sort
+
+    for (size_t i = 0; i< contours.size(); i++) {
+        double area = contourArea(contours[i]);
+        double length = arcLength(contours[i],true);
+
+        if (area < 1000) {
+            continue;
+        }
+        cout << "area = " << area << ", length = " << length << endl;
+
+        if (contourDisplaySettings.showBoundingRect) {
+            Rect rect = boundingRect(contours[i]);
+            rectangle(src, rect, Scalar(0, 255, 0), 8, 8);
+        }
+
+        RotatedRect rrt;
+        if (contourDisplaySettings.showMinAreaRect) {
+            rrt = minAreaRect(contours[i]);// 获取最小外接矩形
+
+            Point2f pt[4];
+            rrt.points(pt);
+            line(src, pt[0], pt[1], Scalar(0, 0, 255), 8, 8);
+            line(src, pt[1], pt[2], Scalar(0, 0, 255), 8, 8);
+            line(src, pt[2], pt[3], Scalar(0, 0, 255), 8, 8);
+            line(src, pt[3], pt[0], Scalar(0, 0, 255), 8, 8);
+        }
+
+        if (contourDisplaySettings.showCenter) {
+            if (rrt.size.width == 0 || rrt.size.height == 0) { // 判断 rrt 是否为空
+                rrt = minAreaRect(contours[i]);// 获取最小外接矩形
+            }
+
+            Point center = rrt.center;
+            circle(src, center, 2,Scalar(0, 0, 255), 8, 8); // 绘制最小外接矩形的中心点
+        }
+    }
 }
