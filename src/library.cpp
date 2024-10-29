@@ -406,12 +406,23 @@ void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterS
     findContours(binary, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
     sort(contours.begin(), contours.end(), ascendSort);//ascending sort
 
-    for (size_t i = 0; i< contours.size(); i++) {
-        double area = contourArea(contours[i]);
-        double length = arcLength(contours[i],true);
+    double maxArea = contourFilterSettings.maxArea;
+    double minArea = contourFilterSettings.minArea;
 
-        if (area < 1000) {
-            continue;
+    for (size_t i = 0; i< contours.size(); i++) {
+
+        double area;
+//        double length = arcLength(contours[i],true);
+        if (minArea > 0 || maxArea > 0) {
+            area = contourArea(contours[i]);
+
+            if (area < minArea) {
+                continue;
+            }
+
+            if (maxArea > 0 && area > maxArea) {
+                continue;
+            }
         }
 
         if (contourDisplaySettings.showBoundingRect) {
