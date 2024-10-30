@@ -406,13 +406,28 @@ void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterS
     findContours(binary, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
     sort(contours.begin(), contours.end(), ascendSort);//ascending sort
 
-    double maxArea = contourFilterSettings.maxArea;
+    double minPerimeter = contourFilterSettings.minPerimeter;
+    double maxPerimeter = contourFilterSettings.maxPerimeter;
+
     double minArea = contourFilterSettings.minArea;
+    double maxArea = contourFilterSettings.maxArea;
 
     for (size_t i = 0; i< contours.size(); i++) {
-
         double area;
-//        double length = arcLength(contours[i],true);
+        double length;
+
+        if (minPerimeter > 0 || maxPerimeter > 0) {
+            length = arcLength(contours[i],true);
+
+            if (length < minPerimeter) {
+                continue;
+            }
+
+            if (maxPerimeter > 0 && length > maxPerimeter) {
+                continue;
+            }
+        }
+
         if (minArea > 0 || maxArea > 0) {
             area = contourArea(contours[i]);
 
@@ -424,6 +439,8 @@ void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterS
                 continue;
             }
         }
+
+        cout << "length = " << length << ", area = " << area << endl;
 
         if (contourDisplaySettings.showBoundingRect) {
             Rect rect = boundingRect(contours[i]);
