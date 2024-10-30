@@ -412,9 +412,17 @@ void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterS
     double minArea = contourFilterSettings.minArea;
     double maxArea = contourFilterSettings.maxArea;
 
+    double minRoundness = contourFilterSettings.minRoundness;
+    double maxRoundness = contourFilterSettings.maxRoundness;
+
+    double minAspectRatio = contourFilterSettings.minAspectRatio;
+    double maxAspectRatio = contourFilterSettings.maxAspectRatio;
+
     for (size_t i = 0; i< contours.size(); i++) {
-        double area;
-        double length;
+        double length = 0;
+        double area = 0;
+        double roundness = 0;
+        double aspect_radio = 0;
 
         if (minPerimeter > 0 || maxPerimeter > 0) {
             length = arcLength(contours[i],true);
@@ -440,7 +448,40 @@ void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterS
             }
         }
 
-        cout << "length = " << length << ", area = " << area << endl;
+        if (minRoundness > 0 || maxRoundness > 0) {
+            if (length == 0) {
+                length = arcLength(contours[i],true);
+            }
+
+            if (area == 0) {
+                area = contourArea(contours[i]);
+            }
+
+            roundness = (4 * CV_PI * area) / (length * length);
+
+            if (roundness < minRoundness) {
+                continue;
+            }
+
+            if (maxRoundness > 0 && roundness > maxRoundness) {
+                continue;
+            }
+        }
+
+        if (minAspectRatio > 0 || maxAspectRatio > 0) {
+            Rect rect = boundingRect(contours[i]);
+            aspect_radio = (double)rect.width/rect.height;
+
+            if (aspect_radio < minAspectRatio) {
+                continue;
+            }
+
+            if (maxAspectRatio > 0 && aspect_radio > maxAspectRatio) {
+                continue;
+            }
+        }
+
+        cout << "length = " << length << ", area = " << area << ", roundness = " << roundness << ", aspect_radio = " << aspect_radio << endl;
 
         if (contourDisplaySettings.showBoundingRect) {
             Rect rect = boundingRect(contours[i]);
