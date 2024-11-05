@@ -58,6 +58,7 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
             src/faceSwap/FaceEmbedding.cpp include/faceSwap/FaceEmbedding.h
             src/faceSwap/FaceSwap.cpp include/faceSwap/FaceSwap.h
             src/faceSwap/FaceEnhance.cpp include/faceSwap/FaceEnhance.h
+            src/colorcorrection/ColorCorrection.cpp include/colorcorrection/ColorCorrection.h
             src/utils/Timer.cpp include/utils/Timer.h
             src/utils/Utils.cpp include/utils/Utils.h
             include/Constants.h)
@@ -84,6 +85,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
             src/faceSwap/FaceEmbedding.cpp include/faceSwap/FaceEmbedding.h
             src/faceSwap/FaceSwap.cpp include/faceSwap/FaceSwap.h
             src/faceSwap/FaceEnhance.cpp include/faceSwap/FaceEnhance.h
+            src/colorcorrection/ColorCorrection.cpp include/colorcorrection/ColorCorrection.h
             src/utils/Timer.cpp include/utils/Timer.h
             src/utils/Utils.cpp include/utils/Utils.h
             include/Constants.h)
