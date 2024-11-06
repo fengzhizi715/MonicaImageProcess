@@ -47,6 +47,12 @@ private:
     float _sharpenOffset; // 0 ~ 1
     float _cornerOffset; // 0 ~ 1
 
+    int width;
+    int height;
+    int middleRow;
+    int middleCol;
+    float radius;
+
     Mat adjust();
     void genHighlightAndShadowMask();
 };
