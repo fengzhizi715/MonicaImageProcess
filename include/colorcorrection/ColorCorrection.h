@@ -11,6 +11,7 @@
 #include <opencv2/imgproc.hpp>
 
 using namespace cv;
+using namespace std;
 
 class ColorCorrection{
 
@@ -45,8 +46,8 @@ private:
     int _shadowOffset;
     float _sharpenOffset; // 0 ~ 1
     float _cornerOffset; // 0 ~ 1
-    Mat adjust();
 
+    Mat adjust();
     void genHighlightAndShadowMask();
 };
 
