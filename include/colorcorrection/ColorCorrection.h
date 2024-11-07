@@ -13,6 +13,19 @@
 using namespace cv;
 using namespace std;
 
+typedef struct {
+    int contrast;
+    int hue;
+    int saturation;
+    int lightness;
+    int temperature;
+    int highlight;
+    int shadow;
+    int sharpen;
+    int corner;
+    int status;
+} ColorCorrectionSettings;
+
 class ColorCorrection{
 
 public:
@@ -28,6 +41,8 @@ public:
     Mat adjustShadow(int shadowOffset);
     Mat adjustSharpen(int sharpenOffset);
     Mat adjustCorner(int cornerOffset);
+
+    void doColorCorrection(ColorCorrectionSettings colorCorrectionSettings, Mat& dst);
 
     Mat originImg;
     Mat grayImg;

@@ -78,6 +78,41 @@ Mat ColorCorrection::adjustCorner(int cornerOffset) {
     return adjust();
 }
 
+void ColorCorrection::doColorCorrection(ColorCorrectionSettings colorCorrectionSettings, Mat& dst) {
+
+    switch( colorCorrectionSettings.status) {
+        case 1:
+            dst = adjustContrast(colorCorrectionSettings.contrast);
+            break;
+        case 2:
+            dst = adjustHue(colorCorrectionSettings.hue);
+            break;
+        case 3:
+            dst = adjustSaturation(colorCorrectionSettings.saturation);
+            break;
+        case 4:
+            dst = adjustLightness(colorCorrectionSettings.lightness);
+            break;
+        case 5:
+            dst = adjustTemperature(colorCorrectionSettings.temperature);
+            break;
+        case 6:
+            dst = adjustHighlight(colorCorrectionSettings.highlight);
+            break;
+        case 7:
+            dst = adjustShadow(colorCorrectionSettings.shadow);
+            break;
+        case 8:
+            dst = adjustSharpen(colorCorrectionSettings.sharpen);
+            break;
+        case 9:
+            dst = adjustCorner(colorCorrectionSettings.corner);
+            break;
+        default:
+            break;
+    }
+}
+
 Mat ColorCorrection::adjust() {
     printf("_contractScale = %f, _hueOffset = %d, _saturationOffset = %d, _lightnessOffset = %d, _temperatureScale = %f, _highlightOffset = %d, _shadowOffset = %d, _sharpenOffset = %f, _cornerOffset =%f\n",_contractScale,_hueOffset,_saturationOffset,_lightnessOffset,_temperatureScale,_highlightOffset,_shadowOffset,_sharpenOffset,_cornerOffset);
 

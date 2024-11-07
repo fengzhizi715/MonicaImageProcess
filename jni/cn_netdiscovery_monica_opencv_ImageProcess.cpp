@@ -3,6 +3,7 @@
 //
 #include <iostream>
 #include "cn_netdiscovery_monica_opencv_ImageProcess.h"
+#include "../include/colorcorrection/ColorCorrection.h"
 #include "../include/library.h"
 #include "../include/Constants.h"
 #include "../include/faceDetect/FaceDetect.h"
@@ -15,6 +16,7 @@
 #include "../include/utils/Utils.h"
 #include <onnxruntime_cxx_api.h>
 
+ColorCorrection *colorCorrection = nullptr;
 FaceDetect      *faceDetect = nullptr;
 SketchDrawing   *sketchDrawing = nullptr;
 Yolov8Face      *yolov8Face = nullptr;
@@ -26,7 +28,7 @@ FaceEnhance     *faceEnhance = nullptr;
 
 JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getVersion
         (JNIEnv* env, jobject) {
-    string version = "v0.1.1";
+    string version = "v0.1.2";
     return env->NewStringUTF(version.c_str());
 }
 
@@ -63,6 +65,49 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_shea
 
         return env->NewIntArray(0);
     }
+
+    return matToIntArray(env,dst);
+}
+
+JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initColorCorrection
+(JNIEnv* env, jobject, jbyteArray array) {
+    Mat image = byteArrayToMat(env, array);
+
+    colorCorrection = new ColorCorrection(image);
+}
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colorCorrection
+        (JNIEnv* env, jobject,jbyteArray array, jobject jobj) {
+    ColorCorrectionSettings colorCorrectionSettings;
+
+    Mat image = byteArrayToMat(env, array);
+
+    // 获取 jclass 实例
+    jclass jcls = env->FindClass("cn/netdiscovery/monica/ui/controlpanel/colorcorrection/model/ColorCorrectionSettings");
+    jfieldID contrastId = env->GetFieldID(jcls, "contrast", "I");
+    jfieldID hueId = env->GetFieldID(jcls, "hue", "I");
+    jfieldID saturationId = env->GetFieldID(jcls, "saturation", "I");
+    jfieldID lightnessId = env->GetFieldID(jcls, "lightness", "I");
+    jfieldID temperatureId = env->GetFieldID(jcls, "temperature", "I");
+    jfieldID highlightId = env->GetFieldID(jcls, "highlight", "I");
+    jfieldID shadowId = env->GetFieldID(jcls, "shadow", "I");
+    jfieldID sharpenId = env->GetFieldID(jcls, "sharpen", "I");
+    jfieldID cornerId = env->GetFieldID(jcls, "corner", "I");
+    jfieldID statusId = env->GetFieldID(jcls, "status", "I");
+
+    colorCorrectionSettings.contrast = env->GetIntField(jobj, contrastId);
+    colorCorrectionSettings.hue = env->GetIntField(jobj, hueId);
+    colorCorrectionSettings.saturation = env->GetIntField(jobj, saturationId);
+    colorCorrectionSettings.lightness = env->GetIntField(jobj, lightnessId);
+    colorCorrectionSettings.temperature = env->GetIntField(jobj, temperatureId);
+    colorCorrectionSettings.highlight = env->GetIntField(jobj, highlightId);
+    colorCorrectionSettings.shadow = env->GetIntField(jobj, shadowId);
+    colorCorrectionSettings.sharpen = env->GetIntField(jobj, sharpenId);
+    colorCorrectionSettings.corner = env->GetIntField(jobj, cornerId);
+    colorCorrectionSettings.status = env->GetIntField(jobj, statusId);
+
+    Mat dst;
+    colorCorrection->doColorCorrection(colorCorrectionSettings,dst);
 
     return matToIntArray(env,dst);
 }
