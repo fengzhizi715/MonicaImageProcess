@@ -82,25 +82,25 @@ void ColorCorrection::doColorCorrection(ColorCorrectionSettings colorCorrectionS
 
     switch( colorCorrectionSettings.status) {
         case 1:
-            dst = adjustContrast(colorCorrectionSettings.contrast);
+            dst = adjustContrast(colorCorrectionSettings.contrast - 255);
             break;
         case 2:
-            dst = adjustHue(colorCorrectionSettings.hue);
+            dst = adjustHue(colorCorrectionSettings.hue - 180);
             break;
         case 3:
-            dst = adjustSaturation(colorCorrectionSettings.saturation);
+            dst = adjustSaturation(colorCorrectionSettings.saturation - 255);
             break;
         case 4:
-            dst = adjustLightness(colorCorrectionSettings.lightness);
+            dst = adjustLightness(colorCorrectionSettings.lightness - 255);
             break;
         case 5:
-            dst = adjustTemperature(colorCorrectionSettings.temperature);
+            dst = adjustTemperature(colorCorrectionSettings.temperature - 255);
             break;
         case 6:
-            dst = adjustHighlight(colorCorrectionSettings.highlight);
+            dst = adjustHighlight(colorCorrectionSettings.highlight - 255);
             break;
         case 7:
-            dst = adjustShadow(colorCorrectionSettings.shadow);
+            dst = adjustShadow(colorCorrectionSettings.shadow - 255);
             break;
         case 8:
             dst = adjustSharpen(colorCorrectionSettings.sharpen);
@@ -114,7 +114,7 @@ void ColorCorrection::doColorCorrection(ColorCorrectionSettings colorCorrectionS
 }
 
 Mat ColorCorrection::adjust() {
-    printf("_contractScale = %f, _hueOffset = %d, _saturationOffset = %d, _lightnessOffset = %d, _temperatureScale = %f, _highlightOffset = %d, _shadowOffset = %d, _sharpenOffset = %f, _cornerOffset =%f\n",_contractScale,_hueOffset,_saturationOffset,_lightnessOffset,_temperatureScale,_highlightOffset,_shadowOffset,_sharpenOffset,_cornerOffset);
+    cout<<"_contractScale = "<< _contractScale <<", _hueOffset = "<< _hueOffset <<", _saturationOffset = "<<_saturationOffset<<", _lightnessOffset = "<<_lightnessOffset<<", _temperatureScale = "<<_temperatureScale<<", _highlightOffset = "<<_highlightOffset<<", _shadowOffset = "<<_shadowOffset<<", _sharpenOffset = "<<_sharpenOffset<<", _cornerOffset = "<<_cornerOffset<< endl;
 
     cv::Mat hslCopy = _cachedHSLImg.clone();
     _cachedHSLImg.forEach<Pixel>([&](Pixel &p, const int * position) -> void {
