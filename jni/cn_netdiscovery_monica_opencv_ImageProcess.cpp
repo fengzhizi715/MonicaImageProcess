@@ -113,7 +113,9 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colo
     Mat dst;
     colorCorrection->doColorCorrection(colorCorrectionSettings,dst);
 
-    return matToIntArray(env,dst);
+    env->DeleteLocalRef(jcls);  // 手动释放局部引用
+
+    return matToIntArray(env, dst);
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_deleteColorCorrection
