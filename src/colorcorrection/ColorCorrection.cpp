@@ -25,7 +25,7 @@ ColorCorrection::ColorCorrection(Mat src):
     radius = sqrt(pow(width, 2) + pow(height, 2)) / 2.0;
 
     cvtColor(origin, _cachedHSLImg, cv::COLOR_BGR2HSV);
-    cvtColor(origin, gray, cv::COLOR_BGR2GRAY);
+//    cvtColor(origin, gray, cv::COLOR_BGR2GRAY);
     GaussianBlur(origin, blurMask, {0, 0}, 5);
     genHighlightAndShadowMask();
 }
