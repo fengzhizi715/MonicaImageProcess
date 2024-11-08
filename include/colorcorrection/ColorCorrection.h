@@ -44,8 +44,8 @@ public:
 
     void doColorCorrection(ColorCorrectionSettings colorCorrectionSettings, Mat& dst);
 
-    Mat originImg;
-    Mat grayImg;
+    Mat origin;
+    Mat gray;
     Mat highlightMask;
     Mat shadowMask;
     Mat blurMask;
