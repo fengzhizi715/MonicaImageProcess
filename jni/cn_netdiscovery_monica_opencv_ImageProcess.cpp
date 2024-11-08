@@ -16,7 +16,7 @@
 #include "../include/utils/Utils.h"
 #include <onnxruntime_cxx_api.h>
 
-ColorCorrection *colorCorrection = nullptr;
+//ColorCorrection *colorCorrection = nullptr;
 FaceDetect      *faceDetect = nullptr;
 SketchDrawing   *sketchDrawing = nullptr;
 Yolov8Face      *yolov8Face = nullptr;
@@ -69,15 +69,19 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_shea
     return matToIntArray(env,dst);
 }
 
-JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initColorCorrection
+JNIEXPORT jlong JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initColorCorrection
 (JNIEnv* env, jobject, jbyteArray array) {
     Mat image = byteArrayToMat(env, array);
 
-    colorCorrection = new ColorCorrection(image);
+    // 创建 C++ 对象并存储指针
+    ColorCorrection* cppObject = new ColorCorrection(image);
+    return reinterpret_cast<jlong>(cppObject);
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colorCorrection
-        (JNIEnv* env, jobject,jbyteArray array, jobject jobj) {
+        (JNIEnv* env, jobject,jbyteArray array, jobject jobj,  jlong cppObjectPtr) {
+
+    ColorCorrection* colorCorrection = reinterpret_cast<ColorCorrection*>(cppObjectPtr);
     ColorCorrectionSettings colorCorrectionSettings;
 
     Mat image = byteArrayToMat(env, array);
@@ -110,6 +114,13 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colo
     colorCorrection->doColorCorrection(colorCorrectionSettings,dst);
 
     return matToIntArray(env,dst);
+}
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_deleteColorCorrection
+        (JNIEnv* env, jobject, jlong cppObjectPtr) {
+    // 删除 C++对象，防止内存泄漏
+    ColorCorrection* colorCorrection = reinterpret_cast<ColorCorrection*>(cppObjectPtr);
+    delete colorCorrection;
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_equalizeHist

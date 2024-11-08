@@ -21,11 +21,14 @@ JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getONN
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_shearing
         (JNIEnv* env, jobject,jbyteArray array, jfloat x, jfloat y);
 
-JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initColorCorrection
+JNIEXPORT jlong JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initColorCorrection
 (JNIEnv* env, jobject,jbyteArray array);
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colorCorrection
-        (JNIEnv* env, jobject,jbyteArray array, jobject jobj);
+        (JNIEnv* env, jobject,jbyteArray array, jobject jobj,  jlong cppObjectPtr);
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_deleteColorCorrection
+        (JNIEnv* env, jobject, jlong cppObjectPtr);
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_equalizeHist
         (JNIEnv* env, jobject,jbyteArray array);
