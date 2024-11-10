@@ -111,7 +111,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colo
     colorCorrectionSettings.status = env->GetIntField(jobj, statusId);
 
     Mat dst;
-    colorCorrection->doColorCorrection(colorCorrectionSettings,dst);
+    colorCorrection->doColorCorrection(colorCorrectionSettings, dst);
 
     env->DeleteLocalRef(jcls);  // 手动释放局部引用
 
@@ -427,6 +427,9 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cont
     contourDisplaySettings.showCenter = env->GetBooleanField(jobj2, showCenterId);
 
     contourAnalysis(src, binary, contourFilterSettings, contourDisplaySettings);
+
+    env->DeleteLocalRef(jcls1);  // 手动释放局部引用
+    env->DeleteLocalRef(jcls2);  // 手动释放局部引用
 
     if (contourDisplaySettings.showOriginalImage) {
         return matToIntArray(env,src);
