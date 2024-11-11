@@ -118,7 +118,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colo
     return matToIntArray(env, dst);
 }
 
-JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_deleteColorCorrection
+JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_deleteColorCorrection
         (JNIEnv* env, jobject, jlong cppObjectPtr) {
     // 删除 C++对象，防止内存泄漏
     ColorCorrection* colorCorrection = reinterpret_cast<ColorCorrection*>(cppObjectPtr);
