@@ -16,7 +16,6 @@
 #include "../include/utils/Utils.h"
 #include <onnxruntime_cxx_api.h>
 
-//ColorCorrection *colorCorrection = nullptr;
 FaceDetect      *faceDetect = nullptr;
 SketchDrawing   *sketchDrawing = nullptr;
 Yolov8Face      *yolov8Face = nullptr;
@@ -111,7 +110,23 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colo
     colorCorrectionSettings.status = env->GetIntField(jobj, statusId);
 
     Mat dst;
-    colorCorrection->doColorCorrection(colorCorrectionSettings, dst);
+
+    try {
+        colorCorrection->doColorCorrection(colorCorrectionSettings, dst);
+    } catch(...) {
+    }
+
+    jthrowable mException = NULL;
+    mException = env->ExceptionOccurred();
+
+    if (mException != NULL) {
+      env->ExceptionClear();
+      jclass exceptionClazz = env->FindClass("java/lang/Exception");
+      env->ThrowNew(exceptionClazz, "jni exception");
+      env->DeleteLocalRef(exceptionClazz);
+
+      return env->NewIntArray(0);
+    }
 
     env->DeleteLocalRef(jcls);  // 手动释放局部引用
 
