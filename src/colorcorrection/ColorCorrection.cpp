@@ -25,7 +25,6 @@ ColorCorrection::ColorCorrection(Mat src):
     radius = sqrt(pow(width, 2) + pow(height, 2)) / 2.0;
 
     cvtColor(origin, _cachedHSLImg, cv::COLOR_BGR2HSV);
-//    cvtColor(origin, gray, cv::COLOR_BGR2GRAY);
     GaussianBlur(origin, blurMask, {0, 0}, 5);
     genHighlightAndShadowMask();
 }
@@ -80,7 +79,7 @@ Mat ColorCorrection::adjustCorner(int cornerOffset) {
 
 void ColorCorrection::doColorCorrection(ColorCorrectionSettings colorCorrectionSettings, Mat& dst) {
 
-    switch( colorCorrectionSettings.status) {
+    switch(colorCorrectionSettings.status) {
         case 1:
             dst = adjustContrast(colorCorrectionSettings.contrast - 255);
             break;
