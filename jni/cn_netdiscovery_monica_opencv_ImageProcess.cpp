@@ -453,6 +453,21 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cont
     }
 }
 
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_gaussianBlur
+        (JNIEnv* env, jobject,jbyteArray array,jint ksize, jdouble sigmaX, jdouble sigmaY) {
+    Mat image = byteArrayToMat(env,array);
+
+    Mat dst;
+    gaussianBlur(image, dst, ksize, sigmaX, sigmaY);
+    return matToIntArray(env,dst);
+}
+
+
+
+
+
+
+
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceDetect
         (JNIEnv* env, jobject, jstring jFaceProto, jstring jFaceModel,
          jstring jAgeProto, jstring jAgeModel, jstring jGenderProto, jstring jGenderModel) {
