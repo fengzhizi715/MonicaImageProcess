@@ -27,7 +27,7 @@ FaceEnhance     *faceEnhance = nullptr;
 
 JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getVersion
         (JNIEnv* env, jobject) {
-    string version = "v0.1.2";
+    string version = "v0.1.3";
     return env->NewStringUTF(version.c_str());
 }
 
@@ -479,6 +479,16 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_bila
    bilateralFilter(image,dst,d, sigmaColor, sigmaSpace);
    return matToIntArray(env,dst);
 }
+
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_pyrMeanShiftFiltering
+        (JNIEnv* env, jobject,jbyteArray array,jdouble sp,jdouble sr) {
+   Mat image = byteArrayToMat(env,array);
+
+   Mat dst;
+   pyrMeanShiftFiltering(image, dst, sp, sr);
+   return matToIntArray(env,dst);
+}
+
 
 
 
