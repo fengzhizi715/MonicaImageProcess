@@ -510,7 +510,3 @@ void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterS
         }
     }
 }
-
-void gaussianBlur(Mat image, Mat& dst, int ksize, double sigmaX, double sigmaY) {
-    GaussianBlur(image, dst, cv::Size(ksize, ksize), sigmaX ,sigmaY);
-}

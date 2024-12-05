@@ -90,6 +90,10 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cann
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_gaussianBlur
         (JNIEnv* env, jobject,jbyteArray array,jint ksize,jdouble sigmaX,jdouble sigmaY);
 
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_medianBlur
+        (JNIEnv* env, jobject,jbyteArray array,jint ksize);
+
+
 
 
 

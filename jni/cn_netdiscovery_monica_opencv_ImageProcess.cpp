@@ -458,10 +458,18 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_gaus
     Mat image = byteArrayToMat(env,array);
 
     Mat dst;
-    gaussianBlur(image, dst, ksize, sigmaX, sigmaY);
+    GaussianBlur(image, dst, cv::Size(ksize, ksize), sigmaX ,sigmaY);
     return matToIntArray(env,dst);
 }
 
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_medianBlur
+        (JNIEnv* env, jobject,jbyteArray array,jint ksize) {
+   Mat image = byteArrayToMat(env,array);
+
+   Mat dst;
+   medianBlur(image, dst, ksize);
+   return matToIntArray(env,dst);
+}
 
 
 

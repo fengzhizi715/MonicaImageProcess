@@ -112,10 +112,6 @@ void inRange(Mat image, Mat& dst, int hmin, int smin, int vmin, int hmax, int sm
  */
 void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterSettings, ContourDisplaySettings contourDisplaySettings);
 
-/**
- * 高斯滤波
- */
-void gaussianBlur(Mat image, Mat& dst, int ksize, double sigmaX, double sigmaY);
 
 
 #endif //MONICAIMAGEPROCESS_LIBRARY_H
