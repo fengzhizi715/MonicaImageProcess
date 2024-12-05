@@ -471,6 +471,15 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_medi
    return matToIntArray(env,dst);
 }
 
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_bilateralFilter
+        (JNIEnv* env, jobject,jbyteArray array,jint d,jdouble sigmaColor,jdouble sigmaSpace) {
+   Mat image = byteArrayToMat(env,array);
+
+   Mat dst;
+   bilateralFilter(image,dst,d, sigmaColor, sigmaSpace);
+   return matToIntArray(env,dst);
+}
+
 
 
 
