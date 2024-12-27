@@ -489,6 +489,25 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_pyrM
    return matToIntArray(env,dst);
 }
 
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_morphologyEx
+        (JNIEnv* env, jobject,jbyteArray array,jobject jobj) {
+    MorphologicalOperationSettings morphologicalOperationSettings;
+
+    Mat binary = byteArrayTo8UC1Mat(env, array);
+    // 获取 jclass 实例
+    jclass jcls = env->FindClass("cn/netdiscovery/monica/ui/controlpanel/ai/experiment/model/MorphologicalOperationSettings");
+    jfieldID opId = env->GetFieldID(jcls, "op", "I");
+    jfieldID shapeId = env->GetFieldID(jcls, "shape", "I");
+    jfieldID widthId = env->GetFieldID(jcls, "width", "I");
+    jfieldID heightId = env->GetFieldID(jcls, "height", "I");
+
+    morphologicalOperationSettings.op = env->GetIntField(jobj, opId);
+    morphologicalOperationSettings.shape = env->GetIntField(jobj, shapeId);
+    morphologicalOperationSettings.width = env->GetIntField(jobj, widthId);
+    morphologicalOperationSettings.height = env->GetIntField(jobj, heightId);
+
+    return binaryMatToIntArray(env, binary);
+}
 
 
 

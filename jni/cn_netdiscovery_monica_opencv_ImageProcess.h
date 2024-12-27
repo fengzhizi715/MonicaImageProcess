@@ -99,7 +99,8 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_bila
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_pyrMeanShiftFiltering
         (JNIEnv* env, jobject,jbyteArray array,jdouble sp,jdouble sr);
 
-
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_morphologyEx
+        (JNIEnv* env, jobject,jbyteArray array,jobject jobj);
 
 
 

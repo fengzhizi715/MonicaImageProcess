@@ -30,6 +30,13 @@ typedef struct {
     bool showCenter;
 } ContourDisplaySettings;
 
+typedef struct {
+    int op;
+    int shape;
+    int width;
+    int height;
+} MorphologicalOperationSettings;
+
 /**
  * 图像错切
  * @param 沿 x 方向
