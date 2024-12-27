@@ -510,3 +510,10 @@ void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterS
         }
     }
 }
+
+void morphologyEx(Mat& image, Mat& dst, MorphologicalOperationSettings morphologicalOperationSettings){
+
+    Mat kernel = getStructuringElement(morphologicalOperationSettings.shape, Size(morphologicalOperationSettings.width, morphologicalOperationSettings.height));
+
+    cv::morphologyEx(image, dst, morphologicalOperationSettings.op, kernel);
+}

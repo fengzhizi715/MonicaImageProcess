@@ -119,6 +119,11 @@ void inRange(Mat image, Mat& dst, int hmin, int smin, int vmin, int hmax, int sm
  */
 void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterSettings, ContourDisplaySettings contourDisplaySettings);
 
+/**
+ * 形态学操作
+ */
+void morphologyEx(Mat& image, Mat& dst, MorphologicalOperationSettings morphologicalOperationSettings);
+
 
 
 #endif //MONICAIMAGEPROCESS_LIBRARY_H

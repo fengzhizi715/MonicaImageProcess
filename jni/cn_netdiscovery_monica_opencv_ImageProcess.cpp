@@ -506,7 +506,12 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_morp
     morphologicalOperationSettings.width = env->GetIntField(jobj, widthId);
     morphologicalOperationSettings.height = env->GetIntField(jobj, heightId);
 
-    return binaryMatToIntArray(env, binary);
+    Mat dst;
+    morphologyEx(binary, dst, morphologicalOperationSettings);
+
+    env->DeleteLocalRef(jcls);  // 手动释放局部引用
+
+    return binaryMatToIntArray(env, dst);
 }
 
 
