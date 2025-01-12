@@ -20,6 +20,11 @@ class MatchTemplate {
 public:
     MatchTemplate();
 
+    void doParallelTemplateMatching(Mat& image, Mat& templateImage,
+                                    double angleStart, double angleEnd, double angleStep,
+                                    double scaleStart, double scaleEnd, double scaleStep,
+                                    double threshold);
+
 private:
     // 使用 Canny 边缘检测
     cv::Mat computeCanny(const cv::Mat& image, double threshold1, double threshold2);

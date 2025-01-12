@@ -93,3 +93,25 @@ void MatchTemplate::applyNMS(const std::vector<cv::Rect>& boxes, const std::vect
         finalBoxes.push_back(boxes[idx]);
     }
 }
+
+void MatchTemplate::doParallelTemplateMatching(Mat& image, Mat& templateImage,
+                                               double angleStart, double angleEnd, double angleStep,
+                                               double scaleStart, double scaleEnd, double scaleStep,
+                                               double threshold){
+
+    std::vector<cv::Rect> matches;
+    std::vector<float> scores;
+
+    // 并行模板匹配
+    parallelTemplateMatching(image, templateImage, 0, 30, 5, 0.5, 1.0, 0.1, 0.75, matches, scores);
+
+    // 使用 OpenCV 的 NMS 过滤结果
+    std::vector<cv::Rect> finalMatches;
+    applyNMS(matches, scores, finalMatches, 0.6, 0.3);
+
+    // 绘制最终结果
+    cv::Mat resultImage = image.clone();
+    for (const auto& match : finalMatches) {
+        cv::rectangle(resultImage, match, cv::Scalar(0, 0, 255), 2);
+    }
+}
