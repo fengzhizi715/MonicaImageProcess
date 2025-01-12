@@ -5,17 +5,28 @@
 #ifndef MONICAIMAGEPROCESS_MATCHTEMPLATE_H
 #define MONICAIMAGEPROCESS_MATCHTEMPLATE_H
 
+#include <opencv2/opencv.hpp>
+#include <opencv2/dnn.hpp>
+#include <vector>
+#include <future>
+#include <mutex>
+#include <iostream>
+
+using namespace std;
+using namespace cv;
+
 class MatchTemplate {
 
 public:
     MatchTemplate();
 
 private:
-    cv::Mat computeCanny(const cv::Mat& image, double threshold1 = 50, double threshold2 = 150);
+    // 使用 Canny 边缘检测
+    cv::Mat computeCanny(const cv::Mat& image, double threshold1, double threshold2);
 
     // 处理单个角度和尺度
-    void processAngleScale(const cv::Mat& inputEdges, const cv::Mat& templateEdges, double angle, double scale,
-                           double threshold, std::mutex& resultMutex, std::vector<cv::Rect>& results, std::vector<float>& scores);
+    static void processAngleScale(const cv::Mat& inputEdges, const cv::Mat& templateEdges, double angle, double scale,
+                                  double threshold, std::mutex& resultMutex, std::vector<cv::Rect>& results, std::vector<float>& scores);
 
     // 并行化的模板匹配
     void parallelTemplateMatching(const cv::Mat& inputEdges, const cv::Mat& templateEdges,
