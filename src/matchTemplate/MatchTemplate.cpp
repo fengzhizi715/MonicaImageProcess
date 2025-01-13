@@ -94,10 +94,16 @@ void MatchTemplate::applyNMS(const std::vector<cv::Rect>& boxes, const std::vect
     }
 }
 
-void MatchTemplate::doParallelTemplateMatching(Mat& image, Mat& templateImage,
+cv::Mat MatchTemplate::templateMatching(Mat& image, Mat& templateImage,
                                                double angleStart, double angleEnd, double angleStep,
                                                double scaleStart, double scaleEnd, double scaleStep,
-                                               double threshold){
+                                               double threshold) {
+    // 绘制最终结果
+    cv::Mat resultImage = image.clone();
+
+    // 计算图像和模板的 Canny 边缘
+//    cv::Mat imageEdges = computeCanny(image, 50, 150);
+//    cv::Mat templateEdges = computeCanny(templateImage, 50, 150);
 
     std::vector<cv::Rect> matches;
     std::vector<float> scores;
@@ -109,9 +115,9 @@ void MatchTemplate::doParallelTemplateMatching(Mat& image, Mat& templateImage,
     std::vector<cv::Rect> finalMatches;
     applyNMS(matches, scores, finalMatches, 0.6, 0.3);
 
-    // 绘制最终结果
-    cv::Mat resultImage = image.clone();
     for (const auto& match : finalMatches) {
         cv::rectangle(resultImage, match, cv::Scalar(0, 0, 255), 2);
     }
+
+    return resultImage;
 }

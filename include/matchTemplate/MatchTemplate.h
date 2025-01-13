@@ -18,9 +18,7 @@ using namespace cv;
 class MatchTemplate {
 
 public:
-    MatchTemplate();
-
-    void doParallelTemplateMatching(Mat& image, Mat& templateImage,
+    cv::Mat templateMatching(Mat& image, Mat& templateImage,
                                     double angleStart, double angleEnd, double angleStep,
                                     double scaleStart, double scaleEnd, double scaleStep,
                                     double threshold);
