@@ -109,7 +109,7 @@ cv::Mat MatchTemplate::templateMatching(Mat& image, Mat& templateImage,
     std::vector<float> scores;
 
     // 并行模板匹配
-    parallelTemplateMatching(image, templateImage, 0, 30, 5, 0.5, 1.0, 0.1, 0.75, matches, scores);
+    parallelTemplateMatching(image, templateImage, angleStart, angleEnd, angleStep, scaleStart, scaleEnd, scaleStep, threshold, matches, scores);
 
     // 使用 OpenCV 的 NMS 过滤结果
     std::vector<cv::Rect> finalMatches;
