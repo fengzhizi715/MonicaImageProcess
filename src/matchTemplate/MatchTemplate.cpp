@@ -95,10 +95,11 @@ void MatchTemplate::applyNMS(const std::vector<cv::Rect>& boxes, const std::vect
     }
 }
 
-cv::Mat MatchTemplate::templateMatching(Mat& image, Mat& templateImage,
-                                        double angleStart, double angleEnd, double angleStep,
-                                        double scaleStart, double scaleEnd, double scaleStep,
-                                        double threshold) {
+Mat MatchTemplate::templateMatching(Mat& image, Mat& templateImage,
+                                    double angleStart, double angleEnd, double angleStep,
+                                    double scaleStart, double scaleEnd, double scaleStep,
+                                    double matchTemplateThreshold,  float scoreThreshold,float nmsThreshold) {
+
     // 绘制最终结果
     cv::Mat resultImage = image.clone();
 
@@ -110,11 +111,11 @@ cv::Mat MatchTemplate::templateMatching(Mat& image, Mat& templateImage,
     std::vector<float> scores;
 
     // 并行模板匹配
-    parallelTemplateMatching(image, templateImage, angleStart, angleEnd, angleStep, scaleStart, scaleEnd, scaleStep, threshold, matches, scores);
+    parallelTemplateMatching(image, templateImage, angleStart, angleEnd, angleStep, scaleStart, scaleEnd, scaleStep, matchTemplateThreshold, matches, scores);
 
     // 使用 OpenCV 的 NMS 过滤结果
     std::vector<cv::Rect> finalMatches;
-    applyNMS(matches, scores, finalMatches, 0.6, 0.3);
+    applyNMS(matches, scores, finalMatches, scoreThreshold, nmsThreshold);
 
     for (const auto& match : finalMatches) {
         cv::rectangle(resultImage, match, cv::Scalar(0, 0, 255), 2);

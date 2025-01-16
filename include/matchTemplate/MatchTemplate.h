@@ -18,14 +18,14 @@ using namespace cv;
 class MatchTemplate {
 
 public:
-    cv::Mat templateMatching(Mat& image, Mat& templateImage,
-                                    double angleStart, double angleEnd, double angleStep,
-                                    double scaleStart, double scaleEnd, double scaleStep,
-                                    double threshold);
+    Mat templateMatching(Mat& image, Mat& templateImage,
+                             double angleStart, double angleEnd, double angleStep,
+                             double scaleStart, double scaleEnd, double scaleStep,
+                             double matchTemplateThreshold,  float scoreThreshold,float nmsThreshold);
 
 private:
     // 使用 Canny 边缘检测
-    cv::Mat computeCanny(const cv::Mat& image, double threshold1, double threshold2);
+    Mat computeCanny(const cv::Mat& image, double threshold1, double threshold2);
 
     // 处理单个角度和尺度
     static void processAngleScale(const cv::Mat& inputEdges, const cv::Mat& templateEdges, double angle, double scale,
