@@ -15,13 +15,26 @@
 using namespace std;
 using namespace cv;
 
+typedef struct {
+    int matchType;
+    int angleStart;
+    int angleEnd;
+    int angleStep;
+    double scaleStart;
+    double scaleEnd;
+    double scaleStep;
+    double matchTemplateThreshold;
+    float scoreThreshold;
+    float nmsThreshold;
+} MatchTemplateSettings;
+
 class MatchTemplate {
 
 public:
-    Mat templateMatching(Mat& image, Mat& templateImage,
-                             double angleStart, double angleEnd, double angleStep,
-                             double scaleStart, double scaleEnd, double scaleStep,
-                             double matchTemplateThreshold,  float scoreThreshold,float nmsThreshold);
+    Mat templateMatching(Mat& image, Mat& templateImage, int matchType,
+                         double angleStart, double angleEnd, double angleStep,
+                         double scaleStart, double scaleEnd, double scaleStep,
+                         double matchTemplateThreshold,  float scoreThreshold, float nmsThreshold);
 
 private:
     // 使用 Canny 边缘检测
