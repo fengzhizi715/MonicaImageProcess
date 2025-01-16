@@ -80,8 +80,9 @@ void MatchTemplate::parallelTemplateMatching(const cv::Mat& inputEdges, const cv
 }
 
 // 使用 OpenCV 的 NMS
-void MatchTemplate::applyNMS(const std::vector<cv::Rect>& boxes, const std::vector<float>& scores, std::vector<cv::Rect>& finalBoxes,
-              float scoreThreshold, float nmsThreshold) {
+void MatchTemplate::applyNMS(const std::vector<cv::Rect>& boxes, const std::vector<float>& scores,
+                             std::vector<cv::Rect>& finalBoxes,
+                             float scoreThreshold, float nmsThreshold) {
     if (boxes.empty() || scores.empty()) {
         return; // 避免空输入导致的崩溃
     }
@@ -95,9 +96,9 @@ void MatchTemplate::applyNMS(const std::vector<cv::Rect>& boxes, const std::vect
 }
 
 cv::Mat MatchTemplate::templateMatching(Mat& image, Mat& templateImage,
-                                               double angleStart, double angleEnd, double angleStep,
-                                               double scaleStart, double scaleEnd, double scaleStep,
-                                               double threshold) {
+                                        double angleStart, double angleEnd, double angleStep,
+                                        double scaleStart, double scaleEnd, double scaleStep,
+                                        double threshold) {
     // 绘制最终结果
     cv::Mat resultImage = image.clone();
 
