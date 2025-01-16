@@ -3,6 +3,8 @@
 //
 #include "../../include/matchTemplate/MatchTemplate.h"
 
+using namespace cv::dnn;
+
 // 使用 Canny 边缘检测
 cv::Mat MatchTemplate::computeCanny(const cv::Mat& image, double threshold1 = 50, double threshold2 = 150) {
     cv::Mat edges;
@@ -88,7 +90,7 @@ void MatchTemplate::applyNMS(const std::vector<cv::Rect>& boxes, const std::vect
     }
 
     std::vector<int> indices;
-    cv::dnn::NMSBoxes(boxes, scores, scoreThreshold, nmsThreshold, indices);
+    NMSBoxes(boxes, scores, scoreThreshold, nmsThreshold, indices);
 
     for (int idx : indices) {
         finalBoxes.push_back(boxes[idx]);
@@ -103,12 +105,17 @@ Mat MatchTemplate::templateMatching(Mat& image, Mat& templateImage, int matchTyp
     // 绘制最终结果
     cv::Mat resultImage = image.clone();
 
-    // 计算图像和模板的 Canny 边缘
-//    cv::Mat imageEdges = computeCanny(image, 50, 150);
-//    cv::Mat templateEdges = computeCanny(templateImage, 50, 150);
+    if (matchType == 1) { // 灰度匹配
+        cvtColor(image, image, COLOR_BGR2GRAY);
+        cvtColor(templateImage, templateImage, COLOR_BGR2GRAY);
+    } else if (matchType == 2) { // 边缘匹配
+        // 计算图像和模板的 Canny 边缘
+        image = computeCanny(image, 50, 150);
+        templateImage = computeCanny(templateImage, 50, 150);
+    }
 
-    std::vector<cv::Rect> matches;
-    std::vector<float> scores;
+    vector<Rect> matches;
+    vector<float> scores;
 
     // 并行模板匹配
     parallelTemplateMatching(image, templateImage, angleStart, angleEnd, angleStep, scaleStart, scaleEnd, scaleStep, matchTemplateThreshold, matches, scores);
