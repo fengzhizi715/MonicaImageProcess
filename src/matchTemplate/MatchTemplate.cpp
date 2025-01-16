@@ -114,11 +114,11 @@ Mat MatchTemplate::templateMatching(Mat& image, Mat& templateImage,
     parallelTemplateMatching(image, templateImage, angleStart, angleEnd, angleStep, scaleStart, scaleEnd, scaleStep, matchTemplateThreshold, matches, scores);
 
     // 使用 OpenCV 的 NMS 过滤结果
-    std::vector<cv::Rect> finalMatches;
+    vector<Rect> finalMatches;
     applyNMS(matches, scores, finalMatches, scoreThreshold, nmsThreshold);
 
     for (const auto& match : finalMatches) {
-        cv::rectangle(resultImage, match, cv::Scalar(0, 0, 255), 2);
+        rectangle(resultImage, match, cv::Scalar(0, 0, 255), 2);
     }
 
     return resultImage;
