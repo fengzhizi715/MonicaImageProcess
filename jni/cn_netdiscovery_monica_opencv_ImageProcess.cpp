@@ -4,6 +4,7 @@
 #include <iostream>
 #include "cn_netdiscovery_monica_opencv_ImageProcess.h"
 #include "../include/colorcorrection/ColorCorrection.h"
+#include "../include/matchTemplate//MatchTemplate.h"
 #include "../include/library.h"
 #include "../include/Constants.h"
 #include "../include/faceDetect/FaceDetect.h"
@@ -514,7 +515,43 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_morp
     return binaryMatToIntArray(env, dst);
 }
 
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matchTemplate
+        (JNIEnv* env, jobject,jbyteArray array, jbyteArray arrayTemplate, jobject jobj) {
+    MatchTemplateSettings matchTemplateSettings;
 
+    Mat image = byteArrayToMat(env,array);
+    Mat templateImage = byteArrayToMat(env,arrayTemplate);
+    // 获取 jclass 实例
+    jclass jcls = env->FindClass("cn/netdiscovery/monica/ui/controlpanel/ai/experiment/model/MatchTemplateSettings");
+    jfieldID matchTypeId = env->GetFieldID(jcls, "matchType", "I");
+    jfieldID angleStartId = env->GetFieldID(jcls, "angleStart", "I");
+    jfieldID angleEndId = env->GetFieldID(jcls, "angleEnd", "I");
+    jfieldID angleStepId = env->GetFieldID(jcls, "angleStep", "I");
+    jfieldID scaleStartId = env->GetFieldID(jcls, "scaleStart", "D");
+    jfieldID scaleEndId = env->GetFieldID(jcls, "scaleEnd", "D");
+    jfieldID scaleStepId = env->GetFieldID(jcls, "scaleStep", "D");
+    jfieldID matchTemplateThresholdId = env->GetFieldID(jcls, "matchTemplateThreshold", "D");
+    jfieldID scoreThresholdId = env->GetFieldID(jcls, "scoreThreshold", "F");
+    jfieldID nmsThresholdId = env->GetFieldID(jcls, "nmsThreshold", "F");
+
+    matchTemplateSettings.matchType = env->GetIntField(jobj, matchTypeId);
+    matchTemplateSettings.angleStart = env->GetIntField(jobj, angleStartId);
+    matchTemplateSettings.angleEnd = env->GetIntField(jobj, angleEndId);
+    matchTemplateSettings.angleStep = env->GetIntField(jobj, angleStepId);
+    matchTemplateSettings.scaleStart = env->GetDoubleField(jobj, scaleStartId);
+    matchTemplateSettings.scaleEnd = env->GetDoubleField(jobj, scaleEndId);
+    matchTemplateSettings.scaleStep = env->GetDoubleField(jobj, scaleStepId);
+    matchTemplateSettings.matchTemplateThreshold = env->GetDoubleField(jobj, matchTemplateThresholdId);
+    matchTemplateSettings.scoreThreshold = env->GetFloatField(jobj, scoreThresholdId);
+    matchTemplateSettings.nmsThreshold = env->GetFloatField(jobj, nmsThresholdId);
+
+    MatchTemplate matchTemplate;
+
+    Mat dst = matchTemplate.templateMatching(image, templateImage, matchTemplateSettings.matchType, matchTemplateSettings.angleStart, matchTemplateSettings.angleEnd, matchTemplateSettings.angleStep,
+                                             matchTemplateSettings.scaleStart, matchTemplateSettings.scaleEnd, matchTemplateSettings.scaleStep,
+                                             matchTemplateSettings.matchTemplateThreshold, matchTemplateSettings.scoreThreshold, matchTemplateSettings.nmsThreshold);
+    return matToIntArray(env,dst);
+}
 
 
 

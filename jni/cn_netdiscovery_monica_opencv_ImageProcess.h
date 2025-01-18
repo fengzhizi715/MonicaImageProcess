@@ -102,7 +102,8 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_pyrM
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_morphologyEx
         (JNIEnv* env, jobject,jbyteArray array,jobject jobj);
 
-
+JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matchTemplate
+        (JNIEnv* env, jobject,jbyteArray array, jbyteArray arrayTemplate, jobject jobj);
 
 
 //-------------------------------------------------------------------
