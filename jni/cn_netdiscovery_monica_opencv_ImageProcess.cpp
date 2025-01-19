@@ -545,8 +545,8 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matc
     matchTemplateSettings.scoreThreshold = env->GetFloatField(jobj, scoreThresholdId);
     matchTemplateSettings.nmsThreshold = env->GetFloatField(jobj, nmsThresholdId);
 
-    MatchTemplate matchTemplate;
 
+    MatchTemplate matchTemplate;
     Mat dst = matchTemplate.templateMatching(image, templateImage, matchTemplateSettings.matchType, matchTemplateSettings.angleStart, matchTemplateSettings.angleEnd, matchTemplateSettings.angleStep,
                                              matchTemplateSettings.scaleStart, matchTemplateSettings.scaleEnd, matchTemplateSettings.scaleStep,
                                              matchTemplateSettings.matchTemplateThreshold, matchTemplateSettings.scoreThreshold, matchTemplateSettings.nmsThreshold);

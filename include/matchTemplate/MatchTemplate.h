@@ -31,7 +31,7 @@ typedef struct {
 class MatchTemplate {
 
 public:
-    Mat templateMatching(Mat& image, Mat& templateImage, int matchType,
+    Mat templateMatching(Mat image, Mat templateImage, int matchType,
                          double angleStart, double angleEnd, double angleStep,
                          double scaleStart, double scaleEnd, double scaleStep,
                          double matchTemplateThreshold,  float scoreThreshold, float nmsThreshold);

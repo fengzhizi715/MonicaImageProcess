@@ -97,7 +97,7 @@ void MatchTemplate::applyNMS(const std::vector<cv::Rect>& boxes, const std::vect
     }
 }
 
-Mat MatchTemplate::templateMatching(Mat& image, Mat& templateImage, int matchType,
+Mat MatchTemplate::templateMatching(Mat image, Mat templateImage, int matchType,
                                     double angleStart, double angleEnd, double angleStep,
                                     double scaleStart, double scaleEnd, double scaleStep,
                                     double matchTemplateThreshold,  float scoreThreshold, float nmsThreshold) {
