@@ -4,7 +4,7 @@
 #include <iostream>
 #include "cn_netdiscovery_monica_opencv_ImageProcess.h"
 #include "../include/colorcorrection/ColorCorrection.h"
-#include "../include/matchTemplate//MatchTemplate.h"
+#include "../include/matchTemplate/MatchTemplate.h"
 #include "../include/library.h"
 #include "../include/Constants.h"
 #include "../include/faceDetect/FaceDetect.h"
