@@ -24,6 +24,7 @@ Face68Landmarks *face68Landmarks = nullptr;
 FaceEmbedding   *faceEmbedding = nullptr;
 FaceSwap        *faceSwap = nullptr;
 FaceEnhance     *faceEnhance = nullptr;
+MatchTemplate   *match_template = nullptr;
 
 
 JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getVersion
@@ -545,9 +546,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matc
     matchTemplateSettings.scoreThreshold = env->GetFloatField(jobj, scoreThresholdId);
     matchTemplateSettings.nmsThreshold = env->GetFloatField(jobj, nmsThresholdId);
 
-
-    MatchTemplate matchTemplate;
-    Mat dst = matchTemplate.templateMatching(image, templateImage, matchTemplateSettings.matchType, matchTemplateSettings.angleStart, matchTemplateSettings.angleEnd, matchTemplateSettings.angleStep,
+    Mat dst = match_template->templateMatching(image, templateImage, matchTemplateSettings.matchType, matchTemplateSettings.angleStart, matchTemplateSettings.angleEnd, matchTemplateSettings.angleStep,
                                              matchTemplateSettings.scaleStart, matchTemplateSettings.scaleEnd, matchTemplateSettings.scaleStep,
                                              matchTemplateSettings.matchTemplateThreshold, matchTemplateSettings.scoreThreshold, matchTemplateSettings.nmsThreshold);
 
@@ -555,7 +554,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matc
 
     return matToIntArray(env,dst);
 }
-
 
 
 
