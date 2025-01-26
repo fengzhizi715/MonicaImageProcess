@@ -399,7 +399,7 @@ void inRange(Mat image , Mat& dst, int hmin, int smin, int vmin, int hmax, int s
     inRange(image, lower, upper, dst); // 通过 inRange 函数实现二值化
 }
 
-void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterSettings, ContourDisplaySettings contourDisplaySettings){
+void contourAnalysis(Mat& src, Mat& binary, Scalar scalar, ContourFilterSettings contourFilterSettings, ContourDisplaySettings contourDisplaySettings){
     vector<vector<Point>> contours;
     vector<Vec4i> hierarchy;
 
@@ -494,10 +494,10 @@ void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterS
 
             Point2f pt[4];
             rrt.points(pt);
-            line(src, pt[0], pt[1], Scalar(0, 0, 255), 8, 8);
-            line(src, pt[1], pt[2], Scalar(0, 0, 255), 8, 8);
-            line(src, pt[2], pt[3], Scalar(0, 0, 255), 8, 8);
-            line(src, pt[3], pt[0], Scalar(0, 0, 255), 8, 8);
+            line(src, pt[0], pt[1], scalar, 8, 8);
+            line(src, pt[1], pt[2], scalar, 8, 8);
+            line(src, pt[2], pt[3], scalar, 8, 8);
+            line(src, pt[3], pt[0], scalar, 8, 8);
         }
 
         if (contourDisplaySettings.showCenter) {
@@ -506,7 +506,7 @@ void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterS
             }
 
             Point center = rrt.center;
-            circle(src, center, 2,Scalar(0, 0, 255), 8, 8); // 绘制最小外接矩形的中心点
+            circle(src, center, 2, scalar, 8, 8); // 绘制最小外接矩形的中心点
         }
     }
 }

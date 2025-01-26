@@ -29,7 +29,7 @@ MatchTemplate   *match_template = nullptr;
 
 JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getVersion
         (JNIEnv* env, jobject) {
-    string version = "v0.1.4";
+    string version = "v0.1.5";
     return env->NewStringUTF(version.c_str());
 }
 
@@ -404,12 +404,18 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cann
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_contourAnalysis
-        (JNIEnv* env, jobject,jbyteArray srcArray, jbyteArray binaryArray, jobject jobj1, jobject jobj2) {
+        (JNIEnv* env, jobject,jbyteArray srcArray, jbyteArray binaryArray, jintArray scalarArray, jobject jobj1, jobject jobj2) {
     ContourFilterSettings contourFilterSettings;
     ContourDisplaySettings contourDisplaySettings;
 
     Mat src = byteArrayToMat(env, srcArray);
     Mat binary = byteArrayTo8UC1Mat(env,binaryArray);
+
+    jsize len = env->GetArrayLength(scalarArray);
+    jint scalarValues[3];
+    env->GetIntArrayRegion(scalarArray, 0, len, scalarValues);
+
+    cv::Scalar scalar(scalarValues[0], scalarValues[1], scalarValues[2]);
 
     // 获取 jclass 实例
     jclass jcls1 = env->FindClass("cn/netdiscovery/monica/ui/controlpanel/ai/experiment/model/ContourFilterSettings");
@@ -443,7 +449,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cont
     contourDisplaySettings.showMinAreaRect = env->GetBooleanField(jobj2, showMinAreaRectId);
     contourDisplaySettings.showCenter = env->GetBooleanField(jobj2, showCenterId);
 
-    contourAnalysis(src, binary, contourFilterSettings, contourDisplaySettings);
+    contourAnalysis(src, binary, scalar, contourFilterSettings, contourDisplaySettings);
 
     env->DeleteLocalRef(jcls1);  // 手动释放局部引用
     env->DeleteLocalRef(jcls2);  // 手动释放局部引用

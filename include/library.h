@@ -117,7 +117,7 @@ void inRange(Mat image, Mat& dst, int hmin, int smin, int vmin, int hmax, int sm
 /**
  * 轮廓分析
  */
-void contourAnalysis(Mat& src, Mat& binary, ContourFilterSettings contourFilterSettings, ContourDisplaySettings contourDisplaySettings);
+void contourAnalysis(Mat& src, Mat& binary, Scalar scalar, ContourFilterSettings contourFilterSettings, ContourDisplaySettings contourDisplaySettings);
 
 /**
  * 形态学操作
