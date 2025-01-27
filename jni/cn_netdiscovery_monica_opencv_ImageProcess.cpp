@@ -523,11 +523,18 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_morp
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matchTemplate
-        (JNIEnv* env, jobject,jbyteArray array, jbyteArray arrayTemplate, jobject jobj) {
+        (JNIEnv* env, jobject,jbyteArray array, jbyteArray arrayTemplate, jintArray scalarArray, jobject jobj) {
     MatchTemplateSettings matchTemplateSettings;
 
     Mat image = byteArrayToMat(env,array);
     Mat templateImage = byteArrayToMat(env,arrayTemplate);
+
+    jsize len = env->GetArrayLength(scalarArray);
+    jint scalarValues[3];
+    env->GetIntArrayRegion(scalarArray, 0, len, scalarValues);
+
+    cv::Scalar scalar(scalarValues[0], scalarValues[1], scalarValues[2]);
+
     // 获取 jclass 实例
     jclass jcls = env->FindClass("cn/netdiscovery/monica/ui/controlpanel/ai/experiment/model/MatchTemplateSettings");
     jfieldID matchTypeId = env->GetFieldID(jcls, "matchType", "I");
@@ -554,7 +561,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matc
 
     Mat dst = match_template->templateMatching(image, templateImage, matchTemplateSettings.matchType, matchTemplateSettings.angleStart, matchTemplateSettings.angleEnd, matchTemplateSettings.angleStep,
                                              matchTemplateSettings.scaleStart, matchTemplateSettings.scaleEnd, matchTemplateSettings.scaleStep,
-                                             matchTemplateSettings.matchTemplateThreshold, matchTemplateSettings.scoreThreshold, matchTemplateSettings.nmsThreshold);
+                                             matchTemplateSettings.matchTemplateThreshold, matchTemplateSettings.scoreThreshold, matchTemplateSettings.nmsThreshold, scalar);
 
     env->DeleteLocalRef(jcls);  // 手动释放局部引用
 

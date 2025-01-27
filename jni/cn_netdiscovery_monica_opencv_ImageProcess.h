@@ -103,7 +103,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_morp
         (JNIEnv* env, jobject,jbyteArray array,jobject jobj);
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matchTemplate
-        (JNIEnv* env, jobject,jbyteArray array, jbyteArray arrayTemplate, jobject jobj);
+        (JNIEnv* env, jobject,jbyteArray array, jbyteArray arrayTemplate, jintArray scalarArray, jobject jobj);
 
 
 //-------------------------------------------------------------------

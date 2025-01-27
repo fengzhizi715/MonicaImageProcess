@@ -485,7 +485,7 @@ void contourAnalysis(Mat& src, Mat& binary, Scalar scalar, ContourFilterSettings
 
         if (contourDisplaySettings.showBoundingRect) {
             Rect rect = boundingRect(contours[i]);
-            rectangle(src, rect, Scalar(0, 255, 0), 8, 8);
+            rectangle(src, rect, scalar, 8, 8);
         }
 
         RotatedRect rrt;

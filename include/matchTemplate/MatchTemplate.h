@@ -34,7 +34,7 @@ public:
     Mat templateMatching(Mat image, Mat templateImage, int matchType,
                          double angleStart, double angleEnd, double angleStep,
                          double scaleStart, double scaleEnd, double scaleStep,
-                         double matchTemplateThreshold,  float scoreThreshold, float nmsThreshold);
+                         double matchTemplateThreshold,  float scoreThreshold, float nmsThreshold, Scalar scalar);
 
 private:
     // 使用 Canny 边缘检测
