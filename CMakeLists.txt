@@ -48,20 +48,20 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
     add_library(${PROJECT_NAME} SHARED
-            src/library.cpp include/library.h
-            src/common/OnnxRuntimeBase.cpp include/common/OnnxRuntimeBase.h
-            jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp jni/cn_netdiscovery_monica_opencv_ImageProcess.h
-            src/faceDetect/FaceDetect.cpp include/faceDetect/FaceDetect.h
-            src/sketchDrawing/SketchDrawing.cpp include/sketchDrawing/SketchDrawing.h
-            src/faceSwap/Yolov8Face.cpp include/faceSwap/Yolov8Face.h
-            src/faceSwap/Face68Landmarks.cpp include/faceSwap/Face68Landmarks.h
-            src/faceSwap/FaceEmbedding.cpp include/faceSwap/FaceEmbedding.h
-            src/faceSwap/FaceSwap.cpp include/faceSwap/FaceSwap.h
-            src/faceSwap/FaceEnhance.cpp include/faceSwap/FaceEnhance.h
-            src/colorcorrection/ColorCorrection.cpp include/colorcorrection/ColorCorrection.h
-            src/matchTemplate/MatchTemplate.cpp include/matchTemplate/MatchTemplate.h
-            src/utils/Timer.cpp include/utils/Timer.h
-            src/utils/Utils.cpp include/utils/Utils.h
+            include/library.h src/library.cpp
+            include/common/OnnxRuntimeBase.h src/common/OnnxRuntimeBase.cpp
+            jni/cn_netdiscovery_monica_opencv_ImageProcess.h jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp
+            include/faceDetect/FaceDetect.h src/faceDetect/FaceDetect.cpp
+            include/sketchDrawing/SketchDrawing.h src/sketchDrawing/SketchDrawing.cpp
+            include/faceSwap/Yolov8Face.h src/faceSwap/Yolov8Face.cpp
+            include/faceSwap/Face68Landmarks.h src/faceSwap/Face68Landmarks.cpp
+            include/faceSwap/FaceEmbedding.h src/faceSwap/FaceEmbedding.cpp
+            include/faceSwap/FaceSwap.h src/faceSwap/FaceSwap.cpp
+            include/faceSwap/FaceEnhance.h src/faceSwap/FaceEnhance.cpp
+            include/colorcorrection/ColorCorrection.h src/colorcorrection/ColorCorrection.cpp
+            include/matchTemplate/MatchTemplate.h src/matchTemplate/MatchTemplate.cpp
+            include/utils/Timer.h src/utils/Timer.cpp
+            include/utils/Utils.h src/utils/Utils.cpp
             include/Constants.h)
 
     target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
@@ -76,20 +76,20 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
     add_library(MonicaImageProcess_aarch64 SHARED
-            src/library.cpp include/library.h
-            src/common/OnnxRuntimeBase.cpp include/common/OnnxRuntimeBase.h
-            jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp jni/cn_netdiscovery_monica_opencv_ImageProcess.h
-            src/faceDetect/FaceDetect.cpp include/faceDetect/FaceDetect.h
-            src/sketchDrawing/SketchDrawing.cpp include/sketchDrawing/SketchDrawing.h
-            src/faceSwap/Yolov8Face.cpp include/faceSwap/Yolov8Face.h
-            src/faceSwap/Face68Landmarks.cpp include/faceSwap/Face68Landmarks.h
-            src/faceSwap/FaceEmbedding.cpp include/faceSwap/FaceEmbedding.h
-            src/faceSwap/FaceSwap.cpp include/faceSwap/FaceSwap.h
-            src/faceSwap/FaceEnhance.cpp include/faceSwap/FaceEnhance.h
-            src/colorcorrection/ColorCorrection.cpp include/colorcorrection/ColorCorrection.h
-            src/matchTemplate/MatchTemplate.cpp include/matchTemplate/MatchTemplate.h
-            src/utils/Timer.cpp include/utils/Timer.h
-            src/utils/Utils.cpp include/utils/Utils.h
+            include/library.h src/library.cpp
+            include/common/OnnxRuntimeBase.h src/common/OnnxRuntimeBase.cpp
+            jni/cn_netdiscovery_monica_opencv_ImageProcess.h jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp
+            include/faceDetect/FaceDetect.h src/faceDetect/FaceDetect.cpp
+            include/sketchDrawing/SketchDrawing.h src/sketchDrawing/SketchDrawing.cpp
+            include/faceSwap/Yolov8Face.h src/faceSwap/Yolov8Face.cpp
+            include/faceSwap/Face68Landmarks.h src/faceSwap/Face68Landmarks.cpp
+            include/faceSwap/FaceEmbedding.h src/faceSwap/FaceEmbedding.cpp
+            include/faceSwap/FaceSwap.h src/faceSwap/FaceSwap.cpp
+            include/faceSwap/FaceEnhance.h src/faceSwap/FaceEnhance.cpp
+            include/colorcorrection/ColorCorrection.h src/colorcorrection/ColorCorrection.cpp
+            include/matchTemplate/MatchTemplate.h src/matchTemplate/MatchTemplate.cpp
+            include/utils/Timer.h src/utils/Timer.cpp
+            include/utils/Utils.h src/utils/Utils.cpp
             include/Constants.h)
 
     target_link_libraries(MonicaImageProcess_aarch64 ${OpenCV_LIBS})
