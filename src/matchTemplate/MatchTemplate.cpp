@@ -7,8 +7,15 @@ using namespace cv::dnn;
 
 // 使用 Canny 边缘检测
 cv::Mat MatchTemplate::computeCanny(const cv::Mat& image, double threshold1 = 50, double threshold2 = 150) {
-    cv::Mat edges;
-    cv::Canny(image, edges, threshold1, threshold2);
+
+    cv::Mat gray, edges;
+    if (image.channels() == 3) {
+        cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+    } else {
+        gray = image.clone();
+    }
+
+    cv::Canny(gray, edges, threshold1, threshold2);
     CV_Assert(edges.type() == CV_8U); // 确保输出为单通道图像
     return edges;
 }
