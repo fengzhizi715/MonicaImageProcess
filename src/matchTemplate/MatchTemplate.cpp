@@ -13,30 +13,33 @@ cv::Mat MatchTemplate::computeCanny(const cv::Mat& image, double threshold1 = 50
     return edges;
 }
 
-// 处理单个角度和尺度
+// 处理旋转 + 缩放
 void MatchTemplate::processAngleScale(const cv::Mat& inputEdges, const cv::Mat& templateEdges, double angle, double scale,
                               double threshold, std::mutex& resultMutex, std::vector<cv::Rect>& results, std::vector<float>& scores) {
+
     // 旋转模板
+    cv::Mat rotatedTemplate;
     cv::Point2f center(templateEdges.cols / 2.0f, templateEdges.rows / 2.0f);
     cv::Mat rotationMatrix = cv::getRotationMatrix2D(center, angle, 1.0);
-    cv::Mat rotatedTemplate;
-    cv::warpAffine(templateEdges, rotatedTemplate, rotationMatrix, templateEdges.size(), cv::INTER_LINEAR);
+
+    // 计算旋转后外接矩形尺寸
+    cv::Rect bbox = cv::RotatedRect(center, templateEdges.size(), angle).boundingRect();
+    rotationMatrix.at<double>(0, 2) += bbox.width / 2.0 - center.x;
+    rotationMatrix.at<double>(1, 2) += bbox.height / 2.0 - center.y;
+
+    cv::warpAffine(templateEdges, rotatedTemplate, rotationMatrix, bbox.size(), cv::INTER_LINEAR, BORDER_CONSTANT, Scalar(0));
 
     // 缩放模板
     cv::Mat scaledTemplate;
-    cv::resize(rotatedTemplate, scaledTemplate, cv::Size(), scale, scale);
+    cv::resize(rotatedTemplate, scaledTemplate, cv::Size(), scale, scale, scale < 1 ? cv::INTER_AREA : cv::INTER_LINEAR);
 
-    // 检查模板有效性
-    if (scaledTemplate.empty() || scaledTemplate.cols < 1 || scaledTemplate.rows < 1) {
-        return; // 跳过无效模板
+    // 边界检查
+    if (scaledTemplate.empty() || scaledTemplate.cols < 1 || scaledTemplate.rows < 1 ||
+        scaledTemplate.cols > inputEdges.cols || scaledTemplate.rows > inputEdges.rows) {
+        return;
     }
 
-    // 检查模板与输入图像尺寸
-    if (scaledTemplate.cols > inputEdges.cols || scaledTemplate.rows > inputEdges.rows) {
-        return; // 跳过尺寸不匹配的模板
-    }
-
-    // 边缘模板匹配
+    // 模板匹配
     cv::Mat result;
     try {
         cv::matchTemplate(inputEdges, scaledTemplate, result, cv::TM_CCOEFF_NORMED);
@@ -44,6 +47,8 @@ void MatchTemplate::processAngleScale(const cv::Mat& inputEdges, const cv::Mat& 
         std::cerr << "Error in matchTemplate: " << e.what() << std::endl;
         return;
     }
+
+    if (result.empty()) return;
 
     // 记录满足阈值的匹配结果
     for (int y = 0; y < result.rows; ++y) {
@@ -64,20 +69,33 @@ void MatchTemplate::parallelTemplateMatching(const cv::Mat& inputEdges, const cv
                               double scaleStart, double scaleEnd, double scaleStep,
                               double threshold, std::vector<cv::Rect>& matches, std::vector<float>& scores) {
     std::mutex resultMutex;
-    std::vector<std::future<void>> futures;
+    std::vector<std::thread> threads;
+    std::condition_variable cv;
+    std::mutex cvMutex;
+    int activeThreads = 0;
+    const int maxThreads = std::thread::hardware_concurrency();
 
     for (double angle = angleStart; angle <= angleEnd; angle += angleStep) {
         for (double scale = scaleStart; scale <= scaleEnd; scale += scaleStep) {
-            futures.emplace_back(std::async(std::launch::async, &MatchTemplate::processAngleScale,
-                                            std::ref(inputEdges), std::ref(templateEdges),
-                                            angle, scale, threshold, std::ref(resultMutex),
-                                            std::ref(matches), std::ref(scores)));
+            {
+                std::unique_lock<std::mutex> lock(cvMutex);
+                cv.wait(lock, [&] { return activeThreads < maxThreads; });
+                activeThreads++;
+            }
+
+            threads.emplace_back([&, angle, scale] {
+                processAngleScale(inputEdges, templateEdges, angle, scale, threshold, resultMutex, matches, scores);
+                {
+                    std::lock_guard<std::mutex> lock(cvMutex);
+                    activeThreads--;
+                }
+                cv.notify_one();
+            });
         }
     }
 
-    // 等待所有线程完成
-    for (auto& future : futures) {
-        future.get();
+    for (auto& thread : threads) {
+        thread.join();
     }
 }
 
@@ -85,13 +103,12 @@ void MatchTemplate::parallelTemplateMatching(const cv::Mat& inputEdges, const cv
 void MatchTemplate::applyNMS(const std::vector<cv::Rect>& boxes, const std::vector<float>& scores,
                              std::vector<cv::Rect>& finalBoxes,
                              float scoreThreshold, float nmsThreshold) {
-    if (boxes.empty() || scores.empty()) {
-        return; // 避免空输入导致的崩溃
+    if (boxes.empty() || scores.empty() || boxes.size() != scores.size()) {
+        return;
     }
 
     std::vector<int> indices;
     NMSBoxes(boxes, scores, scoreThreshold, nmsThreshold, indices);
-
     for (int idx : indices) {
         finalBoxes.push_back(boxes[idx]);
     }
