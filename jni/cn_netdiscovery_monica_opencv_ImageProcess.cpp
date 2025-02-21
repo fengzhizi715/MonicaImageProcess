@@ -688,9 +688,16 @@ JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceS
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_faceLandMark
-        (JNIEnv* env, jobject,jbyteArray array) {
+        (JNIEnv* env, jobject,jbyteArray array, jintArray scalarArray) {
 
     Mat image = byteArrayToMat(env,array);
+
+    jsize len = env->GetArrayLength(scalarArray);
+    jint scalarValues[3];
+    env->GetIntArrayRegion(scalarArray, 0, len, scalarValues);
+
+    cv::Scalar scalar(scalarValues[0], scalarValues[1], scalarValues[2]);
+
     Mat dst;
 
     try {
@@ -698,13 +705,13 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_face
         yolov8Face->detect(image, boxes);
         dst = image.clone();
         for (auto box: boxes) {
-            rectangle(dst, cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax), Scalar(0, 255, 0), 4, 8, 0);
+            rectangle(dst, cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax), scalar, 4, 8, 0);
 
             vector<Point2f> face_landmark_5of68;
             face68Landmarks->detect(image, box, face_landmark_5of68);
             for (auto point : face_landmark_5of68)
             {
-                circle(dst, cv::Point(point.x, point.y), 4, Scalar(0, 0, 255), -1);
+                circle(dst, cv::Point(point.x, point.y), 4, scalar, -1);
             }
          }
     } catch(...) {
