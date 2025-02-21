@@ -88,7 +88,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colo
     Mat image = byteArrayToMat(env, array);
 
     // 获取 jclass 实例
-    jclass jcls = env->FindClass("cn/netdiscovery/monica/ui/controlpanel/colorcorrection/model/ColorCorrectionSettings");
+    jclass jcls = env->FindClass("cn/netdiscovery/monica/domain/ColorCorrectionSettings");
     jfieldID contrastId = env->GetFieldID(jcls, "contrast", "I");
     jfieldID hueId = env->GetFieldID(jcls, "hue", "I");
     jfieldID saturationId = env->GetFieldID(jcls, "saturation", "I");
@@ -418,7 +418,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cont
     cv::Scalar scalar(scalarValues[0], scalarValues[1], scalarValues[2]);
 
     // 获取 jclass 实例
-    jclass jcls1 = env->FindClass("cn/netdiscovery/monica/ui/controlpanel/ai/experiment/model/ContourFilterSettings");
+    jclass jcls1 = env->FindClass("cn/netdiscovery/monica/domain/ContourFilterSettings");
     jfieldID minPerimeterId = env->GetFieldID(jcls1, "minPerimeter", "D");
     jfieldID maxPerimeterId = env->GetFieldID(jcls1, "maxPerimeter", "D");
     jfieldID minAreaId = env->GetFieldID(jcls1, "minArea", "D");
@@ -438,7 +438,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cont
     contourFilterSettings.maxAspectRatio = env->GetDoubleField(jobj1, maxAspectRatioId);
 
     // 获取 jclass 实例
-    jclass jcls2 = env->FindClass("cn/netdiscovery/monica/ui/controlpanel/ai/experiment/model/ContourDisplaySettings");
+    jclass jcls2 = env->FindClass("cn/netdiscovery/monica/domain/ContourDisplaySettings");
     jfieldID showOriginalImageId = env->GetFieldID(jcls2, "showOriginalImage", "Z");
     jfieldID showBoundingRectId = env->GetFieldID(jcls2, "showBoundingRect", "Z");
     jfieldID showMinAreaRectId = env->GetFieldID(jcls2, "showMinAreaRect", "Z");
@@ -503,7 +503,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_morp
 
     Mat binary = byteArrayTo8UC1Mat(env, array);
     // 获取 jclass 实例
-    jclass jcls = env->FindClass("cn/netdiscovery/monica/ui/controlpanel/ai/experiment/model/MorphologicalOperationSettings");
+    jclass jcls = env->FindClass("cn/netdiscovery/monica/domain/MorphologicalOperationSettings");
     jfieldID opId = env->GetFieldID(jcls, "op", "I");
     jfieldID shapeId = env->GetFieldID(jcls, "shape", "I");
     jfieldID widthId = env->GetFieldID(jcls, "width", "I");
@@ -536,7 +536,7 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matc
     cv::Scalar scalar(scalarValues[0], scalarValues[1], scalarValues[2]);
 
     // 获取 jclass 实例
-    jclass jcls = env->FindClass("cn/netdiscovery/monica/ui/controlpanel/ai/experiment/model/MatchTemplateSettings");
+    jclass jcls = env->FindClass("cn/netdiscovery/monica/domain/MatchTemplateSettings");
     jfieldID matchTypeId = env->GetFieldID(jcls, "matchType", "I");
     jfieldID angleStartId = env->GetFieldID(jcls, "angleStart", "I");
     jfieldID angleEndId = env->GetFieldID(jcls, "angleEnd", "I");
