@@ -58,9 +58,13 @@ private:
         // 简单路由：根据 target 分发不同的逻辑
         if (method == http::verb::post) {
             if (target == "/api/sketchDrawing") {
-                http::response<http::dynamic_body> res{http::status::ok, req_.version()};
-                res.set(http::field::content_type, "application/octet-stream");
-                res.body() = std::move(req_.body());
+                Mat src = globalResource_.get()->requestBodyToCvMat(req_);
+                Mat dst = globalResource_.get()->processSketchDrawing(src);
+                std::string encodedImage = globalResource_.get()->cvMatToResponseBody(dst, ".jpg");
+
+                http::response<http::string_body> res{http::status::ok, req_.version()};
+                res.set(http::field::content_type, "image/jpeg");
+                res.body() = std::move(encodedImage);
                 res.prepare_payload();
                 do_write(res);
             }

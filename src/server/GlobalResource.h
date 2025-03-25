@@ -7,13 +7,19 @@
 
 #include <memory>
 #include "../../include/sketchDrawing/SketchDrawing.h"
+#include <boost/beast.hpp>
+#include <boost/beast/http.hpp>
 
 using namespace std;
 using namespace cv;
+namespace beast = boost::beast;
+namespace http = beast::http;
 
 class GlobalResource {
 public:
     GlobalResource(string modelPath);
+    Mat requestBodyToCvMat(http::request<http::dynamic_body>& req);
+    string cvMatToResponseBody(Mat& image, string extension);
     Mat processSketchDrawing(Mat src);
 
 private:
