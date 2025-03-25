@@ -8,7 +8,7 @@
 #include <string>
 #include <thread>
 #include <vector>
-#include "GlobalResource.cpp"
+#include "GlobalResource.h"
 
 namespace beast = boost::beast;
 namespace http = beast::http;
@@ -47,9 +47,6 @@ private:
         auto target = std::string(req_.target());
 
         if (target == "/health") {
-            // 使用全局资源进行处理，例如调用 processImage
-            globalResource_->processImage();
-
             http::response<http::string_body> res{http::status::not_found, req_.version()};
             res.set(http::field::content_type, CONTENT_TYPE_PLAIN_TEXT);
             res.body() = "OK";
@@ -93,9 +90,9 @@ private:
 // HTTP 服务器：监听指定端口，并为每个连接创建一个 session
 class server {
 public:
-    server(net::io_context& ioc, tcp::endpoint endpoint)
+    server(net::io_context& ioc, tcp::endpoint endpoint, std::string modelPath)
             : acceptor_(ioc)
-            , globalResource_(std::make_shared<GlobalResource>()) // 全局资源初始化，只调用一次
+            , globalResource_(std::make_shared<GlobalResource>(modelPath)) // 全局资源初始化，只调用一次
     {
         beast::error_code ec;
         acceptor_.open(endpoint.protocol(), ec);
@@ -128,17 +125,20 @@ int main(int argc, char* argv[]) {
     // 默认配置参数
     int port = 8080;
     int numThreads = std::thread::hardware_concurrency();
+    std::string modelPath = "/Users/Tony/IdeaProjects/Monica/resources/common";
 
     // 简单命令行参数解析（例如：./server 8000 4 表示端口8000, 4个线程）
     if (argc >= 2)
         port = std::stoi(argv[1]);
     if (argc >= 3)
         numThreads = std::stoi(argv[2]);
+    if (argc >= 4)
+        modelPath = argv[3];
 
     net::io_context ioc{numThreads};
 
     tcp::endpoint endpoint{tcp::v4(), static_cast<unsigned short>(port)};
-    server srv(ioc, endpoint);
+    server srv(ioc, endpoint, modelPath);
     srv.run();
 
     std::vector<std::thread> threads;
