@@ -9,11 +9,12 @@
 #include "../../include/sketchDrawing/SketchDrawing.h"
 
 using namespace std;
+using namespace cv;
 
 class GlobalResource {
 public:
     GlobalResource(string modelPath);
-    void processImage();
+    Mat processSketchDrawing(Mat src);
 
 private:
     string modelPath;

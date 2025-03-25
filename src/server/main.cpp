@@ -57,9 +57,7 @@ private:
         auto method = req_.method();
         // 简单路由：根据 target 分发不同的逻辑
         if (method == http::verb::post) {
-
-            if (target == "/upload") {
-                // 这里直接把上传的内容原样返回，可以在此处对图片进行处理
+            if (target == "/api/sketchDrawing") {
                 http::response<http::dynamic_body> res{http::status::ok, req_.version()};
                 res.set(http::field::content_type, "application/octet-stream");
                 res.body() = std::move(req_.body());
