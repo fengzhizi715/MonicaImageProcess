@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # boost
 find_package(Boost COMPONENTS serialization system filesystem program_options thread REQUIRED)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp
+        GlobalResource.cpp)
 
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
