@@ -2,25 +2,19 @@ cmake_minimum_required(VERSION 3.30)
 project(MonicaImageProcess LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 message(STATUS "===============================")
 MESSAGE(STATUS "current operation system is ${CMAKE_SYSTEM}")
 message(STATUS "current operation system name is ${CMAKE_SYSTEM_NAME}")
 
-if(CMAKE_CROSSCOMPILING)
-    message(STATUS "Cross Compiling!!!,  ARM")
-    set(CURRENT_SYSTEM "Arm")
-else()
-    message(STATUS "No Cross Compiling!!!")
-
-    #根据不同平台给CURRENT_SYSTEM命名
-    if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-        set(CURRENT_SYSTEM "Linux")
-    elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-        set(CURRENT_SYSTEM "Windows")
-    elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-        set(CURRENT_SYSTEM "MacOS")
-    endif()
+#根据不同平台给CURRENT_SYSTEM命名
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    set(CURRENT_SYSTEM "Linux")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    set(CURRENT_SYSTEM "Windows")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    set(CURRENT_SYSTEM "MacOS")
 endif()
 
 # 添加 OpenCV 的配置
