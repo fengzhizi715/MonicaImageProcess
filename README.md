@@ -20,3 +20,15 @@
 | src/faceSwap/FaceEnhance.cpp                                                                             | 使用 OnnxRuntime 加载模型实现人脸增强       |
 | src/faceSwap/FaceSwap.cpp                                                                                | 使用 OnnxRuntime 加载模型实现人脸替换       |
 | src/faceSwap/Yolov8Face.cpp                                                                              | 使用 OnnxRuntime 加载模型实现人脸检测       |
+
+
+编译方法：
+1. 进入 src 目录：
+cd src
+2. 创建一个单独的构建目录
+mkdir build
+cd build
+3. 使用 CMake 配置项目：
+cmake ..
+4. 编译项目
+cmake --build .
