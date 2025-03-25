@@ -1,5 +1,6 @@
 # MonicaImageProcess
 
+# 一. 说明
 该项目是为 https://github.com/fengzhizi715/Monica 项目服务的，
 使用的 OpenCV C++ 实现的图像处理算法和调用、部署深度学习模型。
 
@@ -22,7 +23,8 @@
 | src/faceSwap/Yolov8Face.cpp                                                                              | 使用 OnnxRuntime 加载模型实现人脸检测       |
 
 
-编译方法：
+# 二. 编译方法
+
 1. 进入 src 目录：
 ```
 cd src
