@@ -35,7 +35,10 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
     add_executable(${PROJECT_NAME} main.cpp
-        GlobalResource.h GlobalResource.cpp)
+        GlobalResource.h                            GlobalResource.cpp
+        ../../include/sketchDrawing/SketchDrawing.h ../sketchDrawing/SketchDrawing.cpp
+        ../../include/common/OnnxRuntimeBase.h      ../common/OnnxRuntimeBase.cpp
+        ../../include/utils/Timer.h                 ../utils/Timer.cpp)
 
     target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
     target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
@@ -50,7 +53,10 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
     add_executable(${PROJECT_NAME}_aarch64 main.cpp
-            GlobalResource.h GlobalResource.cpp)
+            GlobalResource.h                            GlobalResource.cpp
+            ../../include/sketchDrawing/SketchDrawing.h ../sketchDrawing/SketchDrawing.cpp
+            ../../include/common/OnnxRuntimeBase.h      ../common/OnnxRuntimeBase.cpp
+            ../../include/utils/Timer.h                 ../utils/Timer.cpp)
 
     target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
     target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
