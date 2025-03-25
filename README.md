@@ -24,11 +24,22 @@
 
 编译方法：
 1. 进入 src 目录：
+```
 cd src
+```
+
 2. 创建一个单独的构建目录
+```
 mkdir build
 cd build
+```
+
 3. 使用 CMake 配置项目：
+```
 cmake ..
+```
+
 4. 编译项目
+```
 cmake --build .
+```
