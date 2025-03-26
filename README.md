@@ -37,7 +37,7 @@ MonicaImageProcess/
 │   └── matchTemplate/              # 模版匹配的头文件
 │   └── sketchDrawing/              # 生成素描画的头文件
 │   └── utils/                      # 工具类的头文件
-└── jni/                            # 给 Java/Kotlin 调用的本地算法
+├── jni/                            # 给 Java/Kotlin 调用的本地算法
 │       ├── cn_netdiscovery_monica_opencv_ImageProcess.h   # jni 对应用层暴露接口的头文件
 │       └── cn_netdiscovery_monica_opencv_ImageProcess.cpp # jni 对应用层暴露接口的源文件
 ├── src/                             # 项目主源代码目录
@@ -56,7 +56,11 @@ MonicaImageProcess/
 │       └── MatchTemplate.cpp        # 模版匹配相关算法的源文件
 │   └── server/                      # http 服务的模块
 │       ├── CMakeLists.txt           # http 服务模块的构建脚本
-│       └── ...
+│       ├── GlobalResource.cpp       # http 服务加载模型、调用模型的源文件
+│       ├── GlobalResource.h         # http 服务加载模型、调用模型的头文件
+│       ├── HttpUtils.cpp            # http 服务模块工具类的源文件
+│       ├── HttpUtils.h              # http 服务模块工具类的头文件
+│       └── main.cpp                 # http 服务模块主程序入口文件
 │   └── sketchDrawing/               # 生成素描画的模块
 │       └── InformativeDrawings.cpp  # 使用 OnnxRuntime 加载模型实现生成素描画的源文件
 │   └── utils/                       # 工具类的模块
