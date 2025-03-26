@@ -50,11 +50,11 @@ MonicaImageProcess/
 │   └── utils/             # 工具类的源文件
 │   └── CMakeLists.txt     # 本地算法的构建脚本
 └── jni/                   # 给 Java/Kotlin 调用的本地算法
-
 ```
+
 # 二. 编译方法
 
-## 2.1 src 目录的编译
+## 2.1 本地算法库的编译
 1. 进入 src 目录：
 ```
 cd src
@@ -76,7 +76,7 @@ cmake ..
 cmake --build .
 ```
 
-## 2.2 server 目录的编译
+## 2.2 http server 的编译
 
 1. 进入 server 目录：
 ```
