@@ -25,9 +25,33 @@
 
 # 二. 编译方法
 
+## 2.1 src 目录的编译
 1. 进入 src 目录：
 ```
 cd src
+```
+
+2. 创建一个单独的构建目录
+```
+mkdir build
+cd build
+```
+
+3. 使用 CMake 配置项目：
+```
+cmake ..
+```
+
+4. 编译项目
+```
+cmake --build .
+```
+
+## 2.2 server 目录的编译
+
+1. 进入 server 目录：
+```
+cd server
 ```
 
 2. 创建一个单独的构建目录
