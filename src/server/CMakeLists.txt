@@ -36,6 +36,7 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
 
     add_executable(${PROJECT_NAME} main.cpp
         GlobalResource.h                            GlobalResource.cpp
+        HttpUtils.h                                 HttpUtils.cpp
         ../../include/sketchDrawing/SketchDrawing.h ../sketchDrawing/SketchDrawing.cpp
         ../../include/common/OnnxRuntimeBase.h      ../common/OnnxRuntimeBase.cpp
         ../../include/utils/Timer.h                 ../utils/Timer.cpp)
@@ -54,6 +55,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
 
     add_executable(${PROJECT_NAME}_aarch64 main.cpp
             GlobalResource.h                            GlobalResource.cpp
+            HttpUtils.h                                 HttpUtils.cpp
             ../../include/sketchDrawing/SketchDrawing.h ../sketchDrawing/SketchDrawing.cpp
             ../../include/common/OnnxRuntimeBase.h      ../common/OnnxRuntimeBase.cpp
             ../../include/utils/Timer.h                 ../utils/Timer.cpp)

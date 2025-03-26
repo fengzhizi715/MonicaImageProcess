@@ -9,6 +9,7 @@
 #include <thread>
 #include <vector>
 #include "GlobalResource.h"
+#include "HttpUtils.h"
 
 namespace beast = boost::beast;
 namespace http = beast::http;
@@ -60,9 +61,9 @@ private:
             if (target == "/api/sketchDrawing") {
 
                 try {
-                    Mat src = globalResource_.get()->requestBodyToCvMat(req_);
+                    Mat src = requestBodyToCvMat(req_);
                     Mat dst = globalResource_.get()->processSketchDrawing(src);
-                    std::string encodedImage = globalResource_.get()->cvMatToResponseBody(dst, ".jpg");
+                    std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
 
                     http::response<http::string_body> res{http::status::ok, req_.version()};
                     res.set(http::field::content_type, "image/jpeg");
