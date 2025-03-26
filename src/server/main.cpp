@@ -58,20 +58,29 @@ private:
         // 简单路由：根据 target 分发不同的逻辑
         if (method == http::verb::post) {
             if (target == "/api/sketchDrawing") {
-                Mat src = globalResource_.get()->requestBodyToCvMat(req_);
-                Mat dst = globalResource_.get()->processSketchDrawing(src);
-                std::string encodedImage = globalResource_.get()->cvMatToResponseBody(dst, ".jpg");
 
-                http::response<http::string_body> res{http::status::ok, req_.version()};
-                res.set(http::field::content_type, "image/jpeg");
-                res.body() = std::move(encodedImage);
-                res.prepare_payload();
-                do_write(res);
+                try {
+                    Mat src = globalResource_.get()->requestBodyToCvMat(req_);
+                    Mat dst = globalResource_.get()->processSketchDrawing(src);
+                    std::string encodedImage = globalResource_.get()->cvMatToResponseBody(dst, ".jpg");
+
+                    http::response<http::string_body> res{http::status::ok, req_.version()};
+                    res.set(http::field::content_type, "image/jpeg");
+                    res.body() = std::move(encodedImage);
+                    res.prepare_payload();
+                    do_write(res);
+                } catch (const std::exception& e) {
+                    http::response<http::string_body> res{http::status::internal_server_error, req_.version()};
+                    res.set(http::field::content_type, "text/plain");
+                    res.body() = "Error: " + std::string(e.what());
+                    res.prepare_payload();
+                    do_write(res);
+                }
             }
         } else {
             // 其他接口返回 404
             http::response<http::string_body> res{http::status::not_found, req_.version()};
-            res.set(http::field::content_type, "text/plain");
+            res.set(http::field::content_type, CONTENT_TYPE_PLAIN_TEXT);
             res.body() = "Not Found";
             res.prepare_payload();
             do_write(res);

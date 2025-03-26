@@ -39,6 +39,11 @@ Mat GlobalResource::requestBodyToCvMat(http::request<http::dynamic_body>& req) {
 
 // 将 cv::Mat 编码为指定格式的二进制数据，并返回一个 std::string
 string GlobalResource::cvMatToResponseBody(Mat& image, string extension) {
+    // 检查图像是否为空
+    if (image.empty()) {
+        throw std::runtime_error("输入图像为空");
+    }
+
     std::vector<uchar> buf;
     // 编码图像到指定格式，例如 JPEG
     if (!cv::imencode(extension, image, buf)) {
@@ -53,5 +58,6 @@ Mat GlobalResource::processSketchDrawing(Mat src) {
 
     Mat dst;
     sketchDrawing.get()->inferImage(src, dst);
+    cvtColor(dst, dst, cv::COLOR_GRAY2BGR);
     return dst;
 }
