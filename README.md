@@ -22,7 +22,36 @@
 | src/faceSwap/FaceSwap.cpp                                                                                | 使用 OnnxRuntime 加载模型实现人脸替换       |
 | src/faceSwap/Yolov8Face.cpp                                                                              | 使用 OnnxRuntime 加载模型实现人脸检测       |
 
+代码目录结构
 
+```
+MonicaImageProcess/
+├── README.md              # 项目简介
+├── LICENSE                # 项目许可证文件
+├── CMakeLists.txt         # CMake构建脚本（主）
+├── include/               # 项目公共头文件，不含平台特定代码
+│   └── colorcorrection/   # 图像调色相关算法的头文件
+│   └── common/            # 工具类的头文件
+│   └── faceDetect/        # 人脸识别的头文件
+│   └── faceSwap/          # 人脸替换的头文件
+│   └── matchTemplate/     # 模版匹配的头文件
+│   └── sketchDrawing/     # 生成素描画的头文件
+│   └── utils/             # 工具类的头文件
+├── src/                   # 项目主源代码目录，不含平台特定代码
+│   └── colorcorrection/   # 图像调色相关算法的源文件
+│   └── common/            # 工具类的源文件
+│   └── faceDetect/        # 人脸识别的源文件
+│   └── faceSwap/          # 人脸替换的源文件
+│   └── matchTemplate/     # 模版匹配的源文件
+│   └── server/            # http 服务的源文件
+│       ├── CMakeLists.txt # http 服务模块的构建脚本
+│       └── ...
+│   └── sketchDrawing/     # 生成素描画的源文件
+│   └── utils/             # 工具类的源文件
+│   └── CMakeLists.txt     # 本地算法的构建脚本
+└── jni/                   # 给 Java/Kotlin 调用的本地算法
+
+```
 # 二. 编译方法
 
 ## 2.1 src 目录的编译
