@@ -39,14 +39,14 @@ private:
 
         // 创建一个请求解析器，使用 dynamic_body 类型
         auto parser = std::make_shared<http::request_parser<http::dynamic_body>>();
-        // 设置允许的最大消息体大小，这里以 10 MB 为例（可根据需要调整）
+        // 设置允许的最大消息体大小
         parser->body_limit(10 * 1024 * 1024);
 
         // 异步读取请求
         http::async_read(socket_, buffer_, *parser,
                          [self, parser](beast::error_code ec, std::size_t bytes_transferred) {
                              if (ec) {
-                                 // 错误处理：输出错误信息并返回响应（如果需要）
+                                 // 错误处理：输出错误信息并返回响应
                                  std::cerr << "Read error: " << ec.message() << std::endl;
                                  http::response<http::string_body> res{http::status::bad_request, self->req_.version()};
                                  res.set(http::field::content_type, "text/plain");
