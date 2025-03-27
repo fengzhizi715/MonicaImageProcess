@@ -109,6 +109,7 @@ public:
         beast::error_code ec;
         acceptor_.open(endpoint.protocol(), ec);
         acceptor_.set_option(net::socket_base::reuse_address(true), ec);
+        acceptor_.set_option(net::socket_base::receive_buffer_size(1024 * 1024), ec);
         acceptor_.bind(endpoint, ec);
         acceptor_.listen(net::socket_base::max_listen_connections, ec);
     }
