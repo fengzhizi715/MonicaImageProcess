@@ -7,6 +7,7 @@
 
 #include <memory>
 #include "../../include/sketchDrawing/SketchDrawing.h"
+#include "../../include/faceDetect/FaceDetect.h"
 
 using namespace std;
 using namespace cv;
@@ -19,8 +20,8 @@ public:
 private:
     string modelPath;
 
-    // 使用智能指针管理SketchDrawing对象
     std::unique_ptr<SketchDrawing> sketchDrawing;
+    std::unique_ptr<FaceDetect> faceDetect;
 };
 
 #endif //MONICAIMAGEPROCESS_GLOBALRESOURCE_H
