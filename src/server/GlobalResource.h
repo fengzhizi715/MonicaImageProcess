@@ -16,6 +16,7 @@ class GlobalResource {
 public:
     GlobalResource(string modelPath);
     Mat processSketchDrawing(Mat src);
+    Mat processFaceDetect(Mat src);
 
 private:
     string modelPath;
