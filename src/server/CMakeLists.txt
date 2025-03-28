@@ -60,7 +60,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
             ../../include/common/OnnxRuntimeBase.h      ../common/OnnxRuntimeBase.cpp
             ../../include/utils/Timer.h                 ../utils/Timer.cpp)
 
-    target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
-    target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
-    target_link_libraries(${PROJECT_NAME} ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
+    target_link_libraries(${PROJECT_NAME}_aarch64 ${OpenCV_LIBS})
+    target_link_libraries(${PROJECT_NAME}_aarch64 ${Boost_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME}_aarch64 ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
 endif ()
