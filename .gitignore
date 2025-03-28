@@ -9,6 +9,7 @@ cmake_install.cmake
 *.dylib
 build.ninja
 MonicaImageProcess_Server
+MonicaImageProcess_Server_aarch64
 
 ### Mac OS ###
 .DS_Store
