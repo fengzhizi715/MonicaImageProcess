@@ -77,42 +77,12 @@ private:
         auto method = req_.method();
         // 简单路由：根据 target 分发不同的逻辑
         if (method == http::verb::post) {
-            try {
-                if (target == "/api/sketchDrawing") {
-                    Mat src = requestBodyToCvMat(req_);
-                    Mat dst = globalResource_.get()->processSketchDrawing(src);
-                    std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
-
-                    http::response<http::string_body> res{http::status::ok, req_.version()};
-                    res.set(http::field::content_type, CONTENT_TYPE_IMAGE_JPEG);
-                    res.body() = std::move(encodedImage);
-                    res.prepare_payload();
-                    do_write(res);
-                } else if (target == "/api/faceDetect") {
-                    Mat src = requestBodyToCvMat(req_);
-                    Mat dst = globalResource_.get()->processFaceDetect(src);
-                    std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
-                    http::response<http::string_body> res{http::status::ok, req_.version()};
-                    res.set(http::field::content_type, CONTENT_TYPE_IMAGE_JPEG);
-                    res.body() = std::move(encodedImage);
-                    res.prepare_payload();
-                    do_write(res);
-                } else if (target == "/api/faceLandMark") {
-                    Mat src = requestBodyToCvMat(req_);
-                    Mat dst = globalResource_.get()->processFaceLandMark(src);
-                    std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
-                    http::response<http::string_body> res{http::status::ok, req_.version()};
-                    res.set(http::field::content_type, CONTENT_TYPE_IMAGE_JPEG);
-                    res.body() = std::move(encodedImage);
-                    res.prepare_payload();
-                    do_write(res);
-                }
-            } catch (const std::exception& e) {
-                http::response<http::string_body> res{http::status::internal_server_error, req_.version()};
-                res.set(http::field::content_type, CONTENT_TYPE_PLAIN_TEXT);
-                res.body() = "Error: " + std::string(e.what());
-                res.prepare_payload();
-                do_write(res);
+            if (target == "/api/sketchDrawing") {
+                process_image(target, [this](Mat src) { return globalResource_->processSketchDrawing(src); });
+            } else if (target == "/api/faceDetect") {
+                process_image(target, [this](Mat src) { return globalResource_->processFaceDetect(src); });
+            } else if (target == "/api/faceLandMark") {
+                process_image(target, [this](Mat src) { return globalResource_->processFaceLandMark(src); });
             }
         } else {
             // 其他接口返回 404
@@ -123,6 +93,27 @@ private:
             do_write(res);
         }
     }
+
+    void process_image(const std::string& target, std::function<Mat(Mat)> processor) {
+        try {
+            Mat src = requestBodyToCvMat(req_);
+            Mat dst = processor(src);
+            std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
+
+            http::response<http::string_body> res{http::status::ok, req_.version()};
+            res.set(http::field::content_type, CONTENT_TYPE_IMAGE_JPEG);
+            res.body() = std::move(encodedImage);
+            res.prepare_payload();
+            do_write(res);
+        } catch (const std::exception& e) {
+            http::response<http::string_body> res{http::status::internal_server_error, req_.version()};
+            res.set(http::field::content_type, CONTENT_TYPE_PLAIN_TEXT);
+            res.body() = "Error: " + std::string(e.what());
+            res.prepare_payload();
+            do_write(res);
+        }
+    }
+
 
     template<class Response>
     void do_write(Response& res) {
