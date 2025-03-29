@@ -56,6 +56,7 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
             ../include/matchTemplate/MatchTemplate.h            matchTemplate/MatchTemplate.cpp
             ../include/utils/Timer.h                            utils/Timer.cpp
             ../include/utils/Utils.h                            utils/Utils.cpp
+            ../include/utils/JNIUtils.h                         utils/JNIUtils.cpp
             ../include/Constants.h)
 
     target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
@@ -84,6 +85,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
             ../include/matchTemplate/MatchTemplate.h            matchTemplate/MatchTemplate.cpp
             ../include/utils/Timer.h                            utils/Timer.cpp
             ../include/utils/Utils.h                            utils/Utils.cpp
+            ../include/utils/JNIUtils.h                         utils/JNIUtils.cpp
             ../include/Constants.h)
 
     target_link_libraries(MonicaImageProcess_aarch64 ${OpenCV_LIBS})

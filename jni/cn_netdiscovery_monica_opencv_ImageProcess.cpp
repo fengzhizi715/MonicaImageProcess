@@ -15,6 +15,7 @@
 #include "../include/faceSwap/FaceSwap.h"
 #include "../include/faceSwap/FaceEnhance.h"
 #include "../include/utils/Utils.h"
+#include "../include/utils/JNIUtils.h"
 #include <onnxruntime_cxx_api.h>
 
 FaceDetect      *faceDetect = nullptr;

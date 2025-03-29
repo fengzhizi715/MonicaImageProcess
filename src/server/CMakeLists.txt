@@ -39,8 +39,14 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
         HttpUtils.h                                 HttpUtils.cpp
         ../../include/sketchDrawing/SketchDrawing.h ../sketchDrawing/SketchDrawing.cpp
         ../../include/faceDetect/FaceDetect.h       ../faceDetect/FaceDetect.cpp
+        ../../include/faceSwap/Yolov8Face.h         ../faceSwap/Yolov8Face.cpp
+        ../../include/faceSwap/Face68Landmarks.h    ../faceSwap/Face68Landmarks.cpp
+        ../../include/faceSwap/FaceEmbedding.h      ../faceSwap/FaceEmbedding.cpp
+        ../../include/faceSwap/FaceSwap.h           ../faceSwap/FaceSwap.cpp
+        ../../include/faceSwap/FaceEnhance.h        ../faceSwap/FaceEnhance.cpp
         ../../include/common/OnnxRuntimeBase.h      ../common/OnnxRuntimeBase.cpp
-        ../../include/utils/Timer.h                 ../utils/Timer.cpp)
+        ../../include/utils/Timer.h                 ../utils/Timer.cpp
+        ../../include/utils/Utils.h                 ../utils/Utils.cpp)
 
     target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
     target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
@@ -59,8 +65,14 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
             HttpUtils.h                                 HttpUtils.cpp
             ../../include/sketchDrawing/SketchDrawing.h ../sketchDrawing/SketchDrawing.cpp
             ../../include/faceDetect/FaceDetect.h       ../faceDetect/FaceDetect.cpp
+            ../../include/faceSwap/Yolov8Face.h         ../faceSwap/Yolov8Face.cpp
+            ../../include/faceSwap/Face68Landmarks.h    ../faceSwap/Face68Landmarks.cpp
+            ../../include/faceSwap/FaceEmbedding.h      ../faceSwap/FaceEmbedding.cpp
+            ../../include/faceSwap/FaceSwap.h           ../faceSwap/FaceSwap.cpp
+            ../../include/faceSwap/FaceEnhance.h        ../faceSwap/FaceEnhance.cpp
             ../../include/common/OnnxRuntimeBase.h      ../common/OnnxRuntimeBase.cpp
-            ../../include/utils/Timer.h                 ../utils/Timer.cpp)
+            ../../include/utils/Timer.h                 ../utils/Timer.cpp
+            ../../include/utils/Utils.h                 ../utils/Utils.cpp)
 
     target_link_libraries(${PROJECT_NAME}_aarch64 ${OpenCV_LIBS})
     target_link_libraries(${PROJECT_NAME}_aarch64 ${Boost_LIBRARIES})
