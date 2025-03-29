@@ -100,7 +100,7 @@ cmake ..
 cmake --build .
 ```
 
-# 3. http server 的测试
+# 三. http server 的运行
 运行编译后的程序
 
 服务器启动:
@@ -108,7 +108,11 @@ cmake --build .
 ./MonicaImageProcess_Server --http-port 8080 --num-threads 4 --model-dir /Users/Tony/IdeaProjects/Monica/resources/common
 ```
 
-通过curl调用:
+通过 curl 调用:
 ```
 curl -X POST http://localhost:8080/api/sketchDrawing -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
+```
+
+```
+curl -X POST "http://localhost:8080/api/faceSwap" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "target=@/Users/target.jpg" --output output.jpg
 ```
