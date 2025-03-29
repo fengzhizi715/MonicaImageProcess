@@ -199,7 +199,6 @@ int main(int argc, char* argv[]) {
     std::cout << "Number of Threads: " << numThreads << std::endl;
     std::cout << "Model Directory: " << modelPath << std::endl;
 
-
     net::io_context ioc{numThreads};
 
     tcp::endpoint endpoint{tcp::v4(), static_cast<unsigned short>(port)};
