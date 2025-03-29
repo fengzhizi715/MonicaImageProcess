@@ -96,25 +96,24 @@ private:
                     res.prepare_payload();
                     do_write(res);
                 }
-            }
-        } else if (target == "/api/faceDetect") {
+            } else if (target == "/api/faceDetect") {
 
-            try {
-                Mat src = requestBodyToCvMat(req_);
-                Mat dst = globalResource_.get()->processFaceDetect(src);
-                std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
-
-                http::response<http::string_body> res{http::status::ok, req_.version()};
-                res.set(http::field::content_type, "image/jpeg");
-                res.body() = std::move(encodedImage);
-                res.prepare_payload();
-                do_write(res);
-            } catch (const std::exception& e) {
-                http::response<http::string_body> res{http::status::internal_server_error, req_.version()};
-                res.set(http::field::content_type, "text/plain");
-                res.body() = "Error: " + std::string(e.what());
-                res.prepare_payload();
-                do_write(res);
+                try {
+                    Mat src = requestBodyToCvMat(req_);
+                    Mat dst = globalResource_.get()->processFaceDetect(src);
+                    std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
+                    http::response<http::string_body> res{http::status::ok, req_.version()};
+                    res.set(http::field::content_type, "image/jpeg");
+                    res.body() = std::move(encodedImage);
+                    res.prepare_payload();
+                    do_write(res);
+                } catch (const std::exception& e) {
+                    http::response<http::string_body> res{http::status::internal_server_error, req_.version()};
+                    res.set(http::field::content_type, "text/plain");
+                    res.body() = "Error: " + std::string(e.what());
+                    res.prepare_payload();
+                    do_write(res);
+                }
             }
         } else {
             // 其他接口返回 404
