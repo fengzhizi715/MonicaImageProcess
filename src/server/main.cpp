@@ -17,7 +17,7 @@ namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
 #define CONTENT_TYPE_PLAIN_TEXT "text/plain"
-
+#define CONTENT_TYPE_IMAGE_JPEG "image/jpeg"
 
 // 用于处理单个 HTTP 会话
 class session : public std::enable_shared_from_this<session> {
@@ -49,7 +49,7 @@ private:
                                  // 错误处理：输出错误信息并返回响应
                                  std::cerr << "Read error: " << ec.message() << std::endl;
                                  http::response<http::string_body> res{http::status::bad_request, self->req_.version()};
-                                 res.set(http::field::content_type, "text/plain");
+                                 res.set(http::field::content_type, CONTENT_TYPE_PLAIN_TEXT);
                                  res.body() = "Error reading request: " + ec.message();
                                  res.prepare_payload();
                                  self->do_write(res);
@@ -77,43 +77,33 @@ private:
         auto method = req_.method();
         // 简单路由：根据 target 分发不同的逻辑
         if (method == http::verb::post) {
-            if (target == "/api/sketchDrawing") {
-
-                try {
+            try {
+                if (target == "/api/sketchDrawing") {
                     Mat src = requestBodyToCvMat(req_);
                     Mat dst = globalResource_.get()->processSketchDrawing(src);
                     std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
 
                     http::response<http::string_body> res{http::status::ok, req_.version()};
-                    res.set(http::field::content_type, "image/jpeg");
+                    res.set(http::field::content_type, CONTENT_TYPE_IMAGE_JPEG);
                     res.body() = std::move(encodedImage);
                     res.prepare_payload();
                     do_write(res);
-                } catch (const std::exception& e) {
-                    http::response<http::string_body> res{http::status::internal_server_error, req_.version()};
-                    res.set(http::field::content_type, "text/plain");
-                    res.body() = "Error: " + std::string(e.what());
-                    res.prepare_payload();
-                    do_write(res);
-                }
-            } else if (target == "/api/faceDetect") {
-
-                try {
+                } else if (target == "/api/faceDetect") {
                     Mat src = requestBodyToCvMat(req_);
                     Mat dst = globalResource_.get()->processFaceDetect(src);
                     std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
                     http::response<http::string_body> res{http::status::ok, req_.version()};
-                    res.set(http::field::content_type, "image/jpeg");
+                    res.set(http::field::content_type, CONTENT_TYPE_IMAGE_JPEG);
                     res.body() = std::move(encodedImage);
                     res.prepare_payload();
                     do_write(res);
-                } catch (const std::exception& e) {
-                    http::response<http::string_body> res{http::status::internal_server_error, req_.version()};
-                    res.set(http::field::content_type, "text/plain");
-                    res.body() = "Error: " + std::string(e.what());
-                    res.prepare_payload();
-                    do_write(res);
                 }
+            } catch (const std::exception& e) {
+                http::response<http::string_body> res{http::status::internal_server_error, req_.version()};
+                res.set(http::field::content_type, CONTENT_TYPE_PLAIN_TEXT);
+                res.body() = "Error: " + std::string(e.what());
+                res.prepare_payload();
+                do_write(res);
             }
         } else {
             // 其他接口返回 404
