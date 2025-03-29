@@ -85,7 +85,40 @@ private:
                 process_image(target, [this](Mat src) { return globalResource_->processFaceDetect(src); });
             } else if (target == "/api/faceLandMark") {
                 process_image(target, [this](Mat src) { return globalResource_->processFaceLandMark(src); });
+            } else if (target == "/api/faceSwap") {
+                try {
+                    // 解析 multipart/form-data
+                    auto parts = parseMultipartFormDataManual(req_);
+                    if (parts.find("image1") == parts.end() || parts.find("image2") == parts.end()) {
+                        throw std::runtime_error("Missing images in request.");
+                    }
+
+                    // 获取图片数据
+                    Mat img1 = binaryToCvMat(parts["image1"]);
+                    Mat img2 = binaryToCvMat(parts["image2"]);
+
+                    // 调用换脸处理函数
+                    Mat swappedFace = globalResource_.get()->processFaceSwap(img1, img2);
+
+                    // 将结果转换为 JPEG 格式
+                    std::string encodedImage = cvMatToResponseBody(swappedFace, ".jpg");
+
+                    // 构造 HTTP 响应
+                    http::response<http::string_body> res{http::status::ok, req_.version()};
+                    res.set(http::field::content_type, CONTENT_TYPE_IMAGE_JPEG);
+                    res.body() = std::move(encodedImage);
+                    res.prepare_payload();
+                    do_write(res);
+
+                } catch (const std::exception& e) {
+                    http::response<http::string_body> res{http::status::bad_request, req_.version()};
+                    res.set(http::field::content_type, CONTENT_TYPE_PLAIN_TEXT);
+                    res.body() = "Error processing face swap: " + std::string(e.what());
+                    res.prepare_payload();
+                    do_write(res);
+                }
             }
+
         } else {
             // 其他接口返回 404
             http::response<http::string_body> res{http::status::not_found, req_.version()};

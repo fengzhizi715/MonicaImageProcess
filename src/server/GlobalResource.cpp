@@ -87,3 +87,38 @@ Mat GlobalResource::processFaceLandMark(Mat src) {
     }
     return dst;
 }
+
+Mat GlobalResource::processFaceSwap(Mat src, Mat target) {
+    vector<Bbox> boxes;
+    yolov8Face->detect(src, boxes);
+    int position = 0; // 一张图片里可能有多个人脸，这里只考虑1个人脸的情况
+
+    bool status = true;
+    Bbox firstBox = boxes[position];
+
+    vector<Point2f> face_landmark_5of68;
+    face68Landmarks.get()->detect(src, boxes[position], face_landmark_5of68);
+    vector<float> source_face_embedding = faceEmbedding.get()->detect(src, face_landmark_5of68);
+    yolov8Face.get() -> detect(target, boxes);
+    Mat dst = target.clone();
+
+    if (!boxes.empty()) {
+        if (status) {
+            for (auto box: boxes) {
+                vector<Point2f> target_landmark_5;
+                face68Landmarks.get()->detect(dst, box, target_landmark_5);
+
+                Mat swap = faceSwap.get()->process(dst, source_face_embedding, target_landmark_5);
+                dst = faceEnhance.get()->process(swap, target_landmark_5);
+            }
+        } else {
+            Bbox  box = boxes[0];
+            vector<Point2f> target_landmark_5;
+            face68Landmarks.get()->detect(dst, box, target_landmark_5);
+            Mat swap = faceSwap.get()->process(dst, source_face_embedding, target_landmark_5);
+            dst = faceEnhance.get()->process(swap, target_landmark_5);
+        }
+    }
+
+    return dst;
+}

@@ -23,6 +23,7 @@ public:
     Mat processSketchDrawing(Mat src);
     Mat processFaceDetect(Mat src);
     Mat processFaceLandMark(Mat src);
+    Mat processFaceSwap(Mat src, Mat target);
 
 private:
     string modelPath;
