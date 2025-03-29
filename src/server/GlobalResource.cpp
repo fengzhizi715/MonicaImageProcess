@@ -63,3 +63,27 @@ Mat GlobalResource::processFaceDetect(Mat src) {
     cvtColor(dst, dst, cv::COLOR_GRAY2BGR);
     return dst;
 }
+
+Mat GlobalResource::processFaceLandMark(Mat src) {
+    cout << "process FaceDetect..." << endl;
+
+    Mat dst;
+
+    cv::Scalar scalar(0, 0, 255);
+    try {
+        vector<Bbox> boxes;
+        yolov8Face.get()->detect(src, boxes);
+        dst = src.clone();
+        for (auto box: boxes) {rectangle(dst, cv::Point(box.xmin,box.ymin), cv::Point(box.xmax,box.ymax), scalar, 4, 8, 0);
+
+           vector<Point2f> face_landmark_5of68;
+           face68Landmarks.get()->detect(src, box, face_landmark_5of68);
+           for (auto point : face_landmark_5of68)
+           {
+               circle(dst, cv::Point(point.x, point.y), 4, scalar, -1);
+           }
+        }
+    } catch(...) {
+    }
+    return dst;
+}

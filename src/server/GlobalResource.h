@@ -22,6 +22,7 @@ public:
     GlobalResource(string modelPath);
     Mat processSketchDrawing(Mat src);
     Mat processFaceDetect(Mat src);
+    Mat processFaceLandMark(Mat src);
 
 private:
     string modelPath;
