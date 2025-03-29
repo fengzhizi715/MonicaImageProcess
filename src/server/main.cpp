@@ -1,6 +1,7 @@
 //
 // Created by Tony on 2025/3/25.
 //
+#include <boost/program_options.hpp>
 #include <boost/asio.hpp>
 #include <boost/beast.hpp>
 #include <boost/beast/http.hpp>
@@ -11,6 +12,7 @@
 #include "GlobalResource.h"
 #include "HttpUtils.h"
 
+namespace po = boost::program_options;
 namespace beast = boost::beast;
 namespace http = beast::http;
 namespace net = boost::asio;
@@ -167,13 +169,36 @@ int main(int argc, char* argv[]) {
     int numThreads = std::thread::hardware_concurrency();
     std::string modelPath = "/Users/Tony/IdeaProjects/Monica/resources/common";
 
-    // 简单命令行参数解析（例如：./server 8000 4 表示端口8000, 4个线程）
-    if (argc >= 2)
-        port = std::stoi(argv[1]);
-    if (argc >= 3)
-        numThreads = std::stoi(argv[2]);
-    if (argc >= 4)
-        modelPath = argv[3];
+    // 定义命令行选项
+    po::options_description desc("Allowed options");
+    desc.add_options()
+            ("help,h", "Display help message")
+            ("http-port", po::value<int>(&port)->default_value(8080), "HTTP server port")
+            ("num-threads", po::value<int>(&numThreads)->default_value(std::thread::hardware_concurrency()), "Number of worker threads")
+            ("model-dir", po::value<std::string>(&modelPath)->default_value(modelPath), "Path to the model directory");
+
+    // 解析命令行参数
+    po::variables_map vm;
+    try {
+        po::store(po::parse_command_line(argc, argv, desc), vm);
+        po::notify(vm);
+    } catch (const po::error& e) {
+        std::cerr << "Error parsing command line: " << e.what() << std::endl;
+        std::cout << desc << std::endl;
+        return 1;
+    }
+
+    // 如果用户请求了帮助
+    if (vm.count("help")) {
+        std::cout << desc << std::endl;
+        return 0;
+    }
+
+    // 打印解析结果
+    std::cout << "HTTP Port: " << port << std::endl;
+    std::cout << "Number of Threads: " << numThreads << std::endl;
+    std::cout << "Model Directory: " << modelPath << std::endl;
+
 
     net::io_context ioc{numThreads};
 
