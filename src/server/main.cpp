@@ -97,6 +97,15 @@ private:
                     res.body() = std::move(encodedImage);
                     res.prepare_payload();
                     do_write(res);
+                } else if (target == "/api/faceLandMark") {
+                    Mat src = requestBodyToCvMat(req_);
+                    Mat dst = globalResource_.get()->processFaceLandMark(src);
+                    std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
+                    http::response<http::string_body> res{http::status::ok, req_.version()};
+                    res.set(http::field::content_type, CONTENT_TYPE_IMAGE_JPEG);
+                    res.body() = std::move(encodedImage);
+                    res.prepare_payload();
+                    do_write(res);
                 }
             } catch (const std::exception& e) {
                 http::response<http::string_body> res{http::status::internal_server_error, req_.version()};
