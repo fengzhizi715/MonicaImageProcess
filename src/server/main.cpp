@@ -111,7 +111,6 @@ private:
                     do_write(res);
                 }
             }
-
         } else {
             // 其他接口返回 404
             http::response<http::string_body> res{http::status::not_found, req_.version()};

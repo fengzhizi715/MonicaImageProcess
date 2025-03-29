@@ -8,7 +8,6 @@
 #include <map>
 #include <stdexcept>
 
-// 解析 multipart/form-data 的简单方法
 std::map<std::string, std::vector<uint8_t>> parseMultipartFormDataManual(http::request<http::dynamic_body>& req) {
     std::map<std::string, std::vector<uint8_t>> fileParts;
 
