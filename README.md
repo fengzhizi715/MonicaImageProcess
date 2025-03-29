@@ -100,14 +100,29 @@ cmake ..
 cmake --build .
 ```
 
-# 三. http server 的运行
+# 三. http server
+
+## 3.1 http server 的运行
 运行编译后的程序
+
+```
+Tony-MacBook-Pro:build tony$ ./MonicaImageProcessHttpServer --help
+Allowed options:
+  -h [ --help ]                         Display help message
+  -p [ --http-port ] arg (=8080)        HTTP server port
+  -t [ --num-threads ] arg (=16)        Number of worker threads
+  -m [ --model-dir ] arg (=/Users/Tony/IdeaProjects/Monica/resources/common)
+                                        Path to the model directory
+  -b [ --max-body-size ] arg (=10485760)
+                                        Maximum HTTP body size in bytes
+```
 
 服务器启动:
 ```
 ./MonicaImageProcessHttpServer --http-port 8080 --num-threads 4 --model-dir /Users/Tony/IdeaProjects/Monica/resources/common
 ```
 
+## 3.2 接口
 通过 curl 调用:
 ```
 curl -X POST http://localhost:8080/api/sketchDrawing -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg

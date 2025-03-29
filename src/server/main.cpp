@@ -24,8 +24,8 @@ using tcp = net::ip::tcp;
 // 用于处理单个 HTTP 会话
 class session : public std::enable_shared_from_this<session> {
 public:
-    session(tcp::socket socket, std::shared_ptr<GlobalResource> globalResource)
-            : socket_(std::move(socket)), globalResource_(globalResource) {}
+    session(tcp::socket socket, std::shared_ptr<GlobalResource> globalResource, size_t maxBodySize)
+            : socket_(std::move(socket)), globalResource_(globalResource), maxBodySize_(maxBodySize) {}
 
     void start() { do_read(); }
 
@@ -35,6 +35,7 @@ private:
     http::request<http::dynamic_body> req_;
     // 引用全局资源
     std::shared_ptr<GlobalResource> globalResource_;
+    size_t maxBodySize_;
 
     void do_read() {
         auto self = shared_from_this();
@@ -42,7 +43,7 @@ private:
         // 创建一个请求解析器，使用 dynamic_body 类型
         auto parser = std::make_shared<http::request_parser<http::dynamic_body>>();
         // 设置允许的最大消息体大小
-        parser->body_limit(10 * 1024 * 1024);
+        parser->body_limit(maxBodySize_);
 
         // 异步读取请求
         http::async_read(socket_, buffer_, *parser,
@@ -156,10 +157,10 @@ private:
 // HTTP 服务器：监听指定端口，并为每个连接创建一个 session
 class server {
 public:
-    server(net::io_context& ioc, tcp::endpoint endpoint, std::string modelPath)
+    server(net::io_context& ioc, tcp::endpoint endpoint, std::string modelPath, size_t maxBodySize)
             : acceptor_(ioc)
             , globalResource_(std::make_shared<GlobalResource>(modelPath)) // 全局资源初始化，只调用一次
-    {
+            , maxBodySize_(maxBodySize) {
         beast::error_code ec;
         acceptor_.open(endpoint.protocol(), ec);
         acceptor_.set_option(net::socket_base::reuse_address(true), ec);
@@ -175,13 +176,14 @@ public:
 private:
     tcp::acceptor acceptor_;
     std::shared_ptr<GlobalResource> globalResource_;
+    size_t maxBodySize_;
 
     void do_accept() {
         acceptor_.async_accept(
                 [this](beast::error_code ec, tcp::socket socket) {
                     if (!ec) {
                         // 将全局资源传递给 session
-                        std::make_shared<session>(std::move(socket), globalResource_)->start();
+                        std::make_shared<session>(std::move(socket), globalResource_, maxBodySize_)->start();
                     }
                     do_accept();
                 });
@@ -193,41 +195,30 @@ int main(int argc, char* argv[]) {
     int port = 8080;
     int numThreads = std::thread::hardware_concurrency();
     std::string modelPath = "/Users/Tony/IdeaProjects/Monica/resources/common";
+    size_t maxBodySize = 10 * 1024 * 1024; // 默认最大请求体大小为 10 MB
 
     // 定义命令行选项
     po::options_description desc("Allowed options");
     desc.add_options()
             ("help,h", "Display help message")
-            ("http-port", po::value<int>(&port)->default_value(8080), "HTTP server port")
-            ("num-threads", po::value<int>(&numThreads)->default_value(std::thread::hardware_concurrency()), "Number of worker threads")
-            ("model-dir", po::value<std::string>(&modelPath)->default_value(modelPath), "Path to the model directory");
+            ("http-port,p", po::value<int>(&port)->default_value(8080), "HTTP server port")
+            ("num-threads,t", po::value<int>(&numThreads)->default_value(std::thread::hardware_concurrency()), "Number of worker threads")
+            ("model-dir,m", po::value<std::string>(&modelPath)->default_value(modelPath), "Path to the model directory")
+            ("max-body-size,b", po::value<size_t>(&maxBodySize)->default_value(maxBodySize), "Maximum HTTP body size in bytes");
 
     // 解析命令行参数
     po::variables_map vm;
-    try {
-        po::store(po::parse_command_line(argc, argv, desc), vm);
-        po::notify(vm);
-    } catch (const po::error& e) {
-        std::cerr << "Error parsing command line: " << e.what() << std::endl;
-        std::cout << desc << std::endl;
-        return 1;
-    }
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
 
-    // 如果用户请求了帮助
     if (vm.count("help")) {
-        std::cout << desc << std::endl;
+        std::cout << desc << "\n";
         return 0;
     }
 
-    // 打印解析结果
-    std::cout << "HTTP Port: " << port << std::endl;
-    std::cout << "Number of Threads: " << numThreads << std::endl;
-    std::cout << "Model Directory: " << modelPath << std::endl;
-
     net::io_context ioc{numThreads};
-
     tcp::endpoint endpoint{tcp::v4(), static_cast<unsigned short>(port)};
-    server srv(ioc, endpoint, modelPath);
+    server srv(ioc, endpoint, modelPath, maxBodySize);
     srv.run();
 
     std::vector<std::thread> threads;
