@@ -99,3 +99,11 @@ cmake ..
 ```
 cmake --build .
 ```
+
+# 3. http server 的测试
+运行编译后的程序
+
+通过curl：
+```
+curl -X POST http://localhost:8080/api/sketchDrawing -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
+```
