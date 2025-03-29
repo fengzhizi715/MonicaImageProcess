@@ -105,7 +105,7 @@ cmake --build .
 
 服务器启动:
 ```
-./MonicaImageProcess_Server --http-port 8080 --num-threads 4 --model-dir /Users/Tony/IdeaProjects/Monica/resources/common
+./MonicaImageProcessHttpServer --http-port 8080 --num-threads 4 --model-dir /Users/Tony/IdeaProjects/Monica/resources/common
 ```
 
 通过 curl 调用:
