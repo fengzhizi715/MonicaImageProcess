@@ -88,12 +88,11 @@ Mat GlobalResource::processFaceLandMark(Mat src) {
     return dst;
 }
 
-Mat GlobalResource::processFaceSwap(Mat src, Mat target) {
+Mat GlobalResource::processFaceSwap(Mat src, Mat target, bool status) {
     vector<Bbox> boxes;
     yolov8Face->detect(src, boxes);
     int position = 0; // 一张图片里可能有多个人脸，这里只考虑1个人脸的情况
 
-    bool status = true;
     Bbox firstBox = boxes[position];
 
     vector<Point2f> face_landmark_5of68;

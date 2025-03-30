@@ -8,6 +8,8 @@ Makefile
 cmake_install.cmake
 *.dylib
 build.ninja
+MonicaImageProcessHttpServer
+MonicaImageProcessHttpServerForAARCH64
 
 ### Mac OS ###
 .DS_Store

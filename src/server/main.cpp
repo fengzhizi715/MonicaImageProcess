@@ -108,7 +108,8 @@ private:
                         auto value = (*it).value;  // 注意：这里可能是 .value 而不是 .value()
                         status_param = std::string(value.data(), value.size());
                     }
-                    bool enable_feature = (status_param == "true");
+                    bool status = (status_param == "true");
+                    cout << "status = "<< status << endl;
 
                     // 解析 multipart/form-data
                     auto parts = parseMultipartFormDataManual(req_);
@@ -118,7 +119,7 @@ private:
 
                     Mat src = binaryToCvMat(parts["src"]);
                     Mat target = binaryToCvMat(parts["target"]);
-                    Mat dst = globalResource_.get()->processFaceSwap(src, target);
+                    Mat dst = globalResource_.get()->processFaceSwap(src, target, status);
                     std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
 
                     http::response<http::string_body> res{http::status::ok, req_.version()};
