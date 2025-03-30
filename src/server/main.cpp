@@ -4,7 +4,12 @@
 #include <boost/program_options.hpp>
 #include <boost/asio.hpp>
 #include <boost/beast.hpp>
+#include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
+#include <boost/url/url.hpp>
+#include <boost/url/url_view.hpp>
+#include <boost/url/parse.hpp>
+#include <boost/version.hpp>
 #include <iostream>
 #include <string>
 #include <thread>
@@ -88,6 +93,26 @@ private:
                 process_image(target, [this](Mat src) { return globalResource_->processFaceLandMark(src); });
             } else if (target == "/api/faceSwap") {
                 try {
+                    // 使用 parse_relative_ref 解析路径 + 查询参数
+                    auto targetRes = boost::urls::parse_relative_ref(target);
+                    if (!targetRes) {
+                        std::cerr << "Invalid URL: " << target << std::endl;
+                        return;
+                    }
+
+                    boost::urls::url_view url_view = targetRes.value();
+                    std::string status_param = "false";  // 默认值
+
+                    // 正确的参数获取方式
+                    auto params = url_view.params();
+                    if (auto it = params.find("status"); it != params.end()) {
+                        // 正确获取参数值的方式
+                        auto value = (*it).value;  // 注意：这里可能是 .value 而不是 .value()
+                        status_param = std::string(value.data(), value.size());
+                    }
+
+                    bool enable_feature = (status_param == "true");
+
                     // 解析 multipart/form-data
                     auto parts = parseMultipartFormDataManual(req_);
                     if (parts.find("src") == parts.end() || parts.find("target") == parts.end()) {
@@ -215,6 +240,11 @@ int main(int argc, char* argv[]) {
         std::cout << desc << "\n";
         return 0;
     }
+
+    std::cout << "Boost version: "
+              << BOOST_VERSION / 100000 << "."   // 主版本号
+              << (BOOST_VERSION / 100 % 1000) << "."  // 次版本号
+              << (BOOST_VERSION % 100) << std::endl;  // 修订号
 
     net::io_context ioc{numThreads};
     tcp::endpoint endpoint{tcp::v4(), static_cast<unsigned short>(port)};

@@ -24,7 +24,8 @@ MESSAGE("OpenCV version: ${OpenCV_VERSION}")
 # 添加include地址
 include_directories(${OpenCV_INCLUDE_DIRS})
 # boost
-find_package(Boost COMPONENTS serialization system filesystem program_options thread REQUIRED)
+find_package(Boost COMPONENTS url serialization system filesystem program_options thread REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
 
 if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "x86_64")
     # 指定ONNX Runtime的路径
