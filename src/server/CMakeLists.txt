@@ -53,6 +53,7 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
     target_link_libraries(${PROJECT_NAME} ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
 
 elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "arm64")
+    # Mac M 芯片打包的应用名称
     set(ARM64_PROJECT_NAME "MonicaImageProcessHttpServerForAARCH64")
 
     # 指定ONNX Runtime的路径
@@ -62,7 +63,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
     # 查找ONNX Runtime库文件
     find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
-    add_executable(${MonicaImageProcessHttpServerForAARCH64} main.cpp
+    add_executable(${ARM64_PROJECT_NAME} main.cpp
             GlobalResource.h                            GlobalResource.cpp
             HttpUtils.h                                 HttpUtils.cpp
             ../../include/sketchDrawing/SketchDrawing.h ../sketchDrawing/SketchDrawing.cpp
@@ -76,7 +77,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
             ../../include/utils/Timer.h                 ../utils/Timer.cpp
             ../../include/utils/Utils.h                 ../utils/Utils.cpp)
 
-    target_link_libraries(${MonicaImageProcessHttpServerForAARCH64} ${OpenCV_LIBS})
-    target_link_libraries(${MonicaImageProcessHttpServerForAARCH64} ${Boost_LIBRARIES})
-    target_link_libraries(${MonicaImageProcessHttpServerForAARCH64} ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
+    target_link_libraries(${ARM64_PROJECT_NAME} ${OpenCV_LIBS})
+    target_link_libraries(${ARM64_PROJECT_NAME} ${Boost_LIBRARIES})
+    target_link_libraries(${ARM64_PROJECT_NAME} ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
 endif ()
