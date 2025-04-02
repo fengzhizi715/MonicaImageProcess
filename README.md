@@ -102,7 +102,7 @@ cmake --build .
 
 # 三. http server
 
-http server 部署了几个模型，方便 Monica 无需本地加载模型文件，只需通过 http 服务即可调用模型。
+http server 部署了几个模型，方便 Monica 无需本地加载模型文件，只需通过调用 http 服务即可调用模型。
 
 ## 3.1 http server 的运行
 运行编译后的程序
@@ -125,6 +125,9 @@ Allowed options:
 ```
 
 ## 3.2 接口
+
+
+
 通过 curl 调用:
 ```
 curl -X POST http://localhost:8080/api/sketchDrawing -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
