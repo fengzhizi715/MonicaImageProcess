@@ -126,13 +126,16 @@ Allowed options:
 
 ## 3.2 接口
 
-
+### 3.2.1 /api/sketchDrawing 
 
 通过 curl 调用:
 ```
 curl -X POST http://localhost:8080/api/sketchDrawing -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
 ```
 
+## 3.2.2 /api/faceDetect
+
+通过 curl 调用:
 ```
-curl -X POST "http://localhost:8080/api/faceSwap" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "target=@/Users/target.jpg" --output output.jpg
+curl -X POST http://localhost:8080/api/faceDetect -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
 ```
