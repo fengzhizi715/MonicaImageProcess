@@ -139,3 +139,17 @@ curl -X POST http://localhost:8080/api/sketchDrawing -H "Content-Type: image/jpe
 ```
 curl -X POST http://localhost:8080/api/faceDetect -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
 ```
+
+## 3.2.3 /api/faceLandMark
+
+通过 curl 调用:
+```
+curl -X POST http://localhost:8080/api/faceLandMark -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
+``
+
+## 3.2.4 /api/faceSwap
+
+通过 curl 调用:
+```
+curl -X POST "http://localhost:8080/api/faceSwap" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "image2=@/Users/Tony/target.jpg" --output
+``
