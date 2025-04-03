@@ -60,7 +60,6 @@ Mat GlobalResource::processFaceDetect(Mat src) {
 
     Mat dst;
     faceDetect.get()->inferImage(src, dst);
-    cvtColor(dst, dst, cv::COLOR_GRAY2BGR);
     return dst;
 }
 
