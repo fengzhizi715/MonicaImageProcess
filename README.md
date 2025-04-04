@@ -151,5 +151,5 @@ curl -X POST http://localhost:8080/api/faceLandMark -H "Content-Type: image/jpeg
 
 通过 curl 调用:
 ```
-curl -X POST "http://localhost:8080/api/faceSwap" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "image2=@/Users/Tony/target.jpg" --output
+curl -X POST "http://localhost:8080/api/faceSwap" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "target=@/Users/Tony/target.jpg" --output output.jpg
 ```
