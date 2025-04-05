@@ -126,6 +126,9 @@ Allowed options:
 
 ## 3.2 接口
 
+### 3.2.0 /health
+服务器状态检测
+
 ### 3.2.1 /api/sketchDrawing 
 
 通过 curl 调用:
