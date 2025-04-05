@@ -74,7 +74,7 @@ private:
         auto target = std::string(req_.target());
 
         if (target == "/health") {
-            http::response<http::string_body> res{http::status::not_found, req_.version()};
+            http::response<http::string_body> res{http::status::ok, req_.version()};
             res.set(http::field::content_type, CONTENT_TYPE_PLAIN_TEXT);
             res.body() = "OK";
             res.prepare_payload();
