@@ -130,6 +130,7 @@ Allowed options:
 服务器状态检测
 
 ### 3.2.1 /api/sketchDrawing 
+提供生成素描画的服务
 
 通过 curl 调用:
 ```
@@ -137,6 +138,7 @@ curl -X POST http://localhost:8080/api/sketchDrawing -H "Content-Type: image/jpe
 ```
 
 ## 3.2.2 /api/faceDetect
+提供人脸识别的服务
 
 通过 curl 调用:
 ```
@@ -144,6 +146,7 @@ curl -X POST http://localhost:8080/api/faceDetect -H "Content-Type: image/jpeg" 
 ```
 
 ## 3.2.3 /api/faceLandMark
+提供人脸检测的服务
 
 通过 curl 调用:
 ```
@@ -151,6 +154,7 @@ curl -X POST http://localhost:8080/api/faceLandMark -H "Content-Type: image/jpeg
 ```
 
 ## 3.2.4 /api/faceSwap
+提供人脸替换的服务
 
 通过 curl 调用:
 ```
