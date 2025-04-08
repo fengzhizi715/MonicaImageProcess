@@ -132,7 +132,7 @@ Allowed options:
 ### 3.2.1 /api/sketchDrawing 
 提供生成素描画的服务
 
-通过 curl 调用:
+curl 调用的示例:
 ```
 curl -X POST http://localhost:8080/api/sketchDrawing -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
 ```
@@ -140,7 +140,7 @@ curl -X POST http://localhost:8080/api/sketchDrawing -H "Content-Type: image/jpe
 ## 3.2.2 /api/faceDetect
 提供人脸识别的服务
 
-通过 curl 调用:
+curl 调用的示例:
 ```
 curl -X POST http://localhost:8080/api/faceDetect -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
 ```
@@ -148,7 +148,7 @@ curl -X POST http://localhost:8080/api/faceDetect -H "Content-Type: image/jpeg" 
 ## 3.2.3 /api/faceLandMark
 提供人脸检测的服务
 
-通过 curl 调用:
+curl 调用的示例:
 ```
 curl -X POST http://localhost:8080/api/faceLandMark -H "Content-Type: image/jpeg" --data-binary "@/Users/Tony/xxx.png" --output output.jpg
 ```
@@ -156,7 +156,7 @@ curl -X POST http://localhost:8080/api/faceLandMark -H "Content-Type: image/jpeg
 ## 3.2.4 /api/faceSwap
 提供人脸替换的服务
 
-通过 curl 调用:
+curl 调用的示例:
 ```
 curl -X POST "http://localhost:8080/api/faceSwap" -H "Content-Type: multipart/form-data" -F "src=@/Users/Tony/src.jpg" -F "target=@/Users/Tony/target.jpg" --output output.jpg
 ```
