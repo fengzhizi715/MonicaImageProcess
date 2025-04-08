@@ -4,8 +4,10 @@
 该项目是为 https://github.com/fengzhizi715/Monica 项目服务的，
 使用的 OpenCV C++ 实现的图像处理算法和调用、部署深度学习模型。
 
+支持客户端通过本地的算法调用深度学习模型，也支持通过 http 服务调用模型
 
-代码目录结构
+
+项目目录结构
 
 ```
 MonicaImageProcess/
