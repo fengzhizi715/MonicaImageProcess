@@ -12,7 +12,12 @@ GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {
 
     string sketchDrawingMode = modelPath + "/opensketch_style_512x512.onnx";
     const string& onnx_logid = "Sketch Drawing";
+
+#ifdef USE_GPU
+    const string& onnx_provider = OnnxProviders::CUDA;
+#else
     const string& onnx_provider = OnnxProviders::CPU;
+#endif
     sketchDrawing = std::make_unique<SketchDrawing>(sketchDrawingMode, onnx_logid.c_str(), onnx_provider.c_str());
 
     string faceProto = modelPath + "/opencv_face_detector.pbtxt";
