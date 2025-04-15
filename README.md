@@ -1,8 +1,8 @@
 # MonicaImageProcess
 
 # 一. 说明
-该项目是为 https://github.com/fengzhizi715/Monica 项目服务的，
-使用的 OpenCV C++ 实现的图像处理算法和调用、部署深度学习模型。支持 Monica 客户端通过 jni 调用深度学习模型，也支持通过 http 服务调用模型。
+该项目是为 https://github.com/fengzhizi715/Monica 项目服务的， 使用的 OpenCV C++ 实现的图像处理算法和调用、部署深度学习模型。
+支持 Monica 客户端通过 jni 调用深度学习模型，也支持通过 http 服务调用模型。
 
 
 项目目录结构
@@ -54,8 +54,8 @@ MonicaImageProcess/
 ```
 
 # 二. 编译方法
-
 ## 2.1 本地算法库的编译
+
 1. 进入 src 目录：
 ```
 cd src
@@ -102,7 +102,7 @@ cmake --build .
 
 # 三. http server
 
-http server 部署了几个模型，方便 Monica 无需本地加载模型文件，只需通过调用 http 服务即可调用模型。
+http server 部署了几个模型，方便 Monica 无需从本地加载模型文件，只需通过调用 http 服务即可调用模型。
 
 ## 3.1 http server 的运行
 运行编译后的程序
