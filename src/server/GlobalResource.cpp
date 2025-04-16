@@ -47,6 +47,25 @@ GlobalResource::GlobalResource(string modelPath): modelPath(modelPath) {
     faceSwap        = std::make_unique<FaceSwap>(faceSwapModePath, faceSwapModePath2, faceSwapLogId.c_str(), onnx_provider.c_str());
     faceEnhance     = std::make_unique<FaceEnhance>(faceEnhanceModePath, faceEnhanceLogId.c_str(), onnx_provider.c_str());
 
+
+    string animeGANHayaoModePath = modelPath + "/AnimeGANv3_Hayao_36.onnx";
+    string animeGANJPFaceModePath = modelPath + "/AnimeGANv3_JP_face_v1.0.onnx";
+    string animeGANPortraitSketchModePath = modelPath + "/AnimeGANv3_PortraitSketch_25.onnx";
+    string animeGANShinkaiModePath = modelPath + "/AnimeGANv3_Shinkai_37.onnx";
+    string animeGANTinyCuteModePath = modelPath + "/AnimeGANv3_tiny_Cute.onnx";
+
+    const std::string& animeGANHayaoLogId = "animeGANHayao";
+    const std::string& animeGANJPFaceLogId = "animeGANJPFace";
+    const std::string& animeGANPortraitSketchLogId = "animeGANPortraitSketch";
+    const std::string& animeGANShinkaiLogId = "animeGANShinkai";
+    const std::string& animeGANTinyCuteLogId = "animeGANTinyCute";
+
+    animeGANHayao          = std::make_unique<AnimeGAN>(animeGANHayaoModePath, animeGANHayaoLogId.c_str(), onnx_provider.c_str());
+    animeGANJPFace         = std::make_unique<AnimeGAN>(animeGANJPFaceModePath, animeGANJPFaceLogId.c_str(), onnx_provider.c_str());
+    animeGANPortraitSketch = std::make_unique<AnimeGAN>(animeGANPortraitSketchModePath, animeGANPortraitSketchLogId.c_str(), onnx_provider.c_str());
+    animeGANShinkai        = std::make_unique<AnimeGAN>(animeGANShinkaiModePath, animeGANShinkaiLogId.c_str(), onnx_provider.c_str());
+    animeGANTinyCute       = std::make_unique<AnimeGAN>(animeGANTinyCuteModePath, animeGANTinyCuteLogId.c_str(), onnx_provider.c_str());
+
     // 初始化资源，加载模型文件
     cout << "GlobalResource initialized." << endl;
 }
@@ -121,6 +140,34 @@ Mat GlobalResource::processFaceSwap(Mat src, Mat target, bool status) {
             Mat swap = faceSwap.get()->process(dst, source_face_embedding, target_landmark_5);
             dst = faceEnhance.get()->process(swap, target_landmark_5);
         }
+    }
+
+    return dst;
+}
+
+Mat GlobalResource::processCartoon(Mat src, int type) {
+    cout << "process Cartoon..." << endl;
+    cout << "type = " << type << endl;
+
+    Mat dst;
+    switch(type) {
+        case 1:
+            animeGANHayao.get()->inferImage(src, dst);
+            break;
+        case 2:
+            animeGANJPFace.get()->inferImage(src, dst);
+            break;
+        case 3:
+            animeGANPortraitSketch.get()->inferImage(src, dst);
+            break;
+        case 4:
+            animeGANShinkai.get()->inferImage(src, dst);
+            break;
+        case 5:
+            animeGANTinyCute.get()->inferImage(src, dst);
+            break;
+        default:
+            animeGANHayao.get()->inferImage(src, dst);
     }
 
     return dst;

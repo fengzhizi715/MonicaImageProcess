@@ -95,7 +95,7 @@ private:
                     // 使用 parse_relative_ref 解析路径 + 查询参数
                     auto targetRes = boost::urls::parse_relative_ref(target);
                     if (!targetRes) {
-                        std::cerr << "Invalid URL: " << target << std::endl;
+                        std::cerr << "URL parsing failed: " << targetRes.error().message() << std::endl;
                         return;
                     }
 
@@ -133,8 +133,42 @@ private:
                     res.prepare_payload();
                     do_write(res);
                 }
+            } else if (target.find("/api/cartoon") == 0) {
+                try {
+                    // 使用 parse_relative_ref 解析路径 + 查询参数
+                    auto targetRes = boost::urls::parse_relative_ref(target);
+                    if (!targetRes) {
+                        std::cerr << "URL parsing failed: " << targetRes.error().message() << std::endl;
+                        return;
+                    }
+
+                    boost::urls::url_view url_view = targetRes.value();
+                    int type_param = 0;  // 默认值
+                    // 正确的参数获取方式
+                    auto params = url_view.params();
+                    if (auto it = params.find("type"); it != params.end()) {
+                        auto value = (*it).value;
+                        type_param = std::stoi(value);
+                    }
+
+                    Mat src = requestBodyToCvMat(req_);
+                    Mat dst = globalResource_->processCartoon(src, type_param);
+                    std::string encodedImage = cvMatToResponseBody(dst, ".jpg");
+
+                    http::response<http::string_body> res{http::status::ok, req_.version()};
+                    res.set(http::field::content_type, CONTENT_TYPE_IMAGE_JPEG);
+                    res.body() = std::move(encodedImage);
+                    res.prepare_payload();
+                    do_write(res);
+                } catch (const std::exception& e) {
+                    http::response<http::string_body> res{http::status::bad_request, req_.version()};
+                    res.set(http::field::content_type, CONTENT_TYPE_PLAIN_TEXT);
+                    res.body() = "Error processing face swap: " + std::string(e.what());
+                    res.prepare_payload();
+                    do_write(res);
+                }
             }
-        } else {
+    } else {
             // 其他接口返回 404
             http::response<http::string_body> res{http::status::not_found, req_.version()};
             res.set(http::field::content_type, CONTENT_TYPE_PLAIN_TEXT);
