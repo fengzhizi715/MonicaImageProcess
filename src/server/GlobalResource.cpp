@@ -147,7 +147,6 @@ Mat GlobalResource::processFaceSwap(Mat src, Mat target, bool status) {
 
 Mat GlobalResource::processCartoon(Mat src, int type) {
     cout << "process Cartoon..." << endl;
-    cout << "type = " << type << endl;
 
     Mat dst;
     switch(type) {
