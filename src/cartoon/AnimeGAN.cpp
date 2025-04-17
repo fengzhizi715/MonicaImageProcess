@@ -6,8 +6,6 @@
 
 AnimeGAN::AnimeGAN(string modelPath, const char* logId, const char* provider): OnnxRuntimeBase(modelPath, logId, provider)
 {
-    this->outHeight = output_node_dims[0][2];
-    this->outWidth = output_node_dims[0][3];
 }
 
 // 工具函数：将 OpenCV 的 Mat 转为 float tensor（NCHW）
@@ -58,7 +56,7 @@ void AnimeGAN::inferImage(Mat& src, Mat& dst)
 
     // 取出输出数据
     float* output_data = ort_outputs.front().GetTensorMutableData<float>();
-    dst = tensor_to_mat_nhwc(output_data, 512, 512);
+    dst = tensor_to_mat_nhwc(output_data, outHeight, outWidth);
 
     // 后处理输出图像
     dst = cv::min(cv::max(dst, 0.0f), 1.0f); // clamp 到 [0,1]

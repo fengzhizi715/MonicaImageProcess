@@ -28,8 +28,8 @@ public:
 private:
     const int inpWidth = 512;
     const int inpHeight = 512;
-    int outWidth;
-    int outHeight;
+    const int outWidth = 512;
+    const int outHeight = 512;
     vector<float> input_image_;
 };
 
