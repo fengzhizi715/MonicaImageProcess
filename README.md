@@ -13,6 +13,7 @@ MonicaImageProcess/
 ├── LICENSE                          # 项目许可证文件
 ├── CMakeLists.txt                   # CMake构建脚本（主）
 ├── include/                         # 项目公共头文件目录
+│   └── cartoon/                     # 图像转换成卡通漫画模块的头文件目录
 │   └── colorcorrection/             # 图像调色相关算法模块的头文件目录
 │   └── common/                      # 封装基类模块的头文件目录
 │   └── faceDetect/                  # 人脸识别模块的头文件目录
@@ -24,6 +25,8 @@ MonicaImageProcess/
 │       ├── cn_netdiscovery_monica_opencv_ImageProcess.h   # jni 对应用层暴露接口的头文件
 │       └── cn_netdiscovery_monica_opencv_ImageProcess.cpp # jni 对应用层暴露接口的源文件
 ├── src/                             # 项目主源代码目录
+│   └── cartoon/                     # 图像转换成卡通漫画模块
+│       └── AnimeGAN.cpp             # 使用 OnnxRuntime 加载 AnimeGANV3 模型的源文件
 │   └── colorcorrection/             # 图像调色相关算法模块
 │       └── ColorCorrection.cpp      # 图像调色相关算法的源文件
 │   └── common/                      # 封装基类模块
