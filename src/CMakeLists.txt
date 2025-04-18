@@ -34,60 +34,41 @@ include_directories(${JNI_INCLUDE_DIRS})
 include_directories(jni)
 
 if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "x86_64")
-    # 指定ONNX Runtime的路径
-    set(ONNXRUNTIME_ROOT "/Users/Tony/onnxruntime/onnxruntime-osx-x86_64-1.10.0")
-    # 包含ONNX Runtime头文件
-    include_directories(${ONNXRUNTIME_ROOT}/include/)
-    # 查找ONNX Runtime库文件
-    find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
     add_library(${PROJECT_NAME} SHARED
             ../include/library.h                                library.cpp
-            ../include/common/OnnxRuntimeBase.h                 common/OnnxRuntimeBase.cpp
             ../jni/cn_netdiscovery_monica_opencv_ImageProcess.h ../jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp
-            ../include/faceDetect/FaceDetect.h                  faceDetect/FaceDetect.cpp
-            ../include/sketchDrawing/SketchDrawing.h            sketchDrawing/SketchDrawing.cpp
-            ../include/faceSwap/Yolov8Face.h                    faceSwap/Yolov8Face.cpp
-            ../include/faceSwap/Face68Landmarks.h               faceSwap/Face68Landmarks.cpp
-            ../include/faceSwap/FaceEmbedding.h                 faceSwap/FaceEmbedding.cpp
-            ../include/faceSwap/FaceSwap.h                      faceSwap/FaceSwap.cpp
-            ../include/faceSwap/FaceEnhance.h                   faceSwap/FaceEnhance.cpp
             ../include/colorcorrection/ColorCorrection.h        colorcorrection/ColorCorrection.cpp
             ../include/matchTemplate/MatchTemplate.h            matchTemplate/MatchTemplate.cpp
-            ../include/utils/Timer.h                            utils/Timer.cpp
-            ../include/utils/Utils.h                            utils/Utils.cpp
             ../include/utils/JNIUtils.h                         utils/JNIUtils.cpp
-            ../include/Constants.h)
+            ../include/utils/Utils.h                            utils/Utils.cpp
+            )
 
     target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
-    target_link_libraries(${PROJECT_NAME} ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
 
 elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "arm64")
-    # 指定ONNX Runtime的路径
-    set(ONNXRUNTIME_ROOT "/Users/tony/onnxruntime/onnxruntime-osx-arm64-1.10.0")
-    # 包含ONNX Runtime头文件
-    include_directories(${ONNXRUNTIME_ROOT}/include/)
-    # 查找ONNX Runtime库文件
-    find_library(ONNXRUNTIME_LIBS onnx-runtime PATHS ${ONNXRUNTIME_ROOT}/lib)
 
     add_library(MonicaImageProcess_aarch64 SHARED
             ../include/library.h                                library.cpp
-            ../include/common/OnnxRuntimeBase.h                 common/OnnxRuntimeBase.cpp
             ../jni/cn_netdiscovery_monica_opencv_ImageProcess.h ../jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp
-            ../include/faceDetect/FaceDetect.h                  faceDetect/FaceDetect.cpp
-            ../include/sketchDrawing/SketchDrawing.h            sketchDrawing/SketchDrawing.cpp
-            ../include/faceSwap/Yolov8Face.h                    faceSwap/Yolov8Face.cpp
-            ../include/faceSwap/Face68Landmarks.h               faceSwap/Face68Landmarks.cpp
-            ../include/faceSwap/FaceEmbedding.h                 faceSwap/FaceEmbedding.cpp
-            ../include/faceSwap/FaceSwap.h                      faceSwap/FaceSwap.cpp
-            ../include/faceSwap/FaceEnhance.h                   faceSwap/FaceEnhance.cpp
             ../include/colorcorrection/ColorCorrection.h        colorcorrection/ColorCorrection.cpp
             ../include/matchTemplate/MatchTemplate.h            matchTemplate/MatchTemplate.cpp
-            ../include/utils/Timer.h                            utils/Timer.cpp
-            ../include/utils/Utils.h                            utils/Utils.cpp
             ../include/utils/JNIUtils.h                         utils/JNIUtils.cpp
-            ../include/Constants.h)
+            ../include/utils/Utils.h                            utils/Utils.cpp
+            )
 
     target_link_libraries(MonicaImageProcess_aarch64 ${OpenCV_LIBS})
-    target_link_libraries(MonicaImageProcess_aarch64 ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.1.10.0.dylib)
+
+elseif(${CURRENT_SYSTEM} MATCHES "Linux")
+
+    add_library(MonicaImageProcess_linux SHARED
+            ../include/library.h                                library.cpp
+            ../jni/cn_netdiscovery_monica_opencv_ImageProcess.h ../jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp
+            ../include/colorcorrection/ColorCorrection.h        colorcorrection/ColorCorrection.cpp
+            ../include/matchTemplate/MatchTemplate.h            matchTemplate/MatchTemplate.cpp
+            ../include/utils/JNIUtils.h                         utils/JNIUtils.cpp
+            ../include/utils/Utils.h                            utils/Utils.cpp
+            )
+
+    target_link_libraries(MonicaImageProcess_linux ${OpenCV_LIBS})
 endif ()

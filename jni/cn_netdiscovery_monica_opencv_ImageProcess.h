@@ -15,9 +15,6 @@ JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getVer
 JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getOpenCVVersion
         (JNIEnv* env, jobject);
 
-JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getONNXRuntimeVersion
-        (JNIEnv* env, jobject);
-
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_shearing
         (JNIEnv* env, jobject,jbyteArray array, jfloat x, jfloat y);
 
@@ -105,32 +102,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_morp
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matchTemplate
         (JNIEnv* env, jobject,jbyteArray array, jbyteArray arrayTemplate, jintArray scalarArray, jobject jobj);
 
-
-//-------------------------------------------------------------------
-// 调用深度学习模型相关
-//-------------------------------------------------------------------
-JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceDetect
-        (JNIEnv* env, jobject,jstring jFaceProto, jstring jFaceModel,
-         jstring jAgeProto, jstring jAgeModel, jstring jGenderProto, jstring jGenderModel);
-
-JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_faceDetect
-        (JNIEnv* env, jobject,jbyteArray array);
-
-JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initSketchDrawing
-        (JNIEnv* env, jobject,jstring jModelPath);
-
-JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sketchDrawing
-        (JNIEnv* env, jobject,jbyteArray array);
-
-JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initFaceSwap
-        (JNIEnv* env, jobject,jstring jYolov8FaceModelPath, jstring jFace68LandmarksModePath,
-         jstring jFaceEmbeddingModePath, jstring jFaceSwapModePath, jstring jFaceSwapModePath2, jstring jFaceEnhanceModePath);
-
-JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_faceLandMark
-        (JNIEnv* env, jobject,jbyteArray array, jintArray scalarArray);
-
-JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_faceSwap
-        (JNIEnv* env, jobject,jbyteArray arraySrc, jbyteArray arrayTarget, jboolean status);
 
 #ifdef __cplusplus
 }

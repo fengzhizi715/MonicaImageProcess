@@ -1,9 +1,7 @@
 # MonicaImageProcess
 
 # 一. 说明
-该项目是为 https://github.com/fengzhizi715/Monica 项目服务的， 使用的 OpenCV C++ 实现的图像处理算法和调用、部署深度学习模型。
-支持 Monica 客户端通过 jni 调用深度学习模型，也支持通过 http 服务调用模型。
-
+该项目是为 https://github.com/fengzhizi715/Monica 项目服务的， 使用的 OpenCV C++ 实现的图像处理算法和调用。
 
 项目目录结构
 
@@ -13,43 +11,17 @@ MonicaImageProcess/
 ├── LICENSE                          # 项目许可证文件
 ├── CMakeLists.txt                   # CMake构建脚本（主）
 ├── include/                         # 项目公共头文件目录
-│   └── cartoon/                     # 图像转换成卡通漫画模块的头文件目录
 │   └── colorcorrection/             # 图像调色相关算法模块的头文件目录
-│   └── common/                      # 封装基类模块的头文件目录
-│   └── faceDetect/                  # 人脸识别模块的头文件目录
-│   └── faceSwap/                    # 人脸替换模块的头文件目录
 │   └── matchTemplate/               # 模版匹配的头文件目录
-│   └── sketchDrawing/               # 生成素描画模块的头文件目录
 │   └── utils/                       # 工具类模块的头文件目录
 ├── jni/                             # 给 Java/Kotlin 调用的本地算法
 │       ├── cn_netdiscovery_monica_opencv_ImageProcess.h   # jni 对应用层暴露接口的头文件
 │       └── cn_netdiscovery_monica_opencv_ImageProcess.cpp # jni 对应用层暴露接口的源文件
 ├── src/                             # 项目主源代码目录
-│   └── cartoon/                     # 图像转换成卡通漫画模块
-│       └── AnimeGAN.cpp             # 使用 OnnxRuntime 加载 AnimeGANV3 模型的源文件
 │   └── colorcorrection/             # 图像调色相关算法模块
 │       └── ColorCorrection.cpp      # 图像调色相关算法的源文件
-│   └── common/                      # 封装基类模块
-│       └── OnnxRuntimeBase.cpp      # 封装 OnnxRuntime 的基类
-│   └── faceDetect/                  # 人脸识别模块
-│       └── FaceDetect.cpp           # 使用 OpenCV 的 dnn 模块加载模型实现的人脸识别检测的源文件
-│   └── faceSwap/                    # 人脸替换模块
-│       └── Face68Landmarks.cpp      # 使用 OnnxRuntime 加载模型实现查找人脸的关键点的源文件
-│       └── FaceEmbedding.cpp        # 使用 OnnxRuntime 加载模型实现人脸图像映射的源文件
-│       └── FaceEnhance.cpp          # 使用 OnnxRuntime 加载模型实现人脸增强的源文件
-│       └── FaceSwap.cpp             # 使用 OnnxRuntime 加载模型实现人脸替换的源文件
-│       └── Yolov8Face.cpp           # 使用 OnnxRuntime 加载模型实现人脸检测的源文件
 │   └── matchTemplate/               # 模版匹配模块
 │       └── MatchTemplate.cpp        # 模版匹配相关算法的源文件
-│   └── server/                      # http 服务的模块
-│       ├── CMakeLists.txt           # http 服务模块的构建脚本
-│       ├── GlobalResource.cpp       # http 服务加载模型、调用模型的源文件
-│       ├── GlobalResource.h         # http 服务加载模型、调用模型的头文件
-│       ├── HttpUtils.cpp            # http 服务模块工具类的源文件
-│       ├── HttpUtils.h              # http 服务模块工具类的头文件
-│       └── main.cpp                 # http 服务模块主程序入口文件
-│   └── sketchDrawing/               # 生成素描画模块
-│       └── InformativeDrawings.cpp  # 使用 OnnxRuntime 加载模型实现生成素描画的源文件
 │   └── utils/                       # 工具类模块
 │   └── CMakeLists.txt               # 本地算法的构建脚本
 │   └── library.cpp                  # 常规使用 OpenCV 图像算法相关的源文件

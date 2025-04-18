@@ -1,9 +1,8 @@
-#include "../include/library.h"
-#include "../include/utils/Utils.h"
-
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
+#include "../include/library.h"
+#include "../include/utils/Utils.h"
 
 using namespace std;
 using namespace cv;
