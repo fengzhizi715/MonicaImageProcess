@@ -11,8 +11,8 @@ MonicaImageProcess/
 ├── LICENSE                          # 项目许可证文件
 ├── CMakeLists.txt                   # CMake构建脚本（主）
 ├── include/                         # 项目公共头文件目录
-│   └── colorcorrection/             # 图像调色相关算法模块的头文件目录
-│   └── matchTemplate/               # 模版匹配的头文件目录
+│   ├── colorcorrection/             # 图像调色相关算法模块的头文件目录
+│   ├── matchTemplate/               # 模版匹配的头文件目录
 │   └── utils/                       # 工具类模块的头文件目录
 ├── jni/                             # 给 Java/Kotlin 调用的本地算法
 │       ├── cn_netdiscovery_monica_opencv_ImageProcess.h   # jni 对应用层暴露接口的头文件
@@ -22,8 +22,8 @@ MonicaImageProcess/
 │       └── ColorCorrection.cpp      # 图像调色相关算法的源文件
 │   └── matchTemplate/               # 模版匹配模块
 │       └── MatchTemplate.cpp        # 模版匹配相关算法的源文件
-│   └── utils/                       # 工具类模块
-│   └── CMakeLists.txt               # 本地算法的构建脚本
+│   ├── utils/                       # 工具类模块
+│   ├── CMakeLists.txt               # 本地算法的构建脚本
 │   └── library.cpp                  # 常规使用 OpenCV 图像算法相关的源文件
 └── .gitignore                       # git 忽略和不追踪的文件
 ```
