@@ -59,7 +59,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
     target_link_libraries(MonicaImageProcess_aarch64 ${OpenCV_LIBS})
 elseif(${CURRENT_SYSTEM} MATCHES "Linux")
 
-    add_library(MonicaImageProcess_linux SHARED
+    add_library(${PROJECT_NAME} SHARED
             ../include/library.h                                library.cpp
             ../jni/cn_netdiscovery_monica_opencv_ImageProcess.h ../jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp
             ../include/colorcorrection/ColorCorrection.h        colorcorrection/ColorCorrection.cpp
@@ -68,5 +68,5 @@ elseif(${CURRENT_SYSTEM} MATCHES "Linux")
             ../include/utils/Utils.h                            utils/Utils.cpp
             )
 
-    target_link_libraries(MonicaImageProcess_linux ${OpenCV_LIBS})
+    target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 endif ()
