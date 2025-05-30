@@ -1,6 +1,9 @@
 //
 // Created by Tony Shen on 2024/7/14.
 //
+#include <libraw/libraw.h>
+#include <vector>
+#include <cstring>
 #include <iostream>
 #include "cn_netdiscovery_monica_opencv_ImageProcess.h"
 #include "../include/colorcorrection/ColorCorrection.h"
@@ -546,4 +549,58 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matc
     env->DeleteLocalRef(jcls);  // 手动释放局部引用
 
     return matToIntArray(env,dst);
+}
+
+JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_detectRawFormat
+        (JNIEnv *env, jobject obj, jstring filePath) {
+
+    const char *path = env->GetStringUTFChars(filePath, nullptr);
+
+    std::string pathString(path);
+
+    std::string result = detectRawFormat(pathString);
+    env->ReleaseStringUTFChars(filePath, path);
+    return env->NewStringUTF(result.c_str());
+}
+
+JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeRawToBuffer
+        (JNIEnv *env, jobject obj, jstring filePath) {
+    const char *path = env->GetStringUTFChars(filePath, nullptr);
+
+    LibRaw rawProcessor;
+    if (rawProcessor.open_file(path) != LIBRAW_SUCCESS || rawProcessor.unpack() != LIBRAW_SUCCESS) {
+        env->ReleaseStringUTFChars(filePath, path);
+        return nullptr;
+    }
+
+    rawProcessor.imgdata.params.output_bps = 8;
+    rawProcessor.imgdata.params.use_camera_wb = 1;
+    rawProcessor.imgdata.params.no_auto_bright = 1;
+    rawProcessor.dcraw_process();
+
+    libraw_processed_image_t *img = rawProcessor.dcraw_make_mem_image();
+
+    if (!img || img->type != LIBRAW_IMAGE_BITMAP) {
+        rawProcessor.recycle();
+        env->ReleaseStringUTFChars(filePath, path);
+        return nullptr;
+    }
+
+    // 假设 img->colors == 3（RGB）
+    int width = img->width;
+    int height = img->height;
+    int channels = img->colors;
+    int length = width * height * channels;
+
+    jbyteArray byteArray = env->NewByteArray(length);
+    env->SetByteArrayRegion(byteArray, 0, length, reinterpret_cast<jbyte *>(img->data));
+
+    jclass bufferCls = env->FindClass("cn/netdiscovery/monica/domain/RawImage");
+    jmethodID constructor = env->GetMethodID(bufferCls, "<init>", "([BIII)V");
+    jobject result = env->NewObject(bufferCls, constructor, byteArray, width, height, channels);
+
+    LibRaw::dcraw_clear_mem(img);
+    rawProcessor.recycle();
+    env->ReleaseStringUTFChars(filePath, path);
+    return result;
 }

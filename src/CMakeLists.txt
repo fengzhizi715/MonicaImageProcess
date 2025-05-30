@@ -33,6 +33,12 @@ find_package(JNI REQUIRED)
 include_directories(${JNI_INCLUDE_DIRS})
 include_directories(jni)
 
+# 添加 libraw 的配置
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBRAW REQUIRED libraw)
+include_directories(${LIBRAW_INCLUDE_DIRS})
+link_directories(${LIBRAW_LIBRARY_DIRS})
+
 if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "x86_64")
 
     add_library(${PROJECT_NAME} SHARED
@@ -45,6 +51,7 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
             )
 
     target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+    target_link_libraries(${PROJECT_NAME} ${LIBRAW_LIBRARIES})
 elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "arm64")
 
     add_library(MonicaImageProcess_aarch64 SHARED
