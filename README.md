@@ -31,7 +31,11 @@ MonicaImageProcess/
 # 二. 依赖
 
 ## 2.1 MacOS
+1. 安装 OpenCV
+brew install opencv
 
+2. 安装 pkg-config 
+brew install pkg-config
 
 ## 2.2 Linux
 编译 OpenCV
