@@ -42,6 +42,9 @@ brew install pkg-config
 ```
 
 3. 安装 libraw
+```
+brew install libraw
+```
 
 ## 2.2 Linux
 编译 OpenCV
