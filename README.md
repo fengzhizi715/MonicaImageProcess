@@ -28,7 +28,15 @@ MonicaImageProcess/
 └── .gitignore                       # git 忽略和不追踪的文件
 ```
 
-# 二. 编译方法
+# 二. 依赖
+
+## 2.1 MacOS
+
+
+## 2.2 Linux
+编译 OpenCV
+
+# 三. 编译方法
 
 1. 进入 src 目录：
 ```
@@ -51,7 +59,7 @@ cmake ..
 cmake --build .
 ```
 
-# 三. 模型的部署
+# 四. 模型的部署
 
 通过 http server 部署了几个模型，方便 Monica 通过调用 http 服务即可调用模型。
 

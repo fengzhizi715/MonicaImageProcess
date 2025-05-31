@@ -64,6 +64,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
             )
 
     target_link_libraries(MonicaImageProcess_aarch64 ${OpenCV_LIBS})
+    target_link_libraries(MonicaImageProcess_aarch64 ${LIBRAW_LIBRARIES})
 elseif(${CURRENT_SYSTEM} MATCHES "Linux")
 
     add_library(${PROJECT_NAME} SHARED
