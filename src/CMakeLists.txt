@@ -77,4 +77,5 @@ elseif(${CURRENT_SYSTEM} MATCHES "Linux")
             )
 
     target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+    target_link_libraries(${PROJECT_NAME} ${LIBRAW_LIBRARIES})
 endif ()
