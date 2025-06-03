@@ -47,7 +47,9 @@ brew install libraw
 ```
 
 ## 2.2 Linux
-编译 OpenCV
+编译/安装 OpenCV
+
+编译/安装 LibRaw
 
 # 三. 编译方法
 
