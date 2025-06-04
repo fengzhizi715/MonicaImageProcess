@@ -17,6 +17,8 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set(CURRENT_SYSTEM "MacOS")
 endif()
 
+find_package(PkgConfig REQUIRED)
+
 # 添加 OpenCV 的配置
 find_package(OpenCV REQUIRED)
 # 打印OpenCV版本
@@ -34,10 +36,15 @@ include_directories(${JNI_INCLUDE_DIRS})
 include_directories(jni)
 
 # 添加 libraw 的配置
-find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBRAW REQUIRED libraw)
 include_directories(${LIBRAW_INCLUDE_DIRS})
 link_directories(${LIBRAW_LIBRARY_DIRS})
+
+# 添加 libheif 的配置
+pkg_check_modules(LIBHEIF REQUIRED libheif)
+include_directories(${LIBHEIF_INCLUDE_DIRS})
+link_directories(${LIBHEIF_LIBRARY_DIRS})
+
 
 if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "x86_64")
 

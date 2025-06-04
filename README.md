@@ -46,6 +46,11 @@ brew install pkg-config
 brew install libraw
 ```
 
+4. 安装 libheif
+```
+brew install libheif
+```
+
 ## 2.2 Linux
 编译/安装 OpenCV
 
