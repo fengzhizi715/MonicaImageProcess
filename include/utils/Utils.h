@@ -13,6 +13,4 @@ using namespace cv;
 
 bool ascendSort(vector<Point> a, vector<Point> b);
 
-std::string detectRawFormat(const std::string& path);
-
 #endif //MONICAIMAGEPROCESS_UTILS_H

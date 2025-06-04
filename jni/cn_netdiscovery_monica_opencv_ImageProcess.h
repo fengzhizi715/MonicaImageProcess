@@ -102,9 +102,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_morp
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matchTemplate
         (JNIEnv* env, jobject,jbyteArray array, jbyteArray arrayTemplate, jintArray scalarArray, jobject jobj);
 
-JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_detectRawFormat
-        (JNIEnv *env, jobject obj, jstring filePath);
-
 JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeRawToBuffer
        (JNIEnv *env, jobject obj, jstring filePath);
 

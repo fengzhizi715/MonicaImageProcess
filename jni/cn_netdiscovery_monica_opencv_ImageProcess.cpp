@@ -551,18 +551,6 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matc
     return matToIntArray(env,dst);
 }
 
-JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_detectRawFormat
-        (JNIEnv *env, jobject obj, jstring filePath) {
-
-    const char *path = env->GetStringUTFChars(filePath, nullptr);
-
-    std::string pathString(path);
-
-    std::string result = detectRawFormat(pathString);
-    env->ReleaseStringUTFChars(filePath, path);
-    return env->NewStringUTF(result.c_str());
-}
-
 JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeRawToBuffer
         (JNIEnv *env, jobject obj, jstring filePath) {
     const char *path = env->GetStringUTFChars(filePath, nullptr);

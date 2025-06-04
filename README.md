@@ -28,7 +28,7 @@ MonicaImageProcess/
 └── .gitignore                       # git 忽略和不追踪的文件
 ```
 
-# 二. 依赖
+# 二. 准备工作
 
 ## 2.1 MacOS
 1. 安装 OpenCV
