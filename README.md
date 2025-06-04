@@ -1,7 +1,7 @@
 # MonicaImageProcess
 
 # 一. 说明
-该项目是为 https://github.com/fengzhizi715/Monica 项目服务的， 使用的 OpenCV C++ 实现的图像处理算法和调用。
+该项目是为 https://github.com/fengzhizi715/Monica 项目服务的， 使用的 OpenCV C++ 实现的图像处理算法。
 
 项目目录结构
 
