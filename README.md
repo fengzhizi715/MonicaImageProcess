@@ -54,19 +54,7 @@ brew install libraw
 ## 2.3 Windows
 编译 OpenCV
 
-安装 MSYS2
-
-
-安装 pkg-config
-```
-pacman -Syu
-pacman -S mingw-w64-x86_64-pkgconf
-```
-
-安装 LibRaw
-```
-pacman -S mingw-w64-x86_64-libraw
-```
+下载 LibRaw 源码
 
 # 三. 编译方法
 
