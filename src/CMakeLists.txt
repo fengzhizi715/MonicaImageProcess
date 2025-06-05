@@ -59,6 +59,7 @@ if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES
 
     target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
     target_link_libraries(${PROJECT_NAME} ${LIBRAW_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} ${LIBHEIF_LIBRARIES})
 elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "arm64")
 
     add_library(MonicaImageProcess_aarch64 SHARED
@@ -72,6 +73,7 @@ elseif(${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATC
 
     target_link_libraries(MonicaImageProcess_aarch64 ${OpenCV_LIBS})
     target_link_libraries(MonicaImageProcess_aarch64 ${LIBRAW_LIBRARIES})
+    target_link_libraries(MonicaImageProcess_aarch64 ${LIBHEIF_LIBRARIES})
 elseif(${CURRENT_SYSTEM} MATCHES "Linux")
 
     add_library(${PROJECT_NAME} SHARED
@@ -85,4 +87,5 @@ elseif(${CURRENT_SYSTEM} MATCHES "Linux")
 
     target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
     target_link_libraries(${PROJECT_NAME} ${LIBRAW_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} ${LIBHEIF_LIBRARIES})
 endif ()
