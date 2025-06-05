@@ -103,7 +103,7 @@ cmake ..
 cmake --build .
 ```
 
-> Windows 我没有用 Clion 作为 ide，也没有用 cmake 构建，而是使用 Visual Studio 2022
+> Windows 我没有用 CLion 作为 IDE，也没有用 cmake 构建项目，而是使用 Visual Studio 2022
 
 # 四. 模型的部署
 
