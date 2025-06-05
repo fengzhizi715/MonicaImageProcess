@@ -52,25 +52,25 @@ brew install libheif
 ```
 
 ## 2.2 Linux
-编译/安装 OpenCV
+1. 编译/安装 OpenCV
 
-编译/安装 LibRaw
+2. 编译/安装 LibRaw
 
-编译/安装 Libheif
+3. 编译/安装 Libheif
 
 ## 2.3 Windows
-编译 OpenCV
+1. 编译 OpenCV
 
-下载 LibRaw 源码
+2. 下载 LibRaw 源码
 
-安装 vcpkg
+3. 安装 vcpkg
 
-安装 libde265
+4. 安装 libde265
 ```
 vcpkg install libde265:x64-windows
 ```
 
-安装其他可选依赖
+5. 安装其他可选依赖
 ```
 vcpkg install aom:x64-windows       # AV1 解码器
 vcpkg install dav1d:x64-windows     # 更快的 AV1 解码器
@@ -78,9 +78,9 @@ vcpkg install libpng:x64-windows    # PNG 支持
 vcpkg install zlib:x64-windows      # zlib 压缩支持
 ```
 
-编译 libheif
+6. 编译 libheif
 
-# 三. 编译方法
+# 三. 编译方法(Mac、Linux)
 
 1. 进入 src 目录：
 ```
@@ -102,6 +102,8 @@ cmake ..
 ```
 cmake --build .
 ```
+
+> Windows 我没有用 Clion 作为 ide，也没有用 cmake 构建，而是使用 Visual Studio 2022
 
 # 四. 模型的部署
 
