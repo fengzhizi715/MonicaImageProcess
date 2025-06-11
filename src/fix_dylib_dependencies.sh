@@ -18,12 +18,21 @@ echo "[INFO] Scanning dependencies..."
 DEPS=$(otool -L "$TARGET_DYLIB" | tail -n +2 | awk '{print $1}' | grep -v "^/usr/lib" | grep -v "^/System")
 
 for dep in $DEPS; do
+    dep_filename=$(basename "$dep")
+    dest_path="$DEST_DIR/$dep_filename"
+
+    # Step 1: Copy dylib to destination
     if [ -f "$dep" ]; then
-        echo "[COPY] $dep → $DEST_DIR"
-        cp -f "$dep" "$DEST_DIR"
+        echo "[COPY] $dep → $dest_path"
+        cp -f "$dep" "$dest_path"
     else
         echo "[WARN] Dependency not found: $dep"
+        continue
     fi
+
+    # Step 2: Change dependency path inside main dylib
+    echo "[FIX] Changing $dep → @loader_path/$dep_filename"
+    install_name_tool -change "$dep" "@loader_path/$dep_filename" "$TARGET_DYLIB"
 done
 
-echo "[DONE] dylib dependencies copied."
+echo "[DONE] dylib dependencies copied and fixed."
