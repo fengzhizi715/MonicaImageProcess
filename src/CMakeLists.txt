@@ -20,11 +20,19 @@ endif()
 find_package(PkgConfig REQUIRED)
 
 # 添加 OpenCV 的配置
-find_package(OpenCV REQUIRED)
-# 打印OpenCV版本
-MESSAGE("OpenCV version: ${OpenCV_VERSION}")
-# 添加include地址
+#find_package(OpenCV REQUIRED)
+## 打印OpenCV版本
+#MESSAGE("OpenCV version: ${OpenCV_VERSION}")
+## 添加include地址
+#include_directories(${OpenCV_INCLUDE_DIRS})
+
+
+# ==== ✅ OpenCV 手动路径设置 ====
+# 替换为你本地 OpenCV 安装路径（含 opencv_world）
+set(OpenCV_DIR "$ENV{HOME}/Libs/opencv-install/lib/cmake/opencv4")
+find_package(OpenCV REQUIRED PATHS ${OpenCV_DIR} NO_DEFAULT_PATH)
 include_directories(${OpenCV_INCLUDE_DIRS})
+
 
 # 添加 jni 的配置
 set(JAVA_AWT_LIBRARY NotNeeded)
@@ -70,7 +78,7 @@ endif()
 
 add_library(${LIB_NAME} SHARED ${SRC_FILES})
 
-# 设置目标属性 - macOS的RPATH处理
+# 设置目标属性 - macOS 设置 RPATH
 if(${CURRENT_SYSTEM} MATCHES "MacOS")
     set_target_properties(${LIB_NAME} PROPERTIES
             BUILD_WITH_INSTALL_RPATH TRUE
@@ -86,10 +94,9 @@ target_link_libraries(${LIB_NAME}
         ${LIBHEIF_LIBRARIES}
 )
 
-# === 复制依赖的 dylib 到输出目录（仅 macOS） ===
-if (CURRENT_SYSTEM STREQUAL "MacOS")
-    add_custom_command(TARGET ${LIB_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E echo "Fixing dylib dependencies..."
-            COMMAND bash ${CMAKE_SOURCE_DIR}/fix_dylib_dependencies.sh ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${LIB_NAME}.dylib
-            )
-endif()
+add_custom_command(
+        TARGET ${LIB_NAME}
+        POST_BUILD
+        COMMAND bash ${CMAKE_SOURCE_DIR}/script/fix_dylib_dependencies.sh
+        COMMENT "Fixing dylib dependencies..."
+)
