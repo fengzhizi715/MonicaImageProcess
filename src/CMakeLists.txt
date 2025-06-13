@@ -4,6 +4,9 @@ project(MonicaImageProcess LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# 是否是发布模式（默认否）
+option(DEPLOY_MODE "Build in deploy (release) mode" OFF)
+
 message(STATUS "===============================")
 message(STATUS "current operation system is ${CMAKE_SYSTEM}")
 message(STATUS "current operation system name is ${CMAKE_SYSTEM_NAME}")
@@ -19,18 +22,15 @@ endif()
 
 find_package(PkgConfig REQUIRED)
 
-# 添加 OpenCV 的配置
-#find_package(OpenCV REQUIRED)
-## 打印OpenCV版本
-#MESSAGE("OpenCV version: ${OpenCV_VERSION}")
-## 添加include地址
-#include_directories(${OpenCV_INCLUDE_DIRS})
 
 
-# ==== ✅ OpenCV 手动路径设置 ====
-# 替换为你本地 OpenCV 安装路径（含 opencv_world）
-set(OpenCV_DIR "$ENV{HOME}/Libs/opencv-install/lib/cmake/opencv4")
-find_package(OpenCV REQUIRED PATHS ${OpenCV_DIR} NO_DEFAULT_PATH)
+# ==== ✅ OpenCV 配置 ====
+if (DEPLOY_MODE)
+    set(OpenCV_DIR "$ENV{HOME}/Libs/opencv-install/lib/cmake/opencv4")
+    find_package(OpenCV REQUIRED PATHS ${OpenCV_DIR} NO_DEFAULT_PATH)
+else()
+    find_package(OpenCV REQUIRED)
+endif()
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 
