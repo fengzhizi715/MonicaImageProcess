@@ -53,9 +53,30 @@ else()
 endif()
 
 # ==== ✅ libheif 配置 ====
-pkg_check_modules(LIBHEIF REQUIRED libheif)
-include_directories(${LIBHEIF_INCLUDE_DIRS})
-link_directories(${LIBHEIF_LIBRARY_DIRS})
+if (DEPLOY_MODE)
+    # 自定义构建的 libheif 路径
+    set(LIBHEIF_CUSTOM_DIR "$ENV{HOME}/Libs/heif-suite")
+
+    # 设置包含路径
+    set(LIBHEIF_INCLUDE_DIR ${LIBHEIF_CUSTOM_DIR}/include)
+    include_directories(${LIBHEIF_INCLUDE_DIR})
+
+    # 设置库路径
+    set(LIBHEIF_LIB_PATH ${LIBHEIF_CUSTOM_DIR}/lib/libheif.a)
+
+    # 设置依赖库路径（确保所有依赖都链接）
+    set(LIBHEIF_DEPENDENCIES
+            ${LIBHEIF_CUSTOM_DIR}/lib/libde265.a
+            ${LIBHEIF_CUSTOM_DIR}/lib/libdav1d.a
+            ${LIBHEIF_CUSTOM_DIR}/lib/libaom.a
+            ${LIBHEIF_CUSTOM_DIR}/lib/libpng16.a
+            ${LIBHEIF_CUSTOM_DIR}/lib/libz.a
+            )
+else()
+    pkg_check_modules(LIBHEIF REQUIRED libheif)
+    include_directories(${LIBHEIF_INCLUDE_DIRS})
+    link_directories(${LIBHEIF_LIBRARY_DIRS})
+endif()
 
 # 输出路径
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/install/lib)
@@ -96,8 +117,9 @@ endif()
 if (DEPLOY_MODE)
     target_link_libraries(${LIB_NAME}
             ${OpenCV_LIBS}
-            ${LIBHEIF_LIBRARIES}
-            ${LIBRAW_LIB_PATH}
+            ${LIBHEIF_LIB_PATH}     # 自定义 libheif
+            ${LIBHEIF_DEPENDENCIES} # libheif 的所有依赖
+            ${LIBRAW_LIB_PATH}      # 自定义 libraw
             z                 # ✅ 静态链接 libraw 时手动加 zlib
             )
 else()
