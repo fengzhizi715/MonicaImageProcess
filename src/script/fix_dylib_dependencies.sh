@@ -1,27 +1,35 @@
 #!/bin/bash
-
 set -e
 
-echo "📦 打包 libopencv_world..."
+# 📌 配置路径
+TARGET_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../build/install/lib" && pwd)"
+THIRDPARTY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../thirdparty/opencv" && pwd)"
 
-# 设置变量
-OPENCV_LIB_PATH="$HOME/Libs/opencv-install/lib"
-BUILD_OUTPUT_DIR="/Users/Tony/CLionProjects/MonicaImageProcess/src/build/install/lib"
-OPENCV_WORLD_DYLIB_NAME="libopencv_world.4.10.0.dylib"
-OPENCV_IMG_HASH_DYLIB_NAME="libopencv_img_hash.4.10.0.dylib"
-OPENCV_SFM_DYLIB_NAME="libopencv_sfm.4.10.0.dylib"
+echo "🔧 修复 dylib 路径: $TARGET_DIR"
+echo "📦 使用 opencv dylib 来源: $THIRDPARTY_DIR"
 
-# 拷贝 libopencv 到构建输出目录
-cp "${OPENCV_LIB_PATH}/${OPENCV_WORLD_DYLIB_NAME}" "${BUILD_OUTPUT_DIR}/"
-cp "${OPENCV_LIB_PATH}/${OPENCV_IMG_HASH_DYLIB_NAME}" "${BUILD_OUTPUT_DIR}/"
-cp "${OPENCV_LIB_PATH}/${OPENCV_SFM_DYLIB_NAME}" "${BUILD_OUTPUT_DIR}/"
+# 📍 拷贝 opencv_world dylib（如果还没拷贝）
+OPENCV_LIB=libopencv_world.4.10.0.dylib
+if [ ! -f "$TARGET_DIR/$OPENCV_LIB" ]; then
+    echo "📥 拷贝 $OPENCV_LIB 到安装目录"
+    cp "$THIRDPARTY_DIR/$OPENCV_LIB" "$TARGET_DIR/"
+fi
 
-# 使用 install_name_tool 修复 rpath
-install_name_tool -id "@loader_path/${OPENCV_WORLD_DYLIB_NAME}" "${BUILD_OUTPUT_DIR}/${OPENCV_WORLD_DYLIB_NAME}"
-install_name_tool -id "@loader_path/${OPENCV_IMG_HASH_DYLIB_NAME}" "${BUILD_OUTPUT_DIR}/${OPENCV_IMG_HASH_DYLIB_NAME}"
-install_name_tool -id "@loader_path/${OPENCV_SFM_DYLIB_NAME}" "${BUILD_OUTPUT_DIR}/${OPENCV_SFM_DYLIB_NAME}"
+# ✅ 重命名软链接（可选，根据实际情况）
+ln -sf "$OPENCV_LIB" "$TARGET_DIR/libopencv_world.410.dylib"
+ln -sf "$OPENCV_LIB" "$TARGET_DIR/libopencv_world.dylib"
 
-# 确认是否还需要修复依赖的其他 OpenCV 模块（如果有被链接进去）
-# otool -L "${BUILD_OUTPUT_DIR}/${OPENCV_DYLIB_NAME}"
+# 📍 主库路径
+MAIN_LIB="$TARGET_DIR/libMonicaImageProcess.dylib"
 
-echo "✅ 打包完成，路径：${BUILD_OUTPUT_DIR}/${OPENCV_DYLIB_NAME}"
+# ✅ 修复主库引用的路径
+echo "🔗 修复主库 $MAIN_LIB 的 opencv 引用..."
+install_name_tool -change "@rpath/libopencv_world.410.dylib" "@loader_path/$OPENCV_LIB" "$MAIN_LIB"
+
+# ✅ 修复 opencv_world 自身 ID
+echo "🪪 设置 opencv_world 的 install_name..."
+install_name_tool -id "@loader_path/$OPENCV_LIB" "$TARGET_DIR/$OPENCV_LIB"
+
+# ✅ 验证依赖
+echo "🔍 最终依赖分析:"
+otool -L "$MAIN_LIB" | grep -E 'opencv|libMonicaImageProcess'
