@@ -64,9 +64,23 @@ fi
 
 echo "✅ 构建工具准备就绪: meson $(meson --version), ninja $(ninja --version)"
 
+# 检测架构并设置编译标志
+ARCH=$(uname -m)
+if [ "$ARCH" = "arm64" ]; then
+    echo "🍏 检测到 Apple Silicon (ARM64) 架构"
+    # 禁用有问题的 ARM 汇编优化
+    LIBDE265_EXTRA_FLAGS="--disable-arm"
+    # 为 ARM64 设置特定优化标志
+    OPT_FLAGS="-O3 -fPIC -mcpu=apple-m1 -mtune=apple-m1"
+else
+    echo "💻 检测到 Intel 架构"
+    LIBDE265_EXTRA_FLAGS=""
+    OPT_FLAGS="-O3 -fPIC"
+fi
+
 # 构建环境变量
 export MACOSX_DEPLOYMENT_TARGET="10.15"
-export CFLAGS="-O3 -fPIC -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}"
+export CFLAGS="${OPT_FLAGS} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}"
 export CXXFLAGS="${CFLAGS}"
 export LDFLAGS="-mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}"
 export PKG_CONFIG_PATH="${INSTALL_DIR}/lib/pkgconfig:${PKG_CONFIG_PATH}"
@@ -176,35 +190,133 @@ fi
 # 4. AOM
 if ! is_library_installed "aom" "$AOM_VERSION"; then
   download_and_extract "aom" "$AOM_VERSION" "https://storage.googleapis.com/aom-releases/libaom-${AOM_VERSION}.tar.gz"
-  cmake_build "${BUILD_DIR}/libaom-${AOM_VERSION}" "-DENABLE_TESTS=OFF -DENABLE_DOCS=OFF -DENABLE_TOOLS=OFF -DENABLE_EXAMPLES=OFF"
+
+  # 添加 ARM64 特定优化
+  AOM_EXTRA_FLAGS=""
+  if [ "$ARCH" = "arm64" ]; then
+    AOM_EXTRA_FLAGS="-DAOM_TARGET_CPU=arm64"
+  fi
+
+  cmake_build "${BUILD_DIR}/libaom-${AOM_VERSION}" "-DENABLE_TESTS=OFF -DENABLE_DOCS=OFF -DENABLE_TOOLS=OFF -DENABLE_EXAMPLES=OFF ${AOM_EXTRA_FLAGS}"
 fi
 
-# 5. DAV1D - 修复选项名称
+# 5. DAV1D
 if ! is_library_installed "dav1d" "$DAV1D_VERSION"; then
   download_and_extract "dav1d" "$DAV1D_VERSION" "https://code.videolan.org/videolan/dav1d/-/archive/${DAV1D_VERSION}/dav1d-${DAV1D_VERSION}.tar.gz"
+
+  # 添加 ARM64 特定优化
+  DAV1D_EXTRA_FLAGS=""
+  if [ "$ARCH" = "arm64" ]; then
+    DAV1D_EXTRA_FLAGS="-Denable_asm=false" # 暂时禁用汇编优化
+  fi
+
   cd "${BUILD_DIR}/dav1d-${DAV1D_VERSION}" && meson setup build \
     --prefix="${INSTALL_DIR}" \
     --buildtype=release \
     --default-library=static \
     -Denable_tests=false \
-    -Denable_tools=false
+    -Denable_tools=false \
+    ${DAV1D_EXTRA_FLAGS}
   cd build && ninja -j${NUM_JOBS} && ninja install
 fi
 
-# 6. libde265
+# 6. libde265 - 修复 ARM64 汇编问题
 if ! is_library_installed "de265" "$LIBDE265_VERSION"; then
   download_and_extract "libde265" "$LIBDE265_VERSION" "https://github.com/strukturag/libde265/releases/download/v${LIBDE265_VERSION}/libde265-${LIBDE265_VERSION}.tar.gz"
-  autotools_build "${BUILD_DIR}/libde265-${LIBDE265_VERSION}" "--disable-shared --enable-static --disable-sherlock265"
+
+  # 应用补丁修复 ARM64 汇编问题
+  if [ "$ARCH" = "arm64" ]; then
+    echo "🔧 修复 libde265 ARM64 汇编问题..."
+    cd "${BUILD_DIR}/libde265-${LIBDE265_VERSION}"
+
+    # 检查文件是否存在
+    if [ -d "libde265" ]; then
+        ARM_DIR="libde265/arm"
+    elif [ -d "src" ]; then
+        ARM_DIR="src/arm"
+    else
+        echo "⚠️ 警告: 无法确定 ARM 汇编文件位置，跳过修复"
+        ARM_DIR=""
+    fi
+
+    # 替换有问题的汇编指令
+    if [ -n "$ARM_DIR" ] && [ -f "${ARM_DIR}/arm-common.S" ]; then
+        sed -i '' 's/bx lr/ret/g' "${ARM_DIR}/arm-common.S"
+        sed -i '' 's/bx lr/ret/g' "${ARM_DIR}/arm-sao.S"
+        sed -i '' 's/bx lr/ret/g' "${ARM_DIR}/arm-util.S"
+        sed -i '' 's/bx lr/ret/g' "${ARM_DIR}/arm-sse-dsp.S"
+        sed -i '' 's/bx lr/ret/g' "${ARM_DIR}/hevcdsp_qpel_neon.S"
+        sed -i '' 's/\.endfunc//g' "${ARM_DIR}/hevcdsp_qpel_neon.S"
+        echo "✅ ARM 汇编修复完成"
+    else
+        echo "⚠️ 警告: ARM 汇编文件未找到，跳过修复"
+    fi
+  fi
+
+  autotools_build "${BUILD_DIR}/libde265-${LIBDE265_VERSION}" \
+    "--disable-shared --enable-static --disable-sherlock265 ${LIBDE265_EXTRA_FLAGS}"
 fi
 
-# 7. libheif
+# 7. libheif - 修复头文件安装问题
 if ! is_library_installed "heif" "$LIBHEIF_VERSION"; then
   download_and_extract "libheif" "$LIBHEIF_VERSION" "https://github.com/strukturag/libheif/releases/download/v${LIBHEIF_VERSION}/libheif-${LIBHEIF_VERSION}.tar.gz"
-  cmake_build "${BUILD_DIR}/libheif-${LIBHEIF_VERSION}" "-DWITH_DAV1D=ON -DWITH_AOM=ON -DWITH_LIBDE265=ON -DWITH_X265=OFF -DWITH_EXAMPLES=OFF -DWITH_LIBSHARPYUV=OFF"
+
+  # 添加 ARM64 特定优化
+  HEIF_EXTRA_FLAGS=""
+  if [ "$ARCH" = "arm64" ]; then
+    HEIF_EXTRA_FLAGS="-DWITH_DAV1D=OFF" # 如果 dav1d 有问题，暂时禁用
+  fi
+
+  # 修复：手动创建头文件目录
+  mkdir -p "${INSTALL_DIR}/include/libheif"
+
+  # 修改 CMake 命令确保头文件安装到正确位置
+  cd "${BUILD_DIR}/libheif-${LIBHEIF_VERSION}"
+  mkdir -p build && cd build
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
+    -DCMAKE_PREFIX_PATH="${INSTALL_DIR}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DWITH_DAV1D=ON \
+    -DWITH_AOM=ON \
+    -DWITH_LIBDE265=ON \
+    -DWITH_X265=OFF \
+    -DWITH_EXAMPLES=OFF \
+    -DWITH_LIBSHARPYUV=OFF \
+    ${HEIF_EXTRA_FLAGS}
+
+  # 显式设置头文件安装位置
+  cmake --build . --target install --parallel ${NUM_JOBS}
+
+  # 验证头文件是否安装
+  if [ -f "${INSTALL_DIR}/include/libheif/heif.h" ]; then
+      echo "✅ heif.h 已安装: ${INSTALL_DIR}/include/libheif/heif.h"
+  else
+      echo "❌ 错误: heif.h 未安装到正确位置"
+      echo "尝试手动复制头文件..."
+
+      # 从源目录复制头文件
+      if [ -d "${BUILD_DIR}/libheif-${LIBHEIF_VERSION}/libheif" ]; then
+          cp -r "${BUILD_DIR}/libheif-${LIBHEIF_VERSION}/libheif" "${INSTALL_DIR}/include/"
+          echo "✅ 手动复制头文件到 ${INSTALL_DIR}/include/libheif"
+      elif [ -d "${BUILD_DIR}/libheif-${LIBHEIF_VERSION}/src" ]; then
+          # 尝试从 src 目录复制
+          cp -r "${BUILD_DIR}/libheif-${LIBHEIF_VERSION}/src" "${INSTALL_DIR}/include/libheif"
+          echo "✅ 手动复制头文件到 ${INSTALL_DIR}/include/libheif"
+      else
+          echo "❌ 无法找到 libheif 头文件源目录"
+          exit 1
+      fi
+  fi
 fi
 
 # 验证
 echo "🔍 验证构建结果:"
+echo "头文件位置:"
+find "${INSTALL_DIR}/include" -name "heif.h"
+
+echo "库文件:"
 find "${INSTALL_DIR}/lib" -name '*.a' | while read f; do
   echo -n "$f: "
   file "$f"
