@@ -8,10 +8,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 option(DEPLOY_MODE "Build in deploy (release) mode" OFF)
 
 message(STATUS "===============================")
-message(STATUS "current operation system is ${CMAKE_SYSTEM}")
-message(STATUS "current operation system name is ${CMAKE_SYSTEM_NAME}")
+message(STATUS "DEPLOY_MODE = ${DEPLOY_MODE}")
+message(STATUS "Operation system: ${CMAKE_SYSTEM_NAME}")
+message(STATUS "Host processor: ${CMAKE_HOST_SYSTEM_PROCESSOR}")
 
-#根据不同平台给CURRENT_SYSTEM命名
+# 平台判定
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     set(CURRENT_SYSTEM "Linux")
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -22,8 +23,6 @@ endif()
 
 find_package(PkgConfig REQUIRED)
 
-
-
 # ==== ✅ OpenCV 配置 ====
 if (DEPLOY_MODE)
     set(OpenCV_DIR "$ENV{HOME}/Libs/opencv-install/lib/cmake/opencv4")
@@ -33,8 +32,7 @@ else()
 endif()
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-
-# 添加 jni 的配置
+# ==== ✅ JNI 配置 ====
 set(JAVA_AWT_LIBRARY NotNeeded)
 set(JAVA_JVM_LIBRARY NotNeeded)
 set(JAVA_INCLUDE_PATH2 NotNeeded)
@@ -43,21 +41,27 @@ find_package(JNI REQUIRED)
 include_directories(${JNI_INCLUDE_DIRS})
 include_directories(jni)
 
-# 添加 libraw 的配置
-pkg_check_modules(LIBRAW REQUIRED libraw)
-include_directories(${LIBRAW_INCLUDE_DIRS})
-link_directories(${LIBRAW_LIBRARY_DIRS})
+# ==== ✅ LibRaw 配置 ====
+if (DEPLOY_MODE)
+    set(LIBRAW_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/thirdparty/libraw/include)
+    set(LIBRAW_LIB_PATH ${CMAKE_SOURCE_DIR}/thirdparty/libraw/lib/libraw.a)
+    include_directories(${LIBRAW_INCLUDE_DIR})
+else()
+    pkg_check_modules(LIBRAW REQUIRED libraw)
+    include_directories(${LIBRAW_INCLUDE_DIRS})
+    link_directories(${LIBRAW_LIBRARY_DIRS})
+endif()
 
-# 添加 libheif 的配置
+# ==== ✅ libheif 配置 ====
 pkg_check_modules(LIBHEIF REQUIRED libheif)
 include_directories(${LIBHEIF_INCLUDE_DIRS})
 link_directories(${LIBHEIF_LIBRARY_DIRS})
 
-# 输出路径设定
+# 输出路径
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/install/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/install/lib)  # 确保可执行文件也输出到此目录
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/install/lib)
 
-# 定义源文件清单
+# 源文件清单
 set(SRC_FILES
         ../include/library.h                                library.cpp
         ../jni/cn_netdiscovery_monica_opencv_ImageProcess.h ../jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp
@@ -76,9 +80,10 @@ elseif (${CURRENT_SYSTEM} MATCHES "Linux")
     set(LIB_NAME MonicaImageProcess)
 endif()
 
+# 添加库
 add_library(${LIB_NAME} SHARED ${SRC_FILES})
 
-# 设置目标属性 - macOS 设置 RPATH
+# 设置 RPATH
 if(${CURRENT_SYSTEM} MATCHES "MacOS")
     set_target_properties(${LIB_NAME} PROPERTIES
             BUILD_WITH_INSTALL_RPATH TRUE
@@ -87,16 +92,28 @@ if(${CURRENT_SYSTEM} MATCHES "MacOS")
             )
 endif()
 
-# 链接库
-target_link_libraries(${LIB_NAME}
-        ${OpenCV_LIBS}
-        ${LIBRAW_LIBRARIES}
-        ${LIBHEIF_LIBRARIES}
-)
+# ==== ✅ 链接库 ====
+if (DEPLOY_MODE)
+    target_link_libraries(${LIB_NAME}
+            ${OpenCV_LIBS}
+            ${LIBHEIF_LIBRARIES}
+            ${LIBRAW_LIB_PATH}
+            z                 # ✅ 静态链接 libraw 时手动加 zlib
+            )
+else()
+    target_link_libraries(${LIB_NAME}
+            ${OpenCV_LIBS}
+            ${LIBHEIF_LIBRARIES}
+            ${LIBRAW_LIBRARIES}
+            )
+endif()
 
-add_custom_command(
-        TARGET ${LIB_NAME}
-        POST_BUILD
-        COMMAND bash ${CMAKE_SOURCE_DIR}/script/fix_dylib_dependencies.sh
-        COMMENT "Fixing dylib dependencies..."
-)
+# ==== ✅ 后处理 ====
+if (${CURRENT_SYSTEM} MATCHES "MacOS")
+    add_custom_command(
+            TARGET ${LIB_NAME}
+            POST_BUILD
+            COMMAND bash ${CMAKE_SOURCE_DIR}/script/fix_dylib_dependencies.sh
+            COMMENT "🔧 Fixing dylib dependencies..."
+    )
+endif()
