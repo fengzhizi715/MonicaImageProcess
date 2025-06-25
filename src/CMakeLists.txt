@@ -102,21 +102,12 @@ set(SRC_FILES
         ../include/utils/Utils.h                            utils/Utils.cpp
         )
 
-# 生成共享库名
-if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "x86_64")
-    set(LIB_NAME MonicaImageProcess)
-elseif (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "arm64")
-    set(LIB_NAME MonicaImageProcess_aarch64)
-elseif (${CURRENT_SYSTEM} MATCHES "Linux")
-    set(LIB_NAME MonicaImageProcess)
-endif()
-
 # 添加库
-add_library(${LIB_NAME} SHARED ${SRC_FILES})
+add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 # 设置 RPATH
 if(${CURRENT_SYSTEM} MATCHES "MacOS")
-    set_target_properties(${LIB_NAME} PROPERTIES
+    set_target_properties(${PROJECT_NAME} PROPERTIES
             BUILD_WITH_INSTALL_RPATH TRUE
             INSTALL_RPATH "@loader_path"
             MACOSX_RPATH ON
@@ -125,7 +116,7 @@ endif()
 
 # ==== ✅ 链接库 ====
 if (DEPLOY_MODE)
-    target_link_libraries(${LIB_NAME}
+    target_link_libraries(${PROJECT_NAME}
             ${OpenCV_LIBS}
             ${LIBHEIF_LIB_PATH}     # 自定义 libheif
             ${LIBHEIF_DEPENDENCIES} # libheif 的所有依赖
@@ -133,7 +124,7 @@ if (DEPLOY_MODE)
             z                 # ✅ 静态链接 libraw 时手动加 zlib
             )
 else()
-    target_link_libraries(${LIB_NAME}
+    target_link_libraries(${PROJECT_NAME}
             ${OpenCV_LIBS}
             ${LIBHEIF_LIBRARIES}
             ${LIBRAW_LIBRARIES}
@@ -143,7 +134,7 @@ endif()
 # ==== ✅ 后处理 ====
 if (${CURRENT_SYSTEM} MATCHES "MacOS")
     add_custom_command(
-            TARGET ${LIB_NAME}
+            TARGET ${PROJECT_NAME}
             POST_BUILD
             COMMAND bash ${CMAKE_SOURCE_DIR}/script/fix_dylib_dependencies.sh
             COMMENT "🔧 Fixing dylib dependencies..."
