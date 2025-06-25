@@ -54,24 +54,34 @@ endif()
 
 # ==== ✅ libheif 配置 ====
 if (DEPLOY_MODE)
-    # 自定义构建的 libheif 路径
+    # 使用绝对路径避免环境变量问题
     set(LIBHEIF_CUSTOM_DIR "$ENV{HOME}/Libs/heif-suite")
 
     # 设置包含路径
     set(LIBHEIF_INCLUDE_DIR ${LIBHEIF_CUSTOM_DIR}/include)
     include_directories(${LIBHEIF_INCLUDE_DIR})
+    include_directories(${LIBHEIF_INCLUDE_DIR}/libheif)
 
     # 设置库路径
     set(LIBHEIF_LIB_PATH ${LIBHEIF_CUSTOM_DIR}/lib/libheif.a)
 
-    # 设置依赖库路径（确保所有依赖都链接）
-    set(LIBHEIF_DEPENDENCIES
-            ${LIBHEIF_CUSTOM_DIR}/lib/libde265.a
-            ${LIBHEIF_CUSTOM_DIR}/lib/libdav1d.a
-            ${LIBHEIF_CUSTOM_DIR}/lib/libaom.a
-            ${LIBHEIF_CUSTOM_DIR}/lib/libpng16.a
-            ${LIBHEIF_CUSTOM_DIR}/lib/libz.a
-            )
+    if (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "x86_64")
+        # 设置依赖库路径
+        set(LIBHEIF_DEPENDENCIES
+                ${LIBHEIF_CUSTOM_DIR}/lib/libde265.a
+                ${LIBHEIF_CUSTOM_DIR}/lib/libdav1d.a
+                ${LIBHEIF_CUSTOM_DIR}/lib/libaom.a
+                ${LIBHEIF_CUSTOM_DIR}/lib/libpng16.a
+                ${LIBHEIF_CUSTOM_DIR}/lib/libz.a)
+    elseif (${CURRENT_SYSTEM} MATCHES "MacOS" AND ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "arm64")
+        # 设置依赖库路径
+        set(LIBHEIF_DEPENDENCIES
+                ${LIBHEIF_CUSTOM_DIR}/lib/libde265.a
+                ${LIBHEIF_CUSTOM_DIR}/lib/libdav1d.a
+                ${LIBHEIF_CUSTOM_DIR}/lib/libaom.a
+                ${LIBHEIF_CUSTOM_DIR}/lib/libpng.a
+                ${LIBHEIF_CUSTOM_DIR}/lib/libz.a)
+    endif()
 else()
     pkg_check_modules(LIBHEIF REQUIRED libheif)
     include_directories(${LIBHEIF_INCLUDE_DIRS})
