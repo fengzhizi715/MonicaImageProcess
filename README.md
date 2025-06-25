@@ -39,6 +39,9 @@ MonicaImageProcess/
 # 二. 准备工作
 
 ## 2.1 MacOS
+
+> 开始发使用 brew 安装的库，部署时这些第三方库大多需要从源码自行编译而不是依赖 brew，方便用户安装。
+
 1. 安装 OpenCV
 ```
 brew install opencv
