@@ -38,7 +38,7 @@ MonicaImageProcess/
 
 # 二. 准备工作
 
-## 2.1 MacOS
+## 2.1 macOS
 
 > 开发、调试时使用 brew 安装的库，部署时这些第三方库大多需要从源码自行编译而不是依赖 brew，方便用户安装。
 
@@ -69,6 +69,7 @@ brew install libheif
 
 3. 编译/安装 Libheif
 
+
 ## 2.3 Windows
 1. 编译 OpenCV
 
@@ -91,7 +92,7 @@ vcpkg install zlib:x64-windows      # zlib 压缩支持
 
 6. 编译 libheif
 
-# 三. 编译方法(Mac)
+# 三. 编译方法(macOS)
 
 1. 在项目根目录下
 ```
@@ -115,7 +116,8 @@ cmake .. -DDEPLOY_MODE=ON
 cmake --build .
 ```
 
-> Windows 我没有用 CLion 作为 IDE，也没有用 cmake 构建项目，而是使用 Visual Studio 2022
+> Windows 我没有用 CLion 作为 IDE，也没有用 cmake 构建项目，而是使用 Visual Studio 2022。
+> 
 > Linux 编译的脚本稍后更新
 
 # 四. 模型的部署
