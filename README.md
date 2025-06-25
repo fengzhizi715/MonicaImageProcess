@@ -82,20 +82,21 @@ vcpkg install zlib:x64-windows      # zlib 压缩支持
 
 # 三. 编译方法(Mac、Linux)
 
-1. 进入 src 目录：
+2. 在项目根目录下
 ```
-cd src
-```
-
-2. 创建一个单独的构建目录
-```
-mkdir build
+mkdir -p build
 cd build
 ```
 
 3. 使用 CMake 配置项目：
+调试时使用
 ```
 cmake ..
+```
+
+部署时使用
+```
+cmake .. -DDEPLOY_MODE=ON
 ```
 
 4. 编译项目

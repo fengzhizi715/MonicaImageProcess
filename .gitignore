@@ -8,8 +8,8 @@ Makefile
 cmake_install.cmake
 *.dylib
 build.ninja
-MonicaImageProcessHttpServer
-MonicaImageProcessHttpServerForAARCH64
+thirdparty/opencv-install/
+thirdparty/heif-suite/
 
 ### Mac OS ###
 .DS_Store
