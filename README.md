@@ -19,7 +19,8 @@ MonicaImageProcess/
 │   └── cn_netdiscovery_monica_opencv_ImageProcess.cpp # jni 对应用层暴露接口的源文件
 ├── script/                          # 构建脚本
 │   ├── build_libheif_deps.sh        # 从源码编译 libheif 及其依赖的库
-│   └── build_opencv_world_4100.sh   # 从源码编译 opencv 库，包含了 contrib
+│   ├── build_opencv_world_4100.sh   # 从源码编译 opencv 库，包含了 contrib
+│   └── fix_dylib_dependencies.sh    # macOS 下修复主库引用 opencv 的路径
 ├── src/                             # 项目主源代码目录
 │   └── colorcorrection/             # 图像调色相关算法模块
 │       └── ColorCorrection.cpp      # 图像调色相关算法的源文件
@@ -29,9 +30,9 @@ MonicaImageProcess/
 │   ├── CMakeLists.txt               # 本地算法的构建脚本
 │   └── library.cpp                  # 常规使用 OpenCV 图像算法相关的源文件
 ├── thirdparty/                      # 外部依赖库
-│   └── heif-suite/                  # libheif 库
+│   └── heif-suite/                  # libheif 库，需要基于 build_libheif_deps.sh 脚本编译，不同的芯片架构编译出来不同，所以没有放
 │   └── libraw/                      # libraw 库
-│   └── opencv-install/              # opencv 库
+│   └── opencv-install/              # opencv 库，需要基于 build_opencv_world_4100.sh 脚本编译，不同的芯片架构编译出来不同，所以没有放
 └── .gitignore                       # git 忽略和不追踪的文件
 ```
 
