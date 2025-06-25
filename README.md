@@ -15,8 +15,8 @@ MonicaImageProcess/
 │   ├── matchTemplate/               # 模版匹配的头文件目录
 │   └── utils/                       # 工具类模块的头文件目录
 ├── jni/                             # 给 Java/Kotlin 调用的本地算法
-│       ├── cn_netdiscovery_monica_opencv_ImageProcess.h   # jni 对应用层暴露接口的头文件
-│       └── cn_netdiscovery_monica_opencv_ImageProcess.cpp # jni 对应用层暴露接口的源文件
+│   ├── cn_netdiscovery_monica_opencv_ImageProcess.h   # jni 对应用层暴露接口的头文件
+│   └── cn_netdiscovery_monica_opencv_ImageProcess.cpp # jni 对应用层暴露接口的源文件
 ├── script/                          # 构建脚本
 ├── src/                             # 项目主源代码目录
 │   └── colorcorrection/             # 图像调色相关算法模块
@@ -28,7 +28,7 @@ MonicaImageProcess/
 │   └── library.cpp                  # 常规使用 OpenCV 图像算法相关的源文件
 ├── thirdparty/                      # 外部依赖库
 │   └── heif-suite/                  # libheif 库
-│   └── heif-suite/                  # libraw 库
+│   └── libraw/                      # libraw 库
 │   └── opencv-install/              # opencv 库
 └── .gitignore                       # git 忽略和不追踪的文件
 ```
