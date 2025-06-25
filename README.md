@@ -91,15 +91,15 @@ vcpkg install zlib:x64-windows      # zlib 压缩支持
 
 6. 编译 libheif
 
-# 三. 编译方法(Mac、Linux)
+# 三. 编译方法(Mac)
 
-2. 在项目根目录下
+1. 在项目根目录下
 ```
 mkdir -p build
 cd build
 ```
 
-3. 使用 CMake 配置项目：
+2. 使用 CMake 配置项目：
 调试时使用
 ```
 cmake ..
@@ -110,12 +110,13 @@ cmake ..
 cmake .. -DDEPLOY_MODE=ON
 ```
 
-4. 编译项目
+3. 编译项目
 ```
 cmake --build .
 ```
 
 > Windows 我没有用 CLion 作为 IDE，也没有用 cmake 构建项目，而是使用 Visual Studio 2022
+> Linux 编译的脚本稍后更新
 
 # 四. 模型的部署
 
