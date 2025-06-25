@@ -18,6 +18,8 @@ MonicaImageProcess/
 │   ├── cn_netdiscovery_monica_opencv_ImageProcess.h   # jni 对应用层暴露接口的头文件
 │   └── cn_netdiscovery_monica_opencv_ImageProcess.cpp # jni 对应用层暴露接口的源文件
 ├── script/                          # 构建脚本
+│   ├── build_libheif_deps.sh        # 从源码编译 libheif 及其依赖的库
+│   └── build_opencv_world_4100.sh   # 从源码编译 opencv 库，包含了 contrib
 ├── src/                             # 项目主源代码目录
 │   └── colorcorrection/             # 图像调色相关算法模块
 │       └── ColorCorrection.cpp      # 图像调色相关算法的源文件
