@@ -40,24 +40,30 @@ MonicaImageProcess/
 
 ## 2.1 macOS
 
-> 开发、调试时使用 brew 安装的库。部署到生产环境时，这些第三方库大多需要从源码自行编译而不是依赖 brew 安装，这样才能保证用户正常安装软件。
+> 开发、调试时使用 brew 安装的库。
+> 
+> 部署到生产环境时，这些第三方库大多需要从源码自行编译而不是依赖 brew 安装，这样才能保证用户正常安装软件。
 
 1. 安装 OpenCV
+
 ```
 brew install opencv
 ```
 
 2. 安装 pkg-config
+
 ```
 brew install pkg-config
 ```
 
 3. 安装 libraw
+
 ```
 brew install libraw
 ```
 
 4. 安装 libheif
+
 ```
 brew install libheif
 ```
