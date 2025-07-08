@@ -124,84 +124,56 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_equa
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_clahe
         (JNIEnv* env, jobject, jbyteArray array, jdouble clipLimit, jint size) {
 
-      return safeJniCall<jintArray>(env, [&]() -> jintArray {
-          Mat image = byteArrayToMat(env, array);
-          Mat dst;
-          clahe(image, dst, clipLimit, size);
-          return matToIntArray(env, dst);
-      }, env->NewIntArray(0));
+     return safeJniCall<jintArray>(env, [&]() -> jintArray {
+         Mat image = byteArrayToMat(env, array);
+         Mat dst;
+         clahe(image, dst, clipLimit, size);
+         return matToIntArray(env, dst);
+     }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_gammaCorrection
         (JNIEnv* env, jobject, jbyteArray array, jfloat k) {
 
-      return safeJniCall<jintArray>(env, [&]() -> jintArray {
-          Mat image = byteArrayToMat(env, array);
-          Mat dst;
-          gammaCorrection(image,dst,k);
-          return matToIntArray(env, dst);
-      }, env->NewIntArray(0));
+     return safeJniCall<jintArray>(env, [&]() -> jintArray {
+         Mat image = byteArrayToMat(env, array);
+         Mat dst;
+         gammaCorrection(image,dst,k);
+         return matToIntArray(env, dst);
+     }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_laplaceSharpening
         (JNIEnv* env, jobject, jbyteArray array) {
 
-      return safeJniCall<jintArray>(env, [&]() -> jintArray {
-          Mat image = byteArrayToMat(env, array);
-          Mat dst;
-          laplaceSharpening(image,dst);
-          return matToIntArray(env, dst);
-      }, env->NewIntArray(0));
+     return safeJniCall<jintArray>(env, [&]() -> jintArray {
+         Mat image = byteArrayToMat(env, array);
+         Mat dst;
+         laplaceSharpening(image,dst);
+         return matToIntArray(env, dst);
+     }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_unsharpMask
         (JNIEnv* env, jobject, jbyteArray array, jint radius, jint threshold, jint amount) {
-    Mat image = byteArrayToMat(env,array);
-    Mat dst = Mat(image.size(), image.type());
 
-    try {
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        Mat image = byteArrayToMat(env, array);
+        Mat dst = Mat(image.size(), image.type());
         unsharpMask(image,dst, radius, threshold, amount);
-    } catch(...) {
-    }
-
-    jthrowable mException = NULL;
-    mException = env->ExceptionOccurred();
-
-    if (mException != NULL) {
-        env->ExceptionClear();
-        jclass exceptionClazz = env->FindClass("java/lang/Exception");
-        env->ThrowNew(exceptionClazz, "jni exception");
-        env->DeleteLocalRef(exceptionClazz);
-
-        return env->NewIntArray(0);
-    }
-
-    return matToIntArray(env,dst);
+        return matToIntArray(env, dst);
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_ace
         (JNIEnv* env, jobject, jbyteArray array, jint ratio, jint radius) {
-    Mat image = byteArrayToMat(env,array);
-    Mat dst;
 
-    try {
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        Mat image = byteArrayToMat(env, array);
+        Mat dst;
         ace(image,dst,ratio,radius);
-    } catch(...) {
-    }
-
-    jthrowable mException = NULL;
-    mException = env->ExceptionOccurred();
-
-    if (mException != NULL) {
-        env->ExceptionClear();
-        jclass exceptionClazz = env->FindClass("java/lang/Exception");
-        env->ThrowNew(exceptionClazz, "jni exception");
-        env->DeleteLocalRef(exceptionClazz);
-
-        return env->NewIntArray(0);
-    }
-
-    return matToIntArray(env,dst);
+        return matToIntArray(env, dst);
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cvtGray
