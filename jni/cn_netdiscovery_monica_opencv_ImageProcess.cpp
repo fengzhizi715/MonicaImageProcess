@@ -51,57 +51,43 @@ JNIEXPORT jlong JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initColo
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colorCorrection
         (JNIEnv* env, jobject,jbyteArray array, jobject jobj,  jlong cppObjectPtr) {
 
-    ColorCorrection* colorCorrection = reinterpret_cast<ColorCorrection*>(cppObjectPtr);
-    ColorCorrectionSettings colorCorrectionSettings;
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        ColorCorrection* colorCorrection = reinterpret_cast<ColorCorrection*>(cppObjectPtr);
+        ColorCorrectionSettings colorCorrectionSettings;
 
-    Mat image = byteArrayToMat(env, array);
+        Mat image = byteArrayToMat(env, array);
 
-    // 获取 jclass 实例
-    jclass jcls = env->FindClass("cn/netdiscovery/monica/domain/ColorCorrectionSettings");
-    jfieldID contrastId = env->GetFieldID(jcls, "contrast", "I");
-    jfieldID hueId = env->GetFieldID(jcls, "hue", "I");
-    jfieldID saturationId = env->GetFieldID(jcls, "saturation", "I");
-    jfieldID lightnessId = env->GetFieldID(jcls, "lightness", "I");
-    jfieldID temperatureId = env->GetFieldID(jcls, "temperature", "I");
-    jfieldID highlightId = env->GetFieldID(jcls, "highlight", "I");
-    jfieldID shadowId = env->GetFieldID(jcls, "shadow", "I");
-    jfieldID sharpenId = env->GetFieldID(jcls, "sharpen", "I");
-    jfieldID cornerId = env->GetFieldID(jcls, "corner", "I");
-    jfieldID statusId = env->GetFieldID(jcls, "status", "I");
+        // 获取 jclass 实例
+        jclass jcls = env->FindClass("cn/netdiscovery/monica/domain/ColorCorrectionSettings");
+        jfieldID contrastId = env->GetFieldID(jcls, "contrast", "I");
+        jfieldID hueId = env->GetFieldID(jcls, "hue", "I");
+        jfieldID saturationId = env->GetFieldID(jcls, "saturation", "I");
+        jfieldID lightnessId = env->GetFieldID(jcls, "lightness", "I");
+        jfieldID temperatureId = env->GetFieldID(jcls, "temperature", "I");
+        jfieldID highlightId = env->GetFieldID(jcls, "highlight", "I");
+        jfieldID shadowId = env->GetFieldID(jcls, "shadow", "I");
+        jfieldID sharpenId = env->GetFieldID(jcls, "sharpen", "I");
+        jfieldID cornerId = env->GetFieldID(jcls, "corner", "I");
+        jfieldID statusId = env->GetFieldID(jcls, "status", "I");
 
-    colorCorrectionSettings.contrast = env->GetIntField(jobj, contrastId);
-    colorCorrectionSettings.hue = env->GetIntField(jobj, hueId);
-    colorCorrectionSettings.saturation = env->GetIntField(jobj, saturationId);
-    colorCorrectionSettings.lightness = env->GetIntField(jobj, lightnessId);
-    colorCorrectionSettings.temperature = env->GetIntField(jobj, temperatureId);
-    colorCorrectionSettings.highlight = env->GetIntField(jobj, highlightId);
-    colorCorrectionSettings.shadow = env->GetIntField(jobj, shadowId);
-    colorCorrectionSettings.sharpen = env->GetIntField(jobj, sharpenId);
-    colorCorrectionSettings.corner = env->GetIntField(jobj, cornerId);
-    colorCorrectionSettings.status = env->GetIntField(jobj, statusId);
+        colorCorrectionSettings.contrast = env->GetIntField(jobj, contrastId);
+        colorCorrectionSettings.hue = env->GetIntField(jobj, hueId);
+        colorCorrectionSettings.saturation = env->GetIntField(jobj, saturationId);
+        colorCorrectionSettings.lightness = env->GetIntField(jobj, lightnessId);
+        colorCorrectionSettings.temperature = env->GetIntField(jobj, temperatureId);
+        colorCorrectionSettings.highlight = env->GetIntField(jobj, highlightId);
+        colorCorrectionSettings.shadow = env->GetIntField(jobj, shadowId);
+        colorCorrectionSettings.sharpen = env->GetIntField(jobj, sharpenId);
+        colorCorrectionSettings.corner = env->GetIntField(jobj, cornerId);
+        colorCorrectionSettings.status = env->GetIntField(jobj, statusId);
 
-    Mat dst;
-
-    try {
+        Mat dst;
         colorCorrection->doColorCorrection(colorCorrectionSettings, dst);
-    } catch(...) {
-    }
 
-    jthrowable mException = NULL;
-    mException = env->ExceptionOccurred();
+        env->DeleteLocalRef(jcls);  // 手动释放局部引用
 
-    if (mException != NULL) {
-      env->ExceptionClear();
-      jclass exceptionClazz = env->FindClass("java/lang/Exception");
-      env->ThrowNew(exceptionClazz, "jni exception");
-      env->DeleteLocalRef(exceptionClazz);
-
-      return env->NewIntArray(0);
-    }
-
-    env->DeleteLocalRef(jcls);  // 手动释放局部引用
-
-    return matToIntArray(env, dst);
+        return matToIntArray(env, dst);
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_deleteColorCorrection
