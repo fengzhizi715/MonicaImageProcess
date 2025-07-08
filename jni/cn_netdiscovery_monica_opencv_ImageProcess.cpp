@@ -11,7 +11,6 @@
 #include "../include/matchTemplate/MatchTemplate.h"
 #include "../include/library.h"
 #include "../include/utils/Utils.h"
-#include "../include/utils/JNIUtils.h"
 #include "../include/utils/JNIUtils.hpp"
 
 

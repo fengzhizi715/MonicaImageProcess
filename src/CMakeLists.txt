@@ -79,9 +79,6 @@ set(SRC_FILES
         ${CMAKE_SOURCE_DIR}/include/matchTemplate/MatchTemplate.h
         ${CMAKE_CURRENT_SOURCE_DIR}/matchTemplate/MatchTemplate.cpp
 
-        ${CMAKE_SOURCE_DIR}/include/utils/JNIUtils.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/utils/JNIUtils.cpp
-
         ${CMAKE_SOURCE_DIR}/include/utils/Utils.h
         ${CMAKE_CURRENT_SOURCE_DIR}/utils/Utils.cpp
         )
