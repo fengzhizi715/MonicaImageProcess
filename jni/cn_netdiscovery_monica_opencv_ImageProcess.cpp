@@ -379,100 +379,115 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_gaus
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_medianBlur
         (JNIEnv* env, jobject,jbyteArray array,jint ksize) {
-   Mat image = byteArrayToMat(env,array);
 
-   Mat dst;
-   medianBlur(image, dst, ksize);
-   return matToIntArray(env,dst);
+   return safeJniCall<jintArray>(env, [&]() -> jintArray {
+       Mat image = byteArrayToMat(env,array);
+
+       Mat dst;
+       medianBlur(image, dst, ksize);
+       return matToIntArray(env,dst);
+   }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_bilateralFilter
         (JNIEnv* env, jobject,jbyteArray array,jint d,jdouble sigmaColor,jdouble sigmaSpace) {
-   Mat image = byteArrayToMat(env,array);
 
-   Mat dst;
-   bilateralFilter(image,dst,d, sigmaColor, sigmaSpace);
-   return matToIntArray(env,dst);
+   return safeJniCall<jintArray>(env, [&]() -> jintArray {
+       Mat image = byteArrayToMat(env,array);
+
+       Mat dst;
+       bilateralFilter(image,dst,d, sigmaColor, sigmaSpace);
+       return matToIntArray(env,dst);
+   }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_pyrMeanShiftFiltering
         (JNIEnv* env, jobject,jbyteArray array,jdouble sp,jdouble sr) {
-   Mat image = byteArrayToMat(env,array);
 
-   Mat dst;
-   pyrMeanShiftFiltering(image, dst, sp, sr);
-   return matToIntArray(env,dst);
+   return safeJniCall<jintArray>(env, [&]() -> jintArray {
+       Mat image = byteArrayToMat(env,array);
+
+       Mat dst;
+       pyrMeanShiftFiltering(image, dst, sp, sr);
+       return matToIntArray(env,dst);
+   }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_morphologyEx
         (JNIEnv* env, jobject,jbyteArray array,jobject jobj) {
-    MorphologicalOperationSettings morphologicalOperationSettings;
 
-    Mat binary = byteArrayTo8UC1Mat(env, array);
-    // 获取 jclass 实例
-    jclass jcls = env->FindClass("cn/netdiscovery/monica/domain/MorphologicalOperationSettings");
-    jfieldID opId = env->GetFieldID(jcls, "op", "I");
-    jfieldID shapeId = env->GetFieldID(jcls, "shape", "I");
-    jfieldID widthId = env->GetFieldID(jcls, "width", "I");
-    jfieldID heightId = env->GetFieldID(jcls, "height", "I");
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        MorphologicalOperationSettings morphologicalOperationSettings;
 
-    morphologicalOperationSettings.op = env->GetIntField(jobj, opId);
-    morphologicalOperationSettings.shape = env->GetIntField(jobj, shapeId);
-    morphologicalOperationSettings.width = env->GetIntField(jobj, widthId);
-    morphologicalOperationSettings.height = env->GetIntField(jobj, heightId);
+        Mat binary = byteArrayTo8UC1Mat(env, array);
+        // 获取 jclass 实例
+        jclass jcls = env->FindClass("cn/netdiscovery/monica/domain/MorphologicalOperationSettings");
+        jfieldID opId = env->GetFieldID(jcls, "op", "I");
+        jfieldID shapeId = env->GetFieldID(jcls, "shape", "I");
+        jfieldID widthId = env->GetFieldID(jcls, "width", "I");
+        jfieldID heightId = env->GetFieldID(jcls, "height", "I");
 
-    Mat dst;
-    morphologyEx(binary, dst, morphologicalOperationSettings);
+        morphologicalOperationSettings.op = env->GetIntField(jobj, opId);
+        morphologicalOperationSettings.shape = env->GetIntField(jobj, shapeId);
+        morphologicalOperationSettings.width = env->GetIntField(jobj, widthId);
+        morphologicalOperationSettings.height = env->GetIntField(jobj, heightId);
 
-    env->DeleteLocalRef(jcls);  // 手动释放局部引用
+        Mat dst;
+        morphologyEx(binary, dst, morphologicalOperationSettings);
 
-    return binaryMatToIntArray(env, dst);
+        env->DeleteLocalRef(jcls);  // 手动释放局部引用
+
+        return binaryMatToIntArray(env, dst);
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matchTemplate
         (JNIEnv* env, jobject,jbyteArray array, jbyteArray arrayTemplate, jintArray scalarArray, jobject jobj) {
-    MatchTemplateSettings matchTemplateSettings;
 
-    Mat image = byteArrayToMat(env,array);
-    Mat templateImage = byteArrayToMat(env,arrayTemplate);
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        MatchTemplateSettings matchTemplateSettings;
 
-    jsize len = env->GetArrayLength(scalarArray);
-    jint scalarValues[3];
-    env->GetIntArrayRegion(scalarArray, 0, len, scalarValues);
+        Mat image = byteArrayToMat(env,array);
+        Mat templateImage = byteArrayToMat(env,arrayTemplate);
 
-    cv::Scalar scalar(scalarValues[0], scalarValues[1], scalarValues[2]);
+        jsize len = env->GetArrayLength(scalarArray);
+        jint scalarValues[3];
+        env->GetIntArrayRegion(scalarArray, 0, len, scalarValues);
 
-    // 获取 jclass 实例
-    jclass jcls = env->FindClass("cn/netdiscovery/monica/domain/MatchTemplateSettings");
-    jfieldID matchTypeId = env->GetFieldID(jcls, "matchType", "I");
-    jfieldID angleStartId = env->GetFieldID(jcls, "angleStart", "I");
-    jfieldID angleEndId = env->GetFieldID(jcls, "angleEnd", "I");
-    jfieldID angleStepId = env->GetFieldID(jcls, "angleStep", "I");
-    jfieldID scaleStartId = env->GetFieldID(jcls, "scaleStart", "D");
-    jfieldID scaleEndId = env->GetFieldID(jcls, "scaleEnd", "D");
-    jfieldID scaleStepId = env->GetFieldID(jcls, "scaleStep", "D");
-    jfieldID matchTemplateThresholdId = env->GetFieldID(jcls, "matchTemplateThreshold", "D");
-    jfieldID scoreThresholdId = env->GetFieldID(jcls, "scoreThreshold", "F");
-    jfieldID nmsThresholdId = env->GetFieldID(jcls, "nmsThreshold", "F");
+        cv::Scalar scalar(scalarValues[0], scalarValues[1], scalarValues[2]);
 
-    matchTemplateSettings.matchType = env->GetIntField(jobj, matchTypeId);
-    matchTemplateSettings.angleStart = env->GetIntField(jobj, angleStartId);
-    matchTemplateSettings.angleEnd = env->GetIntField(jobj, angleEndId);
-    matchTemplateSettings.angleStep = env->GetIntField(jobj, angleStepId);
-    matchTemplateSettings.scaleStart = env->GetDoubleField(jobj, scaleStartId);
-    matchTemplateSettings.scaleEnd = env->GetDoubleField(jobj, scaleEndId);
-    matchTemplateSettings.scaleStep = env->GetDoubleField(jobj, scaleStepId);
-    matchTemplateSettings.matchTemplateThreshold = env->GetDoubleField(jobj, matchTemplateThresholdId);
-    matchTemplateSettings.scoreThreshold = env->GetFloatField(jobj, scoreThresholdId);
-    matchTemplateSettings.nmsThreshold = env->GetFloatField(jobj, nmsThresholdId);
+        // 获取 jclass 实例
+        jclass jcls = env->FindClass("cn/netdiscovery/monica/domain/MatchTemplateSettings");
+        jfieldID matchTypeId = env->GetFieldID(jcls, "matchType", "I");
+        jfieldID angleStartId = env->GetFieldID(jcls, "angleStart", "I");
+        jfieldID angleEndId = env->GetFieldID(jcls, "angleEnd", "I");
+        jfieldID angleStepId = env->GetFieldID(jcls, "angleStep", "I");
+        jfieldID scaleStartId = env->GetFieldID(jcls, "scaleStart", "D");
+        jfieldID scaleEndId = env->GetFieldID(jcls, "scaleEnd", "D");
+        jfieldID scaleStepId = env->GetFieldID(jcls, "scaleStep", "D");
+        jfieldID matchTemplateThresholdId = env->GetFieldID(jcls, "matchTemplateThreshold", "D");
+        jfieldID scoreThresholdId = env->GetFieldID(jcls, "scoreThreshold", "F");
+        jfieldID nmsThresholdId = env->GetFieldID(jcls, "nmsThreshold", "F");
 
-    Mat dst = match_template->templateMatching(image, templateImage, matchTemplateSettings.matchType, matchTemplateSettings.angleStart, matchTemplateSettings.angleEnd, matchTemplateSettings.angleStep,
-                                             matchTemplateSettings.scaleStart, matchTemplateSettings.scaleEnd, matchTemplateSettings.scaleStep,
-                                             matchTemplateSettings.matchTemplateThreshold, matchTemplateSettings.scoreThreshold, matchTemplateSettings.nmsThreshold, scalar);
+        matchTemplateSettings.matchType = env->GetIntField(jobj, matchTypeId);
+        matchTemplateSettings.angleStart = env->GetIntField(jobj, angleStartId);
+        matchTemplateSettings.angleEnd = env->GetIntField(jobj, angleEndId);
+        matchTemplateSettings.angleStep = env->GetIntField(jobj, angleStepId);
+        matchTemplateSettings.scaleStart = env->GetDoubleField(jobj, scaleStartId);
+        matchTemplateSettings.scaleEnd = env->GetDoubleField(jobj, scaleEndId);
+        matchTemplateSettings.scaleStep = env->GetDoubleField(jobj, scaleStepId);
+        matchTemplateSettings.matchTemplateThreshold = env->GetDoubleField(jobj, matchTemplateThresholdId);
+        matchTemplateSettings.scoreThreshold = env->GetFloatField(jobj, scoreThresholdId);
+        matchTemplateSettings.nmsThreshold = env->GetFloatField(jobj, nmsThresholdId);
 
-    env->DeleteLocalRef(jcls);  // 手动释放局部引用
+        Mat dst = match_template->templateMatching(image, templateImage, matchTemplateSettings.matchType, matchTemplateSettings.angleStart, matchTemplateSettings.angleEnd, matchTemplateSettings.angleStep,
+                                           matchTemplateSettings.scaleStart, matchTemplateSettings.scaleEnd, matchTemplateSettings.scaleStep,
+                                           matchTemplateSettings.matchTemplateThreshold, matchTemplateSettings.scoreThreshold, matchTemplateSettings.nmsThreshold, scalar);
 
-    return matToIntArray(env,dst);
+        env->DeleteLocalRef(jcls);  // 手动释放局部引用
+
+        return matToIntArray(env,dst);
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeRawToBuffer
