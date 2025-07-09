@@ -258,38 +258,50 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sobe
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_laplace
         (JNIEnv* env, jobject,jbyteArray array) {
-    Mat image = byteArrayToMat(env,array);
 
-    Mat dst;
-    laplace(image, dst);
-    return matToIntArray(env,dst);
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        Mat image = byteArrayToMat(env,array);
+
+        Mat dst;
+        laplace(image, dst);
+        return matToIntArray(env,dst);
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_log
         (JNIEnv* env, jobject,jbyteArray array) {
-    Mat image = byteArrayToMat(env,array);
 
-    Mat dst;
-    log(image, dst);
-    return matToIntArray(env,dst);
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        Mat image = byteArrayToMat(env,array);
+
+        Mat dst;
+        log(image, dst);
+        return matToIntArray(env,dst);
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_dog
         (JNIEnv* env, jobject,jbyteArray array, jdouble sigma1, jdouble sigma2, jint size) {
-    Mat image = byteArrayToMat(env,array);
 
-    Mat dst;
-    dog(image, dst, sigma1, sigma2, size);
-    return matToIntArray(env,dst);
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        Mat image = byteArrayToMat(env,array);
+
+        Mat dst;
+        dog(image, dst, sigma1, sigma2, size);
+        return matToIntArray(env,dst);
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_canny
         (JNIEnv* env, jobject,jbyteArray array,jdouble threshold1,jdouble threshold2,jint apertureSize) {
-    Mat image = byteArrayToMat(env,array);
 
-    Mat dst;
-    canny(image, dst, threshold1, threshold2, apertureSize);
-    return binaryMatToIntArray(env,dst);
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        Mat image = byteArrayToMat(env,array);
+
+        Mat dst;
+        canny(image, dst, threshold1, threshold2, apertureSize);
+        return binaryMatToIntArray(env,dst);
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_contourAnalysis
