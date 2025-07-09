@@ -306,69 +306,75 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_cann
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_contourAnalysis
         (JNIEnv* env, jobject,jbyteArray srcArray, jbyteArray binaryArray, jintArray scalarArray, jobject jobj1, jobject jobj2) {
-    ContourFilterSettings contourFilterSettings;
-    ContourDisplaySettings contourDisplaySettings;
 
-    Mat src = byteArrayToMat(env, srcArray);
-    Mat binary = byteArrayTo8UC1Mat(env,binaryArray);
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        ContourFilterSettings contourFilterSettings;
+        ContourDisplaySettings contourDisplaySettings;
 
-    jsize len = env->GetArrayLength(scalarArray);
-    jint scalarValues[3];
-    env->GetIntArrayRegion(scalarArray, 0, len, scalarValues);
+        Mat src = byteArrayToMat(env, srcArray);
+        Mat binary = byteArrayTo8UC1Mat(env,binaryArray);
 
-    cv::Scalar scalar(scalarValues[0], scalarValues[1], scalarValues[2]);
+        jsize len = env->GetArrayLength(scalarArray);
+        jint scalarValues[3];
+        env->GetIntArrayRegion(scalarArray, 0, len, scalarValues);
 
-    // 获取 jclass 实例
-    jclass jcls1 = env->FindClass("cn/netdiscovery/monica/domain/ContourFilterSettings");
-    jfieldID minPerimeterId = env->GetFieldID(jcls1, "minPerimeter", "D");
-    jfieldID maxPerimeterId = env->GetFieldID(jcls1, "maxPerimeter", "D");
-    jfieldID minAreaId = env->GetFieldID(jcls1, "minArea", "D");
-    jfieldID maxAreaId = env->GetFieldID(jcls1, "maxArea", "D");
-    jfieldID minRoundnessId = env->GetFieldID(jcls1, "minRoundness", "D");
-    jfieldID maxRoundnessId = env->GetFieldID(jcls1, "maxRoundness", "D");
-    jfieldID minAspectRatioId = env->GetFieldID(jcls1, "minAspectRatio", "D");
-    jfieldID maxAspectRatioId = env->GetFieldID(jcls1, "maxAspectRatio", "D");
+        cv::Scalar scalar(scalarValues[0], scalarValues[1], scalarValues[2]);
 
-    contourFilterSettings.minPerimeter = env->GetDoubleField(jobj1, minPerimeterId);
-    contourFilterSettings.maxPerimeter = env->GetDoubleField(jobj1, maxPerimeterId);
-    contourFilterSettings.minArea = env->GetDoubleField(jobj1, minAreaId);
-    contourFilterSettings.maxArea = env->GetDoubleField(jobj1, maxAreaId);
-    contourFilterSettings.minRoundness = env->GetDoubleField(jobj1, minRoundnessId);
-    contourFilterSettings.maxRoundness = env->GetDoubleField(jobj1, maxRoundnessId);
-    contourFilterSettings.minAspectRatio = env->GetDoubleField(jobj1, minAspectRatioId);
-    contourFilterSettings.maxAspectRatio = env->GetDoubleField(jobj1, maxAspectRatioId);
+        // 获取 jclass 实例
+        jclass jcls1 = env->FindClass("cn/netdiscovery/monica/domain/ContourFilterSettings");
+        jfieldID minPerimeterId = env->GetFieldID(jcls1, "minPerimeter", "D");
+        jfieldID maxPerimeterId = env->GetFieldID(jcls1, "maxPerimeter", "D");
+        jfieldID minAreaId = env->GetFieldID(jcls1, "minArea", "D");
+        jfieldID maxAreaId = env->GetFieldID(jcls1, "maxArea", "D");
+        jfieldID minRoundnessId = env->GetFieldID(jcls1, "minRoundness", "D");
+        jfieldID maxRoundnessId = env->GetFieldID(jcls1, "maxRoundness", "D");
+        jfieldID minAspectRatioId = env->GetFieldID(jcls1, "minAspectRatio", "D");
+        jfieldID maxAspectRatioId = env->GetFieldID(jcls1, "maxAspectRatio", "D");
 
-    // 获取 jclass 实例
-    jclass jcls2 = env->FindClass("cn/netdiscovery/monica/domain/ContourDisplaySettings");
-    jfieldID showOriginalImageId = env->GetFieldID(jcls2, "showOriginalImage", "Z");
-    jfieldID showBoundingRectId = env->GetFieldID(jcls2, "showBoundingRect", "Z");
-    jfieldID showMinAreaRectId = env->GetFieldID(jcls2, "showMinAreaRect", "Z");
-    jfieldID showCenterId = env->GetFieldID(jcls2, "showCenter", "Z");
+        contourFilterSettings.minPerimeter = env->GetDoubleField(jobj1, minPerimeterId);
+        contourFilterSettings.maxPerimeter = env->GetDoubleField(jobj1, maxPerimeterId);
+        contourFilterSettings.minArea = env->GetDoubleField(jobj1, minAreaId);
+        contourFilterSettings.maxArea = env->GetDoubleField(jobj1, maxAreaId);
+        contourFilterSettings.minRoundness = env->GetDoubleField(jobj1, minRoundnessId);
+        contourFilterSettings.maxRoundness = env->GetDoubleField(jobj1, maxRoundnessId);
+        contourFilterSettings.minAspectRatio = env->GetDoubleField(jobj1, minAspectRatioId);
+        contourFilterSettings.maxAspectRatio = env->GetDoubleField(jobj1, maxAspectRatioId);
 
-    contourDisplaySettings.showOriginalImage = env->GetBooleanField(jobj2, showOriginalImageId);
-    contourDisplaySettings.showBoundingRect = env->GetBooleanField(jobj2, showBoundingRectId);
-    contourDisplaySettings.showMinAreaRect = env->GetBooleanField(jobj2, showMinAreaRectId);
-    contourDisplaySettings.showCenter = env->GetBooleanField(jobj2, showCenterId);
+        // 获取 jclass 实例
+        jclass jcls2 = env->FindClass("cn/netdiscovery/monica/domain/ContourDisplaySettings");
+        jfieldID showOriginalImageId = env->GetFieldID(jcls2, "showOriginalImage", "Z");
+        jfieldID showBoundingRectId = env->GetFieldID(jcls2, "showBoundingRect", "Z");
+        jfieldID showMinAreaRectId = env->GetFieldID(jcls2, "showMinAreaRect", "Z");
+        jfieldID showCenterId = env->GetFieldID(jcls2, "showCenter", "Z");
 
-    contourAnalysis(src, binary, scalar, contourFilterSettings, contourDisplaySettings);
+        contourDisplaySettings.showOriginalImage = env->GetBooleanField(jobj2, showOriginalImageId);
+        contourDisplaySettings.showBoundingRect = env->GetBooleanField(jobj2, showBoundingRectId);
+        contourDisplaySettings.showMinAreaRect = env->GetBooleanField(jobj2, showMinAreaRectId);
+        contourDisplaySettings.showCenter = env->GetBooleanField(jobj2, showCenterId);
 
-    env->DeleteLocalRef(jcls1);  // 手动释放局部引用
-    env->DeleteLocalRef(jcls2);  // 手动释放局部引用
+        contourAnalysis(src, binary, scalar, contourFilterSettings, contourDisplaySettings);
 
-    if (contourDisplaySettings.showOriginalImage) {
-        return matToIntArray(env,src);
-    } else {
-        return binaryMatToIntArray(env, binary);
-    }
+        env->DeleteLocalRef(jcls1);  // 手动释放局部引用
+        env->DeleteLocalRef(jcls2);  // 手动释放局部引用
+
+        if (contourDisplaySettings.showOriginalImage) {
+            return matToIntArray(env,src);
+        } else {
+            return binaryMatToIntArray(env, binary);
+        }
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_gaussianBlur
         (JNIEnv* env, jobject,jbyteArray array,jint ksize, jdouble sigmaX, jdouble sigmaY) {
-    Mat image = byteArrayToMat(env,array);
 
-    Mat dst;
-    GaussianBlur(image, dst, cv::Size(ksize, ksize), sigmaX ,sigmaY);
-    return matToIntArray(env,dst);
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        Mat image = byteArrayToMat(env,array);
+
+        Mat dst;
+        GaussianBlur(image, dst, cv::Size(ksize, ksize), sigmaX ,sigmaY);
+        return matToIntArray(env,dst);
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_medianBlur
