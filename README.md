@@ -108,12 +108,11 @@ cd build
 
 2. 使用 CMake 配置项目
 
-开始/调试时使用
+* 开发/调试时使用
 ```
 cmake ..
 ```
-
-部署时使用
+* 部署时使用
 ```
 cmake .. -DDEPLOY_MODE=ON
 ```
