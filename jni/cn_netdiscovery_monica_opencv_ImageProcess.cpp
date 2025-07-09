@@ -234,20 +234,26 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_robe
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_prewitt
         (JNIEnv* env, jobject,jbyteArray array) {
-    Mat image = byteArrayToMat(env,array);
 
-    Mat dst;
-    prewitt(image, dst);
-    return matToIntArray(env,dst);
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        Mat image = byteArrayToMat(env,array);
+
+        Mat dst;
+        prewitt(image, dst);
+        return matToIntArray(env,dst);
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_sobel
         (JNIEnv* env, jobject,jbyteArray array) {
-    Mat image = byteArrayToMat(env,array);
 
-    Mat dst;
-    sobel(image, dst);
-    return matToIntArray(env,dst);
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        Mat image = byteArrayToMat(env,array);
+
+        Mat dst;
+        sobel(image, dst);
+        return matToIntArray(env,dst);
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_laplace
