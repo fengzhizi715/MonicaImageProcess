@@ -192,35 +192,44 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_thre
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_adaptiveThreshold
         (JNIEnv* env, jobject,jbyteArray array,jint adaptiveMethod, jint thresholdType,jint blockSize, jint c) {
-     Mat image = byteArrayToMat(env,array);
 
-     Mat dst;
-     int maxVal = 255;
-     int channels = image.channels();
-     if (channels == 3) {
-         cvtColor(image,image,COLOR_BGR2GRAY);
-     }
+     return safeJniCall<jintArray>(env, [&]() -> jintArray {
+         Mat image = byteArrayToMat(env,array);
 
-     adaptiveThreshold(image, dst, maxVal, adaptiveMethod,thresholdType, blockSize,c);
-     return binaryMatToIntArray(env,dst);
+         Mat dst;
+         int maxVal = 255;
+         int channels = image.channels();
+         if (channels == 3) {
+             cvtColor(image,image,COLOR_BGR2GRAY);
+         }
+
+         adaptiveThreshold(image, dst, maxVal, adaptiveMethod,thresholdType, blockSize,c);
+         return binaryMatToIntArray(env,dst);
+     }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_inRange
         (JNIEnv* env, jobject,jbyteArray array,jint hmin,jint smin,jint vmin,jint hmax,jint smax,jint vmax) {
-    Mat image = byteArrayToMat(env,array);
 
-    Mat dst;
-    inRange(image, dst, hmin, smin, vmin, hmax, smax, vmax);
-    return binaryMatToIntArray(env,dst);
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        Mat image = byteArrayToMat(env,array);
+
+        Mat dst;
+        inRange(image, dst, hmin, smin, vmin, hmax, smax, vmax);
+        return binaryMatToIntArray(env,dst);
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_roberts
         (JNIEnv* env, jobject,jbyteArray array) {
-    Mat image = byteArrayToMat(env,array);
 
-    Mat dst;
-    roberts(image, dst);
-    return matToIntArray(env,dst);
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        Mat image = byteArrayToMat(env,array);
+
+        Mat dst;
+        roberts(image, dst);
+        return matToIntArray(env,dst);
+    }, env->NewIntArray(0));
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_prewitt
