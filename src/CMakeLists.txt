@@ -114,7 +114,7 @@ else()
 endif()
 
 # 后处理 fix_dylib
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND DEPLOY_MODE)
     add_custom_command(
             TARGET ${PROJECT_NAME}
             POST_BUILD
