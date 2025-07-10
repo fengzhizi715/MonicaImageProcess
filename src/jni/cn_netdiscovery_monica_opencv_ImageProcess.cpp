@@ -8,11 +8,11 @@
 #include <iostream>
 #include <mutex>
 #include "cn_netdiscovery_monica_opencv_ImageProcess.h"
-#include "../include/colorcorrection/ColorCorrection.h"
-#include "../include/matchTemplate/MatchTemplate.h"
-#include "../include/library.h"
-#include "../include/utils/Utils.h"
-#include "../include/utils/JNIUtils.hpp"
+#include "../../include/colorcorrection/ColorCorrection.h"
+#include "../../include/matchTemplate/MatchTemplate.h"
+#include "../../include/library.h"
+#include "../../include/utils/Utils.h"
+#include "../../include/utils/JNIUtils.hpp"
 
 
 MatchTemplate   *match_template = nullptr;

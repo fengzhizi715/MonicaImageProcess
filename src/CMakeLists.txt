@@ -70,8 +70,8 @@ set(SRC_FILES
         ${CMAKE_SOURCE_DIR}/include/library.h
         ${CMAKE_CURRENT_SOURCE_DIR}/library.cpp
 
-        ${CMAKE_SOURCE_DIR}/jni/cn_netdiscovery_monica_opencv_ImageProcess.h
-        ${CMAKE_SOURCE_DIR}/jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/jni/cn_netdiscovery_monica_opencv_ImageProcess.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp
 
         ${CMAKE_SOURCE_DIR}/include/colorcorrection/ColorCorrection.h
         ${CMAKE_CURRENT_SOURCE_DIR}/colorcorrection/ColorCorrection.cpp
