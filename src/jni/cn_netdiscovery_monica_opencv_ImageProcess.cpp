@@ -12,25 +12,10 @@
 #include "../../include/matchTemplate/MatchTemplate.h"
 #include "../../include/library.h"
 #include "../../include/utils/Utils.h"
-#include "utils/jni_utils.hpp"
-
+#include "utils/jni_utils.h"
+#include "color_correction/color_correction_internal.h"
 
 MatchTemplate   *match_template = nullptr;
-
-static std::once_flag g_fieldInitFlag;
-static struct {
-    jclass cls = nullptr;
-    jfieldID contrastId;
-    jfieldID hueId;
-    jfieldID saturationId;
-    jfieldID lightnessId;
-    jfieldID temperatureId;
-    jfieldID highlightId;
-    jfieldID shadowId;
-    jfieldID sharpenId;
-    jfieldID cornerId;
-    jfieldID statusId;
-} g_colorCorrectionFieldIds;
 
 JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getVersion
         (JNIEnv* env, jobject) {
@@ -56,80 +41,17 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_shea
 
 JNIEXPORT jlong JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initColorCorrection
 (JNIEnv* env, jobject, jbyteArray array) {
-    Mat image = byteArrayToMat(env, array);
-
-    // 创建 C++ 对象并存储指针
-    ColorCorrection* cppObject = new ColorCorrection(image);
-    return reinterpret_cast<jlong>(cppObject);
-}
-
-void cacheColorCorrectionFields(JNIEnv* env) {
-    std::call_once(g_fieldInitFlag, [&]() {
-        jclass localCls = env->FindClass("cn/netdiscovery/monica/domain/ColorCorrectionSettings");
-        if (localCls == nullptr) {
-            env->FatalError("Failed to find ColorCorrectionSettings class");
-            return;
-        }
-
-        g_colorCorrectionFieldIds.cls = reinterpret_cast<jclass>(env->NewGlobalRef(localCls));
-        env->DeleteLocalRef(localCls); // 清除局部引用
-
-        g_colorCorrectionFieldIds.contrastId    = env->GetFieldID(g_colorCorrectionFieldIds.cls, "contrast", "I");
-        g_colorCorrectionFieldIds.hueId         = env->GetFieldID(g_colorCorrectionFieldIds.cls, "hue", "I");
-        g_colorCorrectionFieldIds.saturationId  = env->GetFieldID(g_colorCorrectionFieldIds.cls, "saturation", "I");
-        g_colorCorrectionFieldIds.lightnessId   = env->GetFieldID(g_colorCorrectionFieldIds.cls, "lightness", "I");
-        g_colorCorrectionFieldIds.temperatureId = env->GetFieldID(g_colorCorrectionFieldIds.cls, "temperature", "I");
-        g_colorCorrectionFieldIds.highlightId   = env->GetFieldID(g_colorCorrectionFieldIds.cls, "highlight", "I");
-        g_colorCorrectionFieldIds.shadowId      = env->GetFieldID(g_colorCorrectionFieldIds.cls, "shadow", "I");
-        g_colorCorrectionFieldIds.sharpenId     = env->GetFieldID(g_colorCorrectionFieldIds.cls, "sharpen", "I");
-        g_colorCorrectionFieldIds.cornerId      = env->GetFieldID(g_colorCorrectionFieldIds.cls, "corner", "I");
-        g_colorCorrectionFieldIds.statusId      = env->GetFieldID(g_colorCorrectionFieldIds.cls, "status", "I");
-    });
-}
-
-ColorCorrectionSettings extractColorCorrectionSettings(JNIEnv* env, jobject jobj) {
-    ColorCorrectionSettings settings;
-    settings.contrast    = env->GetIntField(jobj, g_colorCorrectionFieldIds.contrastId);
-    settings.hue         = env->GetIntField(jobj, g_colorCorrectionFieldIds.hueId);
-    settings.saturation  = env->GetIntField(jobj, g_colorCorrectionFieldIds.saturationId);
-    settings.lightness   = env->GetIntField(jobj, g_colorCorrectionFieldIds.lightnessId);
-    settings.temperature = env->GetIntField(jobj, g_colorCorrectionFieldIds.temperatureId);
-    settings.highlight   = env->GetIntField(jobj, g_colorCorrectionFieldIds.highlightId);
-    settings.shadow      = env->GetIntField(jobj, g_colorCorrectionFieldIds.shadowId);
-    settings.sharpen     = env->GetIntField(jobj, g_colorCorrectionFieldIds.sharpenId);
-    settings.corner      = env->GetIntField(jobj, g_colorCorrectionFieldIds.cornerId);
-    settings.status      = env->GetIntField(jobj, g_colorCorrectionFieldIds.statusId);
-    return settings;
+    return initColorCorrectionInternal(env, array);
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colorCorrection
         (JNIEnv* env, jobject, jbyteArray array, jobject jobj, jlong cppObjectPtr) {
-    return safeJniCall<jintArray>(env, [&]() -> jintArray {
-        if (cppObjectPtr == 0 || jobj == nullptr) {
-            return env->NewIntArray(0);
-        }
-
-        cacheColorCorrectionFields(env);  // 线程安全调用
-
-        ColorCorrection* colorCorrection = reinterpret_cast<ColorCorrection*>(cppObjectPtr);
-        ColorCorrectionSettings settings = extractColorCorrectionSettings(env, jobj);
-
-        Mat image = byteArrayToMat(env, array);
-        colorCorrection->origin = image;
-
-        Mat dst;
-        colorCorrection->doColorCorrection(settings, dst);
-
-        return matToIntArray(env, dst);
-    }, env->NewIntArray(0));
+      return colorCorrectionInternal(env, array, jobj, cppObjectPtr);
 }
 
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_deleteColorCorrection
         (JNIEnv* env, jobject, jlong cppObjectPtr) {
-    // 删除 C++对象，防止内存泄漏
-    if (cppObjectPtr != 0) {
-        delete reinterpret_cast<ColorCorrection*>(cppObjectPtr);
-    }
+    deleteColorCorrectionInternal(env, cppObjectPtr);
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_equalizeHist
