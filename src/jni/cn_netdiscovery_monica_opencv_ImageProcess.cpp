@@ -6,7 +6,6 @@
 #include <vector>
 #include <cstring>
 #include <iostream>
-#include <mutex>
 #include "cn_netdiscovery_monica_opencv_ImageProcess.h"
 #include "../../include/colorcorrection/ColorCorrection.h"
 #include "../../include/matchTemplate/MatchTemplate.h"
