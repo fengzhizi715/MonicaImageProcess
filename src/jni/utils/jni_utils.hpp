@@ -1,9 +1,9 @@
 //
-// Created by Tony on 2025/7/8.
+// Created by Tony on 2025/7/10.
 //
 
-#ifndef MONICAIMAGEPROCESS_JNIUTILS_HPP
-#define MONICAIMAGEPROCESS_JNIUTILS_HPP
+#ifndef MONICAIMAGEPROCESS_JNI_UTILS_HPP
+#define MONICAIMAGEPROCESS_JNI_UTILS_HPP
 
 #pragma once
 #include <jni.h>
@@ -118,4 +118,4 @@ T safeJniCall(JNIEnv* env, const std::function<T()>& nativeLogic, T fallbackValu
     return fallbackValue;
 }
 
-#endif //MONICAIMAGEPROCESS_JNIUTILS_HPP
+#endif //MONICAIMAGEPROCESS_JNI_UTILS_HPP
