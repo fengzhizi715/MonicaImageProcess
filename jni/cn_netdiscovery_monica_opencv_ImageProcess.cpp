@@ -63,7 +63,6 @@ JNIEXPORT jlong JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_initColo
     return reinterpret_cast<jlong>(cppObject);
 }
 
-
 void cacheColorCorrectionFields(JNIEnv* env) {
     std::call_once(g_fieldInitFlag, [&]() {
         jclass localCls = env->FindClass("cn/netdiscovery/monica/domain/ColorCorrectionSettings");
@@ -128,8 +127,9 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colo
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_deleteColorCorrection
         (JNIEnv* env, jobject, jlong cppObjectPtr) {
     // 删除 C++对象，防止内存泄漏
-    ColorCorrection* colorCorrection = reinterpret_cast<ColorCorrection*>(cppObjectPtr);
-    delete colorCorrection;
+    if (cppObjectPtr != 0) {
+        delete reinterpret_cast<ColorCorrection*>(cppObjectPtr);
+    }
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_equalizeHist
