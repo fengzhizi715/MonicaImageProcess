@@ -113,7 +113,13 @@ cd build
 cmake ..
 ```
 
-* 生产部署时，开启 Release 模式编译，并且 DEPLOY_MODE 打开
+或者开启 Release 模式编译(因为 CLion 默认使用 Debug 模式编译)
+
+```
+cmake -DCMAKE_BUILD_TYPE=Release ..
+```
+
+* 生产部署时，开启 Release 模式编译，并且把 DEPLOY_MODE 打开
 ```
 cmake -DCMAKE_BUILD_TYPE=Release -DDEPLOY_MODE=ON ..
 ```
