@@ -112,80 +112,74 @@ void ColorCorrection::doColorCorrection(ColorCorrectionSettings colorCorrectionS
     }
 }
 
-Mat ColorCorrection::adjust() {
-    cout<<"_contractScale = "<< _contractScale <<", _hueOffset = "<< _hueOffset <<", _saturationOffset = "<<_saturationOffset<<", _lightnessOffset = "<<_lightnessOffset<<", _temperatureScale = "<<_temperatureScale<<", _highlightOffset = "<<_highlightOffset<<", _shadowOffset = "<<_shadowOffset<<", _sharpenOffset = "<<_sharpenOffset<<", _cornerOffset = "<<_cornerOffset<< endl;
+cv::Mat ColorCorrection::adjust() {
+    cout << "_contractScale = " << _contractScale << ", _hueOffset = " << _hueOffset
+         << ", _saturationOffset = " << _saturationOffset << ", _lightnessOffset = " << _lightnessOffset
+         << ", _temperatureScale = " << _temperatureScale << ", _highlightOffset = " << _highlightOffset
+         << ", _shadowOffset = " << _shadowOffset << ", _sharpenOffset = " << _sharpenOffset
+         << ", _cornerOffset = " << _cornerOffset << endl;
 
     cv::Mat hslCopy = _cachedHSLImg.clone();
-    _cachedHSLImg.forEach<Pixel>([&](Pixel &p, const int * position) -> void {
-        int i = position[0];
-        int j = position[1];
 
-        auto hslVal = hslCopy.at<cv::Vec3b>(i,j);
+    for (int i = 0; i < _cachedHSLImg.rows; ++i) {
+        cv::Vec3b* dstRow = _cachedHSLImg.ptr<cv::Vec3b>(i);
+        const cv::Vec3b* srcRow = hslCopy.ptr<cv::Vec3b>(i);
+        const uchar* hlRow = highlightMask.ptr<uchar>(i);
+        const uchar* shRow = shadowMask.ptr<uchar>(i);
 
-        int hVal = hslVal[0] + _hueOffset;
-        while (hVal > 180) {
-            hVal -= 180;
+        for (int j = 0; j < _cachedHSLImg.cols; ++j) {
+            const auto& hslVal = srcRow[j];
+
+            int hVal = hslVal[0] + _hueOffset;
+            while (hVal > 180) hVal -= 180;
+            while (hVal < 0) hVal += 180;
+
+            int sVal = hslVal[1] + _saturationOffset;
+            sVal = std::clamp(sVal, 0, 255);
+
+            float highlightFactor = hlRow[j] / 255.0f;
+            float shadowFactor = shRow[j] / 255.0f;
+
+            int lVal = _contractScale * hslVal[2] + _lightnessOffset +
+                       highlightFactor * _highlightOffset +
+                       shadowFactor * _shadowOffset;
+
+            lVal = std::clamp(lVal, 0, 255);
+
+            float distanceToCenter = std::sqrt(
+                    (i - middleRow) * (i - middleRow) + (j - middleCol) * (j - middleCol));
+            float cornerFactor = 1.0f - std::max(distanceToCenter / radius * 2.0f - 1.0f, 0.0f) * _cornerOffset;
+            lVal = std::clamp(int(lVal * cornerFactor), 0, 255);
+
+            dstRow[j] = cv::Vec3b(hVal, sVal, lVal);
         }
-
-        int sval = hslVal[1] + _saturationOffset;
-        if (sval > 255) {
-            sval = 255;
-        }
-        if (sval < 0) {
-            sval = 0;
-        }
-
-        unsigned char highlightFactor = highlightMask.at<unsigned char>(i, j);
-        unsigned char shadowFactor = shadowMask.at<unsigned char>(i, j);
-
-        int lval =  _contractScale * hslVal[2] + _lightnessOffset + highlightFactor / 255.0 * _highlightOffset + shadowFactor / 255.0 * _shadowOffset;
-        if (lval > 255) {
-            lval = 255;
-        }
-        if (lval < 0) {
-            lval = 0;
-        }
-
-        // 简单的暗角效果
-        float distanceToCenter = sqrt(pow(i - middleRow, 2) + pow(j - middleCol, 2));
-        float cornerFactor = 1.0 - std::max(distanceToCenter / radius * 2.0 - 1.0, 0.0) * _cornerOffset;
-        lval *= cornerFactor;
-
-        hslCopy.at<cv::Vec3b>(i,j) = cv::Vec3b{(unsigned char)hVal, (unsigned char)sval, (unsigned char)lval};
-    });
+    }
 
     cv::Mat dst;
-    cv::cvtColor(hslCopy, dst, cv::COLOR_HSV2BGR);
+    cv::cvtColor(_cachedHSLImg, dst, cv::COLOR_HSV2BGR);
 
-    hslCopy.forEach<Pixel>([&](Pixel &p, const int * position) -> void {
-        int i = position[0];
-        int j = position[1];
+    for (int i = 0; i < dst.rows; ++i) {
+        cv::Vec3b* row = dst.ptr<cv::Vec3b>(i);
+        for (int j = 0; j < dst.cols; ++j) {
+            int bVal = row[j][0];
+            int gVal = row[j][1];
+            int rVal = row[j][2];
 
-        auto bgrVal = dst.at<cv::Vec3b>(i,j);
+            if (_temperatureScale > 0) {
+                rVal = std::min(255, int(rVal * (1.0 + _temperatureScale)));
+                gVal = std::min(255, int(gVal * (1.0 + _temperatureScale * 0.4f)));
+            } else {
+                bVal = std::min(255, int(bVal * (1.0 - _temperatureScale)));
+            }
 
-        int bVal = bgrVal[0];
-        int gVal = bgrVal[1];
-        int rVal = bgrVal[2];
-
-        // 使用乘法，保证各个分量不会同步增长，导致全屏泛红（蓝色）
-        if (_temperatureScale > 0) {
-            rVal *= 1.0 + _temperatureScale;
-            gVal *= (1.0 + _temperatureScale * 0.4f);
-        } else {
-            bVal *= 1.0f -_temperatureScale;
+            row[j] = cv::Vec3b(bVal, gVal, rVal);
         }
+    }
 
-        rVal = std::min(255, rVal);
-        gVal = std::min(255, gVal);
-        bVal = std::min(255, bVal);
-
-        dst.at<cv::Vec3b>(i,j) = cv::Vec3b{(unsigned char)bVal, (unsigned char)gVal, (unsigned char)rVal};
-    });
-
-    // 锐化
     cv::addWeighted(dst, 1.0 + _sharpenOffset, blurMask, -_sharpenOffset, 0, dst);
     return dst;
 }
+
 
 void ColorCorrection::genHighlightAndShadowMask() {
     cvtColor(origin, highlightMask, cv::COLOR_BGR2GRAY);
