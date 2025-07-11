@@ -108,13 +108,14 @@ cd build
 
 2. 使用 CMake 配置项目
 
-* 开发/调试时使用
+* 开发/调试时
 ```
 cmake ..
 ```
-* 部署时使用
+
+* 生产部署时，开启 Release 模式编译，并且 DEPLOY_MODE 打开
 ```
-cmake .. -DDEPLOY_MODE=ON
+cmake -DCMAKE_BUILD_TYPE=Release -DDEPLOY_MODE=ON ..
 ```
 
 3. 编译项目
