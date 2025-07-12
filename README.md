@@ -108,7 +108,7 @@ cd build
 
 2. 使用 CMake 配置项目
 
-* 开发/调试时
+* 开发/调试
 ```
 cmake ..
 ```
@@ -119,7 +119,9 @@ cmake ..
 cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 
-* 生产部署时，开启 Release 模式编译，并且把 DEPLOY_MODE 打开
+* 生产部署
+
+开启 Release 模式编译，并且把 DEPLOY_MODE 打开
 ```
 cmake -DCMAKE_BUILD_TYPE=Release -DDEPLOY_MODE=ON ..
 ```
