@@ -144,4 +144,6 @@ https://github.com/fengzhizi715/MonicaImageProcessHttpServer
 
 # 五. TODO
 
+* 优化图像调色代码
 * 日志框架的集成
+* jni 相关代码拆分
