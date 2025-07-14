@@ -4,8 +4,6 @@
 
 #include "../../include/colorcorrection//ColorCorrection.h"
 
-typedef cv::Point3_<uint8_t> Pixel;
-
 ColorCorrection::ColorCorrection(Mat src):
         _hueOffset(0),
         _saturationOffset(0),
@@ -213,35 +211,30 @@ Mat ColorCorrection::adjust() {
 }
 
 void ColorCorrection::genHighlightAndShadowMask() {
-    cvtColor(origin, highlightMask, cv::COLOR_BGR2GRAY);
+    cvtColor(origin, highlightMask, COLOR_BGR2GRAY);
+    cvtColor(origin, shadowMask, COLOR_BGR2GRAY);
 
-    origin.forEach<Pixel>([&](Pixel &p, const int * position) -> void {
-        int i = position[0];
-        int j = position[1];
+    parallel_for_(Range(0, origin.rows), [&](const Range& range) {
+        for (int i = range.start; i < range.end; i++) {
+            uchar* hlRow = highlightMask.ptr<uchar>(i);
+            uchar* shRow = shadowMask.ptr<uchar>(i);
+            for (int j = 0; j < origin.cols; j++) {
+                uchar g = hlRow[j];
 
-        auto grayVal = highlightMask.at<unsigned char>(i, j);
-        if (grayVal > 150) {
-            highlightMask.at<unsigned char>(i, j) = 255;
-        } else {
-            float falloffFactor = highlightMask.at<unsigned char>(i, j) / 150.0f;
-            falloffFactor = powf(falloffFactor, 2);
-            highlightMask.at<unsigned char>(i, j) = (int)(falloffFactor * 255);
-        }
-    });
+                if (g > 150) {
+                    hlRow[j] = 255;
+                } else {
+                    float f = g / 150.0f;
+                    hlRow[j] = static_cast<uchar>(std::pow(f, 2.0f) * 255);
+                }
 
-    cvtColor(origin, shadowMask, cv::COLOR_BGR2GRAY);
-
-    origin.forEach<Pixel>([&](Pixel &p, const int * position) -> void {
-        int i = position[0];
-        int j = position[1];
-
-        auto grayVal = shadowMask.at<unsigned char>(i, j);
-        if (grayVal < 50) {
-            shadowMask.at<unsigned char>(i, j) = 255;
-        } else {
-            float falloffFactor = (255 - shadowMask.at<unsigned char>(i, j)) / (255.0 - 50.0);
-            falloffFactor = powf(falloffFactor, 2);
-            shadowMask.at<unsigned char>(i, j) = (int)(falloffFactor * 255);
+                if (g < 50) {
+                    shRow[j] = 255;
+                } else {
+                    float f = (255 - g) / 205.0f;
+                    shRow[j] = static_cast<uchar>(std::pow(f, 2.0f) * 255);
+                }
+            }
         }
     });
 }
