@@ -9,6 +9,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
+#include <cmath>
 
 using namespace cv;
 using namespace std;
@@ -67,8 +68,24 @@ private:
     int middleCol;
     float radius;
 
+    // LUTs
+    Mat lutH, lutS, lutL;
+    Mat lutB, lutG, lutR;
+    // Last params for LUT cache
+    int lastHueOffset = 0;
+    int lastSaturationOffset = 0;
+    float lastContractScale = 1.0f;
+    int lastLightnessOffset = 0;
+    float lastTemperatureScale = 0.0f;
+
+    Mat distanceMap;  // 存储距离平方值
+
     Mat adjust();
     void genHighlightAndShadowMask();
+    void updateHueLUT();
+    void updateSaturationLUT();
+    void updateLightnessLUT();
+    void updateTemperatureLUT();
 };
 
 #endif //MONICAIMAGEPROCESS_COLORCORRECTION_H
