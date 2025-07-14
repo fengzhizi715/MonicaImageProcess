@@ -1,6 +1,7 @@
 # MonicaImageProcess
 
 # 一. 说明
+
 该项目是为 https://github.com/fengzhizi715/Monica 项目服务的， 使用的 OpenCV C++ 实现的图像处理算法。
 
 项目目录结构
@@ -69,6 +70,7 @@ brew install libheif
 ```
 
 ## 2.2 Linux
+
 1. 编译/安装 OpenCV
 
 2. 编译/安装 LibRaw
@@ -77,6 +79,7 @@ brew install libheif
 
 
 ## 2.3 Windows
+
 1. 编译 OpenCV
 
 2. 下载 LibRaw 源码

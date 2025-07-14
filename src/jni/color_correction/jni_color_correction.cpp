@@ -6,6 +6,7 @@
 #include "../utils/jni_utils.h"
 
 static std::once_flag g_fieldInitFlag;
+
 static struct {
     jclass cls = nullptr;
     jfieldID contrastId;
