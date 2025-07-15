@@ -26,13 +26,13 @@ ColorCorrection::ColorCorrection(Mat src):
     middleRow = origin.rows / 2;
     middleCol = origin.cols / 2;
 
-    // 优化：使用std::hypot计算半径
+    // 使用std::hypot计算半径
     radius = std::hypot(middleRow, middleCol);
 
     cvtColor(origin, _cachedHSLImg, cv::COLOR_BGR2HSV);
     GaussianBlur(origin, blurMask, {0, 0}, 5);
 
-    // 优化：预计算距离映射图
+    // 预计算距离映射图
     distanceMap.create(origin.size(), CV_32F);
     parallel_for_(Range(0, origin.rows), [&](const Range& range) {
         for (int r = range.start; r < range.end; ++r) {
@@ -207,7 +207,7 @@ Mat ColorCorrection::adjust() {
     const int rows = hslCopy.rows;
     const int cols = hslCopy.cols;
 
-    // 优化：直接操作连续内存替代split/merge
+    // 直接操作连续内存替代 split/merge
     parallel_for_(Range(0, rows), [&](const Range& range) {
         for (int r = range.start; r < range.end; r++) {
             Vec3b* row = hslCopy.ptr<Vec3b>(r);
@@ -280,7 +280,6 @@ void ColorCorrection::genHighlightAndShadowMask() {
                     hlRow[j] = 255;
                 } else {
                     float f = g / 150.0f;
-                    // 优化：用乘法替代pow函数
                     hlRow[j] = static_cast<uchar>(f * f * 255);
                 }
 
@@ -288,7 +287,6 @@ void ColorCorrection::genHighlightAndShadowMask() {
                     shRow[j] = 255;
                 } else {
                     float f = (255 - g) / 205.0f;
-                    // 优化：用乘法替代pow函数
                     shRow[j] = static_cast<uchar>(f * f * 255);
                 }
             }
