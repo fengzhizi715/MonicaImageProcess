@@ -79,6 +79,9 @@ set(SRC_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/jni/color_correction/color_correction_internal.h
         ${CMAKE_CURRENT_SOURCE_DIR}/jni/color_correction/jni_color_correction.cpp
 
+        ${CMAKE_CURRENT_SOURCE_DIR}/jni/format_decoder/format_decoder_internal.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/jni/format_decoder/jni_format_decoder.cpp
+
         ${CMAKE_SOURCE_DIR}/include/colorcorrection/ColorCorrection.h
         ${CMAKE_CURRENT_SOURCE_DIR}/colorcorrection/ColorCorrection.cpp
 
