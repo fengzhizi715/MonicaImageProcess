@@ -45,6 +45,8 @@ MonicaImageProcess/
 > 
 > 部署到生产环境时，这些第三方库大多需要从源码自行编译而不是依赖 brew 安装，这样才能保证用户正常安装软件。
 
+### 2.1.1 开发、调试
+
 1. 安装 OpenCV
 
 ```
@@ -68,6 +70,10 @@ brew install libraw
 ```
 brew install libheif
 ```
+
+### 2.1.2 部署
+
+对于 macOS，需要事先基于源码编译 OpenCV、libheif ， script 目录下有相关的编译脚本。
 
 ## 2.2 Linux
 
