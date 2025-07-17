@@ -8,7 +8,7 @@
 #pragma once
 #include <jni.h>
 
-jobject decodeRawToBufferInternal(JNIEnv *env, jstring filePath);
+jobject decodeRawToBufferInternal(JNIEnv *env, jstring filePath, jboolean isPreview);
 
 jobject decodeHeifInternal(JNIEnv *env, jstring filePath);
 

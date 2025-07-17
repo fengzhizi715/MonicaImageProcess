@@ -6,29 +6,52 @@
 #include <libheif/heif.h>
 #include <iostream>
 
-jobject decodeRawToBufferInternal(JNIEnv *env, jstring filePath) {
+jobject decodeRawToBufferInternal(JNIEnv *env, jstring filePath, jboolean isPreview) {
     const char *path = env->GetStringUTFChars(filePath, nullptr);
 
     LibRaw rawProcessor;
-    if (rawProcessor.open_file(path) != LIBRAW_SUCCESS || rawProcessor.unpack() != LIBRAW_SUCCESS) {
+
+    // 根据 isPreview 设置解码参数
+    if (isPreview == JNI_TRUE) {
+        rawProcessor.imgdata.params.half_size = 1;             // 快速预览模式（低分辨率）
+        rawProcessor.imgdata.params.output_color = 0;          // 禁用色彩空间转换
+        rawProcessor.imgdata.params.use_camera_matrix = 0;     // 禁用相机色彩矩阵转换
+    } else {
+        rawProcessor.imgdata.params.half_size = 0;             // 全尺寸解码
+    }
+
+    rawProcessor.imgdata.params.output_bps = 8;                // 输出 8-bit 图像（节省内存）
+    rawProcessor.imgdata.params.use_camera_wb = 1;             // 使用相机白平衡
+    rawProcessor.imgdata.params.no_auto_bright = 1;            // 禁用自动亮度增强
+
+    if (rawProcessor.open_file(path) != LIBRAW_SUCCESS) {
+        std::cerr << "LibRaw failed to open file: " << path << std::endl;
         env->ReleaseStringUTFChars(filePath, path);
         return nullptr;
     }
 
-    rawProcessor.imgdata.params.output_bps = 8;
-    rawProcessor.imgdata.params.use_camera_wb = 1;
-    rawProcessor.imgdata.params.no_auto_bright = 1;
-    rawProcessor.dcraw_process();
-
-    libraw_processed_image_t *img = rawProcessor.dcraw_make_mem_image();
-
-    if (!img || img->type != LIBRAW_IMAGE_BITMAP) {
+    if (rawProcessor.unpack() != LIBRAW_SUCCESS) {
+        std::cerr << "LibRaw failed to unpack file: " << path << std::endl;
         rawProcessor.recycle();
         env->ReleaseStringUTFChars(filePath, path);
         return nullptr;
     }
 
-    // 假设 img->colors == 3（RGB）
+    if (rawProcessor.dcraw_process() != LIBRAW_SUCCESS) {
+        std::cerr << "LibRaw failed to process file: " << path << std::endl;
+        rawProcessor.recycle();
+        env->ReleaseStringUTFChars(filePath, path);
+        return nullptr;
+    }
+
+    libraw_processed_image_t *img = rawProcessor.dcraw_make_mem_image();
+    if (!img || img->type != LIBRAW_IMAGE_BITMAP) {
+        std::cerr << "LibRaw returned invalid image" << std::endl;
+        rawProcessor.recycle();
+        env->ReleaseStringUTFChars(filePath, path);
+        return nullptr;
+    }
+
     int width = img->width;
     int height = img->height;
     int channels = img->colors;
@@ -44,8 +67,10 @@ jobject decodeRawToBufferInternal(JNIEnv *env, jstring filePath) {
     LibRaw::dcraw_clear_mem(img);
     rawProcessor.recycle();
     env->ReleaseStringUTFChars(filePath, path);
+
     return result;
 }
+
 
 jobject decodeHeifInternal(JNIEnv *env, jstring filePath) {
     const char *cpath = env->GetStringUTFChars(filePath, nullptr);
