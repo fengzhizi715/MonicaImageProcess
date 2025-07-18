@@ -24,7 +24,10 @@ MonicaImageProcess/
 │       └── ColorCorrection.cpp      # 图像调色相关算法的源文件
 │   └── jni/                         # 给 Java/Kotlin 调用的本地算法
 │       ├── cn_netdiscovery_monica_opencv_ImageProcess.h   # jni 对应用层暴露接口的头文件
-│       └── cn_netdiscovery_monica_opencv_ImageProcess.cpp # jni 对应用层暴露接口的源文件
+│       ├── cn_netdiscovery_monica_opencv_ImageProcess.cpp # jni 对应用层暴露接口的源文件
+│       ├── color_correction         # 图像调色的 JNI 实现
+│       ├── format_decoder           # RAW 文件、HEIC 文件的解码
+│       └── utils                    # jni 相关的工具类
 │   └── matchTemplate/               # 模版匹配模块
 │       └── MatchTemplate.cpp        # 模版匹配相关算法的源文件
 │   ├── utils/                       # 工具类模块
