@@ -448,7 +448,10 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matc
 
 JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeRawToBuffer
         (JNIEnv *env, jobject obj, jstring filePath, jboolean isPreview) {
-      return decodeRawToBufferInternal(env, filePath, isPreview);
+
+     return safeJniCall<jobject>(env, [&]() -> jobject {
+         return decodeRawToBufferInternal(env, filePath, isPreview);
+     }, nullptr);
 }
 
 JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeHeif

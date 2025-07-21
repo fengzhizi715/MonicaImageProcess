@@ -5,24 +5,21 @@
 #include <libraw/libraw.h>
 #include <libheif/heif.h>
 #include <iostream>
+#include "../../../include/PyramidImage.h"
+#include "../utils/jni_utils.h"
 
 jobject decodeRawToBufferInternal(JNIEnv *env, jstring filePath, jboolean isPreview) {
     const char *path = env->GetStringUTFChars(filePath, nullptr);
 
     LibRaw rawProcessor;
 
-    // 根据 isPreview 设置解码参数
-    if (isPreview == JNI_TRUE) {
-        rawProcessor.imgdata.params.half_size = 1;             // 快速预览模式（低分辨率）
-        rawProcessor.imgdata.params.output_color = 0;          // 禁用色彩空间转换
-        rawProcessor.imgdata.params.use_camera_matrix = 0;     // 禁用相机色彩矩阵转换
-    } else {
-        rawProcessor.imgdata.params.half_size = 0;             // 全尺寸解码
-    }
-
-    rawProcessor.imgdata.params.output_bps = 8;                // 输出 8-bit 图像（节省内存）
-    rawProcessor.imgdata.params.use_camera_wb = 1;             // 使用相机白平衡
-    rawProcessor.imgdata.params.no_auto_bright = 1;            // 禁用自动亮度增强
+    // 设置参数
+    rawProcessor.imgdata.params.half_size = (isPreview == JNI_TRUE) ? 1 : 0;
+    rawProcessor.imgdata.params.output_bps = (isPreview == JNI_TRUE) ? 8 : 16;
+    rawProcessor.imgdata.params.output_color = (isPreview == JNI_TRUE) ? 0 : 1;
+    rawProcessor.imgdata.params.use_camera_matrix = 0;
+    rawProcessor.imgdata.params.use_camera_wb = 1;
+    rawProcessor.imgdata.params.no_auto_bright = 1;
 
     if (rawProcessor.open_file(path) != LIBRAW_SUCCESS) {
         std::cerr << "LibRaw failed to open file: " << path << std::endl;
@@ -52,17 +49,28 @@ jobject decodeRawToBufferInternal(JNIEnv *env, jstring filePath, jboolean isPrev
         return nullptr;
     }
 
+    // 构造 cv::Mat
     int width = img->width;
     int height = img->height;
-    int channels = img->colors;
-    int length = width * height * channels;
 
-    jbyteArray byteArray = env->NewByteArray(length);
-    env->SetByteArrayRegion(byteArray, 0, length, reinterpret_cast<jbyte *>(img->data));
+    cv::Mat mat(height, width, (img->colors == 3) ? CV_8UC3 : CV_8UC1, img->data);
+    cv::Mat bgrMat;
+    cv::cvtColor(mat, bgrMat, cv::COLOR_RGB2BGR); // RAW 是 RGB 顺序
 
-    jclass bufferCls = env->FindClass("cn/netdiscovery/monica/domain/RawImage");
-    jmethodID constructor = env->GetMethodID(bufferCls, "<init>", "([BIII)V");
-    jobject result = env->NewObject(bufferCls, constructor, byteArray, width, height, channels);
+    // 构造 PyramidImage（内部是异步构建金字塔）
+    auto* pyramid = new PyramidImage(bgrMat);
+
+//    // 等待金字塔构建完成
+//    pyramid->waitForPyramid();
+//
+//    // 获取预览图像并转 ARGB int array
+//    cv::Mat preview = pyramid->getPreview();
+//    jintArray previewArray = matToIntArray(env, preview);
+    jintArray previewArray = matToIntArray(env, bgrMat);
+
+    jclass cls = env->FindClass("cn/netdiscovery/monica/domain/DecodedPreviewImage");
+    jmethodID constructor = env->GetMethodID(cls, "<init>", "(JII[I)V");
+    jobject result = env->NewObject(cls, constructor, reinterpret_cast<jlong>(pyramid), width, height, previewArray);
 
     LibRaw::dcraw_clear_mem(img);
     rawProcessor.recycle();

@@ -41,38 +41,77 @@ Mat byteArrayToMat(JNIEnv* env, jbyteArray array) {
 }
 
 jintArray matToIntArray(JNIEnv *env, const cv::Mat &image) {
-
+    int width = image.cols;
+    int height = image.rows;
     int channels = image.channels();
-    if(channels == 3) {
-        int size = image.total();
-        jintArray resultImage = env->NewIntArray(size);
-        jint *_data = new jint[size];
-        for (int i = 0; i < size; i++) {
-            char r = image.data[3 * i + 2];
-            char g = image.data[3 * i + 1];
-            char b = image.data[3 * i + 0];
-            char a = (char)255;
-            _data[i] = (((jint) a << 24) & 0xFF000000) + (((jint) r << 16) & 0x00FF0000) +
-                       (((jint) g << 8) & 0x0000FF00) + ((jint) b & 0x000000FF);
-        }
-        env->SetIntArrayRegion(resultImage, 0, size, _data);
-        delete[]_data;
 
-        return resultImage;
+    int size = width * height;
+    jintArray resultImage = env->NewIntArray(size);
+    jint *argb = new jint[size];
+
+    if (channels == 3) {
+        for (int y = 0; y < height; ++y) {
+            const uchar* row = image.ptr<uchar>(y);
+            for (int x = 0; x < width; ++x) {
+                int idx = y * width + x;
+                uchar b = row[x * 3 + 0];
+                uchar g = row[x * 3 + 1];
+                uchar r = row[x * 3 + 2];
+                argb[idx] = (0xFF << 24) | (r << 16) | (g << 8) | b;
+            }
+        }
     } else if (channels == 1) {
-        int size = image.rows * image.cols;
-        jintArray resultImage = env->NewIntArray(size);
-        unsigned char *matData = image.data;
-        jint *_data = new jint[size];
-        for (int i = 0; i < size; i++) {
-            _data[i] = static_cast<jint>(matData[i]);
+        for (int y = 0; y < height; ++y) {
+            const uchar* row = image.ptr<uchar>(y);
+            for (int x = 0; x < width; ++x) {
+                int idx = y * width + x;
+                uchar gray = row[x];
+                argb[idx] = (0xFF << 24) | (gray << 16) | (gray << 8) | gray;
+            }
         }
-        env->SetIntArrayRegion(resultImage, 0, size, _data);
-        delete[] _data;
-
-        return resultImage;
+    } else {
+        delete[] argb;
+        return nullptr;  // Unsupported format
     }
+
+    env->SetIntArrayRegion(resultImage, 0, size, argb);
+    delete[] argb;
+    return resultImage;
 }
+
+//jintArray matToIntArray(JNIEnv *env, const cv::Mat &image) {
+//
+//    int channels = image.channels();
+//    if(channels == 3) {
+//        int size = image.total();
+//        jintArray resultImage = env->NewIntArray(size);
+//        jint *_data = new jint[size];
+//        for (int i = 0; i < size; i++) {
+//            char r = image.data[3 * i + 2];
+//            char g = image.data[3 * i + 1];
+//            char b = image.data[3 * i + 0];
+//            char a = (char)255;
+//            _data[i] = (((jint) a << 24) & 0xFF000000) + (((jint) r << 16) & 0x00FF0000) +
+//                       (((jint) g << 8) & 0x0000FF00) + ((jint) b & 0x000000FF);
+//        }
+//        env->SetIntArrayRegion(resultImage, 0, size, _data);
+//        delete[]_data;
+//
+//        return resultImage;
+//    } else if (channels == 1) {
+//        int size = image.rows * image.cols;
+//        jintArray resultImage = env->NewIntArray(size);
+//        unsigned char *matData = image.data;
+//        jint *_data = new jint[size];
+//        for (int i = 0; i < size; i++) {
+//            _data[i] = static_cast<jint>(matData[i]);
+//        }
+//        env->SetIntArrayRegion(resultImage, 0, size, _data);
+//        delete[] _data;
+//
+//        return resultImage;
+//    }
+//}
 
 jintArray binaryMatToIntArray(JNIEnv *env, const cv::Mat binary) {
 
