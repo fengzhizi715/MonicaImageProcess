@@ -7,6 +7,9 @@
 
 #pragma once
 #include <jni.h>
+#include <libraw/libraw.h>
+
+libraw_processed_image_t* decodeRawInternal(const char *path, jboolean isPreview);
 
 jobject decodeRawToBufferInternal(JNIEnv *env, jstring filePath, jboolean isPreview);
 

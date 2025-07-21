@@ -454,11 +454,11 @@ JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decode
      }, nullptr);
 }
 
-//JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeRawAndColorCorrection
-//        (JNIEnv *env, obj, jstring filePath, jlong nativePtr, jobject jobj, jlong cppObjectPtr) {
-//
-//    return decodeRawAndColorCorrectionInternal(env, filePath, nativePtr, jobj, cppObjectPtr);
-//}
+JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeRawAndColorCorrection
+        (JNIEnv *env, jobject obj, jstring filePath, jlong nativePtr, jobject jobj, jlong cppObjectPtr) {
+
+    return decodeRawAndColorCorrectionInternal(env, filePath, nativePtr, jobj, cppObjectPtr);
+}
 
 JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeHeif
         (JNIEnv *env, jobject obj, jstring filePath) {

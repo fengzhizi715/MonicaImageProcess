@@ -80,6 +80,7 @@ jobject decodeRawToBufferInternal(JNIEnv *env, jstring filePath, jboolean isPrev
     jobject result = env->NewObject(cls, constructor, reinterpret_cast<jlong>(pyramid), preview.cols, preview.rows, previewArray);
 
     LibRaw::dcraw_clear_mem(img);
+    env->ReleaseStringUTFChars(filePath, path);
 
     return result;
 }

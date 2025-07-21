@@ -4,6 +4,7 @@
 #include "color_correction_internal.h"
 #include "../../../include/colorcorrection/ColorCorrection.h"
 #include "../utils/jni_utils.h"
+#include "../format_decoder/format_decoder_internal.h"
 
 static std::once_flag g_fieldInitFlag;
 
@@ -90,27 +91,45 @@ jintArray colorCorrectionInternal(JNIEnv* env, jbyteArray array, jobject jobj, j
     }, env->NewIntArray(0));
 }
 
-//jintArray decodeRawAndColorCorrectionInternal(JNIEnv* env, jstring filePath, jlong nativePtr, jobject jobj, jlong ptr) {
-//
-//    return safeJniCall<jintArray>(env, [&]() -> jintArray {
-//        if (nativePtr == 0 || cppObjectPtr == 0 || jobj == nullptr) {
-//            return env->NewIntArray(0);
-//        }
-//
-//        cacheColorCorrectionFields(env);  // 线程安全调用
-//
-//        ColorCorrection* colorCorrection = reinterpret_cast<ColorCorrection*>(cppObjectPtr);
-//        ColorCorrectionSettings settings = extractColorCorrectionSettings(env, jobj);
-//
-//        Mat image = byteArrayToMat(env, array);
-//        colorCorrection->origin = image;
-//
-//        Mat dst;
-//        colorCorrection->doColorCorrection(settings, dst);
-//
-//        return matToIntArray(env, dst);
-//    }, env->NewIntArray(0));
-//}
+jintArray decodeRawAndColorCorrectionInternal(JNIEnv* env, jstring filePath, jlong nativePtr, jobject jobj, jlong cppObjectPtr) {
+
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        if (nativePtr == 0 || cppObjectPtr == 0 || jobj == nullptr) {
+            return env->NewIntArray(0);
+        }
+
+        const char *path = env->GetStringUTFChars(filePath, nullptr);
+
+        cacheColorCorrectionFields(env);  // 线程安全调用
+
+        ColorCorrection* colorCorrection = reinterpret_cast<ColorCorrection*>(cppObjectPtr);
+        ColorCorrectionSettings settings = extractColorCorrectionSettings(env, jobj);
+
+        libraw_processed_image_t *img = decodeRawInternal(path, false);
+
+        if (img == nullptr) {
+            env->ReleaseStringUTFChars(filePath, path);
+            return nullptr;
+        }
+
+        // 构造 cv::Mat
+        int width = img->width;
+        int height = img->height;
+        cv::Mat mat(height, width, (img->colors == 3) ? CV_8UC3 : CV_8UC1, img->data);
+        cv::Mat image;
+        cv::cvtColor(mat, image, cv::COLOR_RGB2BGR); // RAW 是 RGB 顺序
+
+        colorCorrection->origin = image;
+
+        Mat dst;
+        colorCorrection->doColorCorrection(settings, dst);
+
+        LibRaw::dcraw_clear_mem(img);
+        env->ReleaseStringUTFChars(filePath, path);
+
+        return matToIntArray(env, dst);
+    }, env->NewIntArray(0));
+}
 
 
 void deleteColorCorrectionInternal(JNIEnv* env, jlong cppObjectPtr) {
