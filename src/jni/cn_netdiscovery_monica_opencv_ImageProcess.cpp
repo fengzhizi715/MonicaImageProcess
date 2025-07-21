@@ -446,11 +446,11 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matc
     }, env->NewIntArray(0));
 }
 
-JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeRawToBuffer
-        (JNIEnv *env, jobject obj, jstring filePath, jboolean isPreview) {
+JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeRawToBufferForPreView
+        (JNIEnv *env, jobject obj, jstring filePath) {
 
      return safeJniCall<jobject>(env, [&]() -> jobject {
-         return decodeRawToBufferInternal(env, filePath, isPreview);
+         return decodeRawToBufferInternal(env, filePath, true);
      }, nullptr);
 }
 

@@ -79,40 +79,6 @@ jintArray matToIntArray(JNIEnv *env, const cv::Mat &image) {
     return resultImage;
 }
 
-//jintArray matToIntArray(JNIEnv *env, const cv::Mat &image) {
-//
-//    int channels = image.channels();
-//    if(channels == 3) {
-//        int size = image.total();
-//        jintArray resultImage = env->NewIntArray(size);
-//        jint *_data = new jint[size];
-//        for (int i = 0; i < size; i++) {
-//            char r = image.data[3 * i + 2];
-//            char g = image.data[3 * i + 1];
-//            char b = image.data[3 * i + 0];
-//            char a = (char)255;
-//            _data[i] = (((jint) a << 24) & 0xFF000000) + (((jint) r << 16) & 0x00FF0000) +
-//                       (((jint) g << 8) & 0x0000FF00) + ((jint) b & 0x000000FF);
-//        }
-//        env->SetIntArrayRegion(resultImage, 0, size, _data);
-//        delete[]_data;
-//
-//        return resultImage;
-//    } else if (channels == 1) {
-//        int size = image.rows * image.cols;
-//        jintArray resultImage = env->NewIntArray(size);
-//        unsigned char *matData = image.data;
-//        jint *_data = new jint[size];
-//        for (int i = 0; i < size; i++) {
-//            _data[i] = static_cast<jint>(matData[i]);
-//        }
-//        env->SetIntArrayRegion(resultImage, 0, size, _data);
-//        delete[] _data;
-//
-//        return resultImage;
-//    }
-//}
-
 jintArray binaryMatToIntArray(JNIEnv *env, const cv::Mat binary) {
 
     int width = binary.cols;
