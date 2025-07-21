@@ -5,6 +5,7 @@
 #include "../../../include/colorcorrection/ColorCorrection.h"
 #include "../utils/jni_utils.h"
 #include "../format_decoder/format_decoder_internal.h"
+#include "../../../include/PyramidImage.h"
 
 static std::once_flag g_fieldInitFlag;
 
@@ -92,44 +93,49 @@ jintArray colorCorrectionInternal(JNIEnv* env, jbyteArray array, jobject jobj, j
 }
 
 jintArray decodeRawAndColorCorrectionInternal(JNIEnv* env, jstring filePath, jlong nativePtr, jobject jobj, jlong cppObjectPtr) {
-
     return safeJniCall<jintArray>(env, [&]() -> jintArray {
         if (nativePtr == 0 || cppObjectPtr == 0 || jobj == nullptr) {
             return env->NewIntArray(0);
         }
 
         const char *path = env->GetStringUTFChars(filePath, nullptr);
-
-        cacheColorCorrectionFields(env);  // 线程安全调用
+        cacheColorCorrectionFields(env);  // 保证只初始化一次字段ID等
 
         ColorCorrection* colorCorrection = reinterpret_cast<ColorCorrection*>(cppObjectPtr);
         ColorCorrectionSettings settings = extractColorCorrectionSettings(env, jobj);
 
         libraw_processed_image_t *img = decodeRawInternal(path, false);
-
-        if (img == nullptr) {
+        if (!img || (img->colors != 3 && img->colors != 1)) {
+            std::cerr << "Invalid or unsupported image format" << std::endl;
+            if (img) LibRaw::dcraw_clear_mem(img);
             env->ReleaseStringUTFChars(filePath, path);
-            return nullptr;
+            return env->NewIntArray(0);
         }
 
-        // 构造 cv::Mat
+        // 构造 cv::Mat（浅拷贝 + clone 以保证数据安全）
         int width = img->width;
         int height = img->height;
         cv::Mat mat(height, width, (img->colors == 3) ? CV_8UC3 : CV_8UC1, img->data);
-        cv::Mat image;
-        cv::cvtColor(mat, image, cv::COLOR_RGB2BGR); // RAW 是 RGB 顺序
+        cv::Mat image = mat.clone();
+        cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
 
+        // 调色
         colorCorrection->origin = image;
-
-        Mat dst;
+        cv::Mat dst;
         colorCorrection->doColorCorrection(settings, dst);
 
+        // 更新金字塔
+        PyramidImage* pyramidImage = reinterpret_cast<PyramidImage*>(nativePtr);
+        pyramidImage->updateImage(dst);
+
+        // 清理资源
         LibRaw::dcraw_clear_mem(img);
         env->ReleaseStringUTFChars(filePath, path);
 
         return matToIntArray(env, dst);
     }, env->NewIntArray(0));
 }
+
 
 
 void deleteColorCorrectionInternal(JNIEnv* env, jlong cppObjectPtr) {

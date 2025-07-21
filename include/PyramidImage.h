@@ -20,6 +20,8 @@ public:
 
     void waitForPyramid() const;
 
+    bool isPyramidReady() const;
+
     // 更新原图（如解码完成后替换预览）
     void updateImage(const cv::Mat& newImage);
 
@@ -38,14 +40,17 @@ public:
 private:
     void buildPyramidAsync();
     cv::Mat downsample(const cv::Mat& input);
+    int computeValidLevels(const cv::Mat& image, int maxLevel) const;
 
     cv::Mat originalImage;
     std::vector<cv::Mat> pyramid;
     int numLevels;
     mutable std::mutex pyramidMutex;
+
     mutable std::shared_future<void> pyramidReadyFuture;
     mutable std::shared_ptr<std::promise<void>> pyramidReadyPromise;
 
+    std::atomic<bool> isBuilding{false};
 };
 
 #endif //MONICAIMAGEPROCESS_PYRAMIDIMAGE_H

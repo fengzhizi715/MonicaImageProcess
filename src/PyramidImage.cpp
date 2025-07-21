@@ -16,7 +16,18 @@ PyramidImage::PyramidImage(const cv::Mat& image, int levels)
 void PyramidImage::updateImage(const cv::Mat& newImage) {
     std::lock_guard<std::mutex> lock(pyramidMutex);
     originalImage = newImage.clone();
-    buildPyramidAsync();
+    buildPyramidAsync();  // 自动重建
+}
+
+void PyramidImage::waitForPyramid() const {
+    if (pyramidReadyFuture.valid()) {
+        pyramidReadyFuture.wait();
+    }
+}
+
+bool PyramidImage::isPyramidReady() const {
+    return pyramidReadyFuture.valid() &&
+           pyramidReadyFuture.wait_for(std::chrono::seconds(0)) == std::future_status::ready;
 }
 
 cv::Mat PyramidImage::getOriginal() const {
@@ -25,12 +36,18 @@ cv::Mat PyramidImage::getOriginal() const {
 }
 
 cv::Mat PyramidImage::getLevel(int level) const {
-    waitForPyramid();  // 等待构建完成
-
+    waitForPyramid();
     std::lock_guard<std::mutex> lock(pyramidMutex);
     if (level < 0 || level >= static_cast<int>(pyramid.size()))
         return cv::Mat();
     return pyramid[level].clone();
+}
+
+cv::Mat PyramidImage::getPreview() const {
+    waitForPyramid();
+    std::lock_guard<std::mutex> lock(pyramidMutex);
+    if (pyramid.empty()) return cv::Mat();
+    return pyramid[std::min(1, static_cast<int>(pyramid.size()) - 1)].clone();
 }
 
 int PyramidImage::getLevelCount() const {
@@ -39,29 +56,34 @@ int PyramidImage::getLevelCount() const {
     return static_cast<int>(pyramid.size());
 }
 
-cv::Mat PyramidImage::getPreview() const {
-    waitForPyramid();
-
-    std::lock_guard<std::mutex> lock(pyramidMutex);
-    if (pyramid.empty()) return cv::Mat();
-    return pyramid[std::min(1, static_cast<int>(pyramid.size() - 1))].clone();
+int PyramidImage::computeValidLevels(const cv::Mat& image, int maxLevel) const {
+    int w = image.cols;
+    int h = image.rows;
+    int levels = 1;
+    while (w > 64 && h > 64 && levels < maxLevel) {
+        w /= 2;
+        h /= 2;
+        levels++;
+    }
+    return levels;
 }
 
 void PyramidImage::buildPyramidAsync() {
     std::lock_guard<std::mutex> lock(pyramidMutex);
 
+    if (isBuilding.exchange(true)) return; // 🔒防止重复构建
+
     pyramidReadyPromise = std::make_shared<std::promise<void>>();
     pyramidReadyFuture = pyramidReadyPromise->get_future().share();
 
     cv::Mat base = originalImage.clone();
-    int levels = numLevels;
+    const int levels = computeValidLevels(base, numLevels);  // 🧠防止空图
 
     std::thread([this, base, levels]() {
         std::vector<cv::Mat> levelsVec(levels);
-        std::vector<std::future<cv::Mat>> futures;
 
         if (base.empty()) {
-            // 防止原图为空导致异常
+            isBuilding = false;
             pyramidReadyPromise->set_value();
             return;
         }
@@ -69,18 +91,10 @@ void PyramidImage::buildPyramidAsync() {
         levelsVec[0] = base;
 
         for (int i = 1; i < levels; ++i) {
-            cv::Mat prev = levelsVec[i - 1];
-            futures.push_back(std::async(std::launch::async, [prev]() {
-                if (prev.empty()) return cv::Mat();
-                cv::Mat down;
-                cv::pyrDown(prev, down);
-                return down;
-            }));
-        }
-
-        for (int i = 1; i < levels; ++i) {
-            levelsVec[i] = futures[i - 1].get();
-            if (levelsVec[i].empty()) break;  // 停止构建更低层
+            cv::Mat down;
+            cv::pyrDown(levelsVec[i - 1], down);
+            if (down.empty() || down.cols < 4 || down.rows < 4) break;
+            levelsVec[i] = down;
         }
 
         {
@@ -88,14 +102,9 @@ void PyramidImage::buildPyramidAsync() {
             pyramid = std::move(levelsVec);
         }
 
+        isBuilding = false;
         pyramidReadyPromise->set_value();
     }).detach();
-}
-
-void PyramidImage::waitForPyramid() const {
-    if (pyramidReadyFuture.valid()) {
-        pyramidReadyFuture.wait();
-    }
 }
 
 cv::Mat PyramidImage::downsample(const cv::Mat& input) {
