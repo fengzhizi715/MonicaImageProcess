@@ -105,6 +105,9 @@ JNIEXPORT jintArray JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_matc
 JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeRawToBufferForPreView
        (JNIEnv *env, jobject obj, jstring filePath);
 
+//JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeRawAndColorCorrection
+//        (JNIEnv *env, obj, jstring filePath, jlong nativePtr, jobject jobj, jlong cppObjectPtr);
+
 JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeHeif
         (JNIEnv *env, jobject obj, jstring filePath);
 

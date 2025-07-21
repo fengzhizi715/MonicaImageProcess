@@ -8,8 +8,7 @@
 #include "../../../include/PyramidImage.h"
 #include "../utils/jni_utils.h"
 
-jobject decodeRawToBufferInternal(JNIEnv *env, jstring filePath, jboolean isPreview) {
-    const char *path = env->GetStringUTFChars(filePath, nullptr);
+libraw_processed_image_t* decodeRawInternal(const char *path, jboolean isPreview) {
 
     LibRaw rawProcessor;
 
@@ -23,21 +22,18 @@ jobject decodeRawToBufferInternal(JNIEnv *env, jstring filePath, jboolean isPrev
 
     if (rawProcessor.open_file(path) != LIBRAW_SUCCESS) {
         std::cerr << "LibRaw failed to open file: " << path << std::endl;
-        env->ReleaseStringUTFChars(filePath, path);
         return nullptr;
     }
 
     if (rawProcessor.unpack() != LIBRAW_SUCCESS) {
         std::cerr << "LibRaw failed to unpack file: " << path << std::endl;
         rawProcessor.recycle();
-        env->ReleaseStringUTFChars(filePath, path);
         return nullptr;
     }
 
     if (rawProcessor.dcraw_process() != LIBRAW_SUCCESS) {
         std::cerr << "LibRaw failed to process file: " << path << std::endl;
         rawProcessor.recycle();
-        env->ReleaseStringUTFChars(filePath, path);
         return nullptr;
     }
 
@@ -45,6 +41,21 @@ jobject decodeRawToBufferInternal(JNIEnv *env, jstring filePath, jboolean isPrev
     if (!img || img->type != LIBRAW_IMAGE_BITMAP) {
         std::cerr << "LibRaw returned invalid image" << std::endl;
         rawProcessor.recycle();
+        return nullptr;
+    }
+
+    rawProcessor.recycle();
+
+    return img;
+}
+
+jobject decodeRawToBufferInternal(JNIEnv *env, jstring filePath, jboolean isPreview) {
+
+    const char *path = env->GetStringUTFChars(filePath, nullptr);
+
+    libraw_processed_image_t *img = decodeRawInternal(path, isPreview);
+
+    if (img == nullptr) {
         env->ReleaseStringUTFChars(filePath, path);
         return nullptr;
     }
@@ -69,8 +80,6 @@ jobject decodeRawToBufferInternal(JNIEnv *env, jstring filePath, jboolean isPrev
     jobject result = env->NewObject(cls, constructor, reinterpret_cast<jlong>(pyramid), preview.cols, preview.rows, previewArray);
 
     LibRaw::dcraw_clear_mem(img);
-    rawProcessor.recycle();
-    env->ReleaseStringUTFChars(filePath, path);
 
     return result;
 }

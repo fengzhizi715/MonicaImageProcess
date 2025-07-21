@@ -90,6 +90,29 @@ jintArray colorCorrectionInternal(JNIEnv* env, jbyteArray array, jobject jobj, j
     }, env->NewIntArray(0));
 }
 
+//jintArray decodeRawAndColorCorrectionInternal(JNIEnv* env, jstring filePath, jlong nativePtr, jobject jobj, jlong ptr) {
+//
+//    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+//        if (nativePtr == 0 || cppObjectPtr == 0 || jobj == nullptr) {
+//            return env->NewIntArray(0);
+//        }
+//
+//        cacheColorCorrectionFields(env);  // 线程安全调用
+//
+//        ColorCorrection* colorCorrection = reinterpret_cast<ColorCorrection*>(cppObjectPtr);
+//        ColorCorrectionSettings settings = extractColorCorrectionSettings(env, jobj);
+//
+//        Mat image = byteArrayToMat(env, array);
+//        colorCorrection->origin = image;
+//
+//        Mat dst;
+//        colorCorrection->doColorCorrection(settings, dst);
+//
+//        return matToIntArray(env, dst);
+//    }, env->NewIntArray(0));
+//}
+
+
 void deleteColorCorrectionInternal(JNIEnv* env, jlong cppObjectPtr) {
     // 删除 C++对象，防止内存泄漏
     if (cppObjectPtr != 0) {
