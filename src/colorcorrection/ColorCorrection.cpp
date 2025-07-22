@@ -202,6 +202,35 @@ Mat ColorCorrection::adjust() {
     if (lastContractScale != _contractScale || lastLightnessOffset != _lightnessOffset) updateLightnessLUT();
     if (lastTemperatureScale != _temperatureScale) updateTemperatureLUT();
 
+    if (_cachedHSLImg.empty() || _cachedHSLImg.size() != origin.size()) {
+
+        width = origin.rows;
+        height = origin.cols;
+        middleRow = origin.rows / 2;
+        middleCol = origin.cols / 2;
+
+        // 使用std::hypot计算半径
+        radius = std::hypot(middleRow, middleCol);
+
+        cvtColor(origin, _cachedHSLImg, cv::COLOR_BGR2HSV);
+        GaussianBlur(origin, blurMask, {0, 0}, 5);
+
+        // 预计算距离映射图
+        distanceMap.create(origin.size(), CV_32F);
+        parallel_for_(Range(0, origin.rows), [&](const Range& range) {
+            for (int r = range.start; r < range.end; ++r) {
+                float* ptr = distanceMap.ptr<float>(r);
+                float dy = r - middleRow;
+                for (int c = 0; c < origin.cols; ++c) {
+                    float dx = c - middleCol;
+                    ptr[c] = dx * dx + dy * dy;  // 存储距离平方
+                }
+            }
+        });
+
+        genHighlightAndShadowMask();
+    }
+
     cv::Mat hslCopy = _cachedHSLImg.clone();
     cv::Mat dst;
     const int rows = hslCopy.rows;

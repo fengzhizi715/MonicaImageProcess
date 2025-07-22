@@ -137,10 +137,10 @@ jintArray decodeRawAndColorCorrectionInternal(JNIEnv* env, jstring filePath, jlo
 }
 
 
-jintArray colorCorrectionWithPyramidImageInternal(JNIEnv* env, jlong nativePtr, jobject jobj, jlong cppObjectPtr) {
-    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+jobject colorCorrectionWithPyramidImageInternal(JNIEnv* env, jlong nativePtr, jobject jobj, jlong cppObjectPtr) {
+    return safeJniCall<jobject>(env, [&]() -> jobject {
         if (nativePtr == 0 || cppObjectPtr == 0 || jobj == nullptr) {
-            return env->NewIntArray(0);
+            return nullptr;
         }
 
         cacheColorCorrectionFields(env);  // 保证只初始化一次字段ID等
@@ -153,19 +153,27 @@ jintArray colorCorrectionWithPyramidImageInternal(JNIEnv* env, jlong nativePtr, 
 
         if (image.empty()) {
             std::cerr << "[colorCorrectionWithPyramidImage] original image is empty" << std::endl;
-            return env->NewIntArray(0);
+            return nullptr;
         }
 
         // 调色
-        colorCorrection->origin = image;
+        colorCorrection->origin = image.clone();
         cv::Mat dst;
         colorCorrection->doColorCorrection(settings, dst);
 
         // 更新图像金字塔
         pyramidImage->updateImage(dst);
 
-        return matToIntArray(env, dst);
-    }, env->NewIntArray(0));
+        // 创建 jintArray
+        jintArray pixelArray = matToIntArray(env, dst);
+
+        // 构造 NativeImage 对象 (int width, int height, int[] pixels)
+        jclass cls = env->FindClass("cn/netdiscovery/monica/domain/NativeImage");
+        jmethodID constructor = env->GetMethodID(cls, "<init>", "(II[I)V");
+        jobject result = env->NewObject(cls, constructor, dst.cols, dst.rows, pixelArray);
+
+        return result;
+    }, nullptr);
 }
 
 void deleteColorCorrectionInternal(JNIEnv* env, jlong cppObjectPtr) {
