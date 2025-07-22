@@ -131,27 +131,22 @@ jobject decodeHeifInternal(JNIEnv *env, jstring filePath) {
         return nullptr;
     }
 
-    // 创建 Java int[] pixels
-    jintArray pixelArray = env->NewIntArray(width * height);
-    jint* pixels = env->GetIntArrayElements(pixelArray, nullptr);
+    // 构建 cv::Mat（RGBA → BGR）
+    cv::Mat rgba(height, width, CV_8UC4, (void*)data, stride);
+    cv::Mat bgr;
+    cv::cvtColor(rgba, bgr, cv::COLOR_RGBA2BGR);
 
-    for (int y = 0; y < height; ++y) {
-        const uint8_t* row = data + y * stride;
-        for (int x = 0; x < width; ++x) {
-            uint8_t r = row[x * 4 + 0];
-            uint8_t g = row[x * 4 + 1];
-            uint8_t b = row[x * 4 + 2];
-            uint8_t a = row[x * 4 + 3];
-            pixels[y * width + x] = ((a << 24) | (r << 16) | (g << 8) | b);
-        }
-    }
+    // 构建 PyramidImage（内部异步金字塔）
+    auto* pyramid = new PyramidImage(bgr);
 
-    env->ReleaseIntArrayElements(pixelArray, pixels, 0);
+    // 生成预览图并转换为 jintArray
+    cv::Mat preview = pyramid->getPreview();
+    jintArray previewArray = matToIntArray(env, preview);
 
-    // 构建 HeifImage Java 对象
-    jclass heifImageCls = env->FindClass("cn/netdiscovery/monica/domain/HeifImage");
-    jmethodID ctor = env->GetMethodID(heifImageCls, "<init>", "(II[I)V");
-    jobject heifImage = env->NewObject(heifImageCls, ctor, width, height, pixelArray);
+    // 构建 DecodedPreviewImage Java 对象
+    jclass cls = env->FindClass("cn/netdiscovery/monica/domain/DecodedPreviewImage");
+    jmethodID constructor = env->GetMethodID(cls, "<init>", "(JII[I)V");
+    jobject result = env->NewObject(cls, constructor, reinterpret_cast<jlong>(pyramid), preview.cols, preview.rows, previewArray);
 
     // 清理
     heif_image_release(img);
@@ -159,5 +154,5 @@ jobject decodeHeifInternal(JNIEnv *env, jstring filePath) {
     heif_context_free(ctx);
     env->ReleaseStringUTFChars(filePath, cpath);
 
-    return heifImage;
+    return result;
 }
