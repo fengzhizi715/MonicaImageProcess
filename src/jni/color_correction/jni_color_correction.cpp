@@ -164,13 +164,14 @@ jobject colorCorrectionWithPyramidImageInternal(JNIEnv* env, jlong nativePtr, jo
         // 更新图像金字塔
         pyramidImage->updateImage(dst);
 
-        // 创建 jintArray
-        jintArray pixelArray = matToIntArray(env, dst);
+        // 生成预览图并转换为 jintArray
+        cv::Mat preview = pyramidImage->getPreview();
+        jintArray previewArray = matToIntArray(env, preview);
 
-        // 构造 NativeImage 对象 (int width, int height, int[] pixels)
-        jclass cls = env->FindClass("cn/netdiscovery/monica/domain/NativeImage");
-        jmethodID constructor = env->GetMethodID(cls, "<init>", "(II[I)V");
-        jobject result = env->NewObject(cls, constructor, dst.cols, dst.rows, pixelArray);
+        // 构建 DecodedPreviewImage Java 对象
+        jclass cls = env->FindClass("cn/netdiscovery/monica/domain/DecodedPreviewImage");
+        jmethodID constructor = env->GetMethodID(cls, "<init>", "(JII[I)V");
+        jobject result = env->NewObject(cls, constructor, nativePtr, preview.cols, preview.rows, previewArray);
 
         return result;
     }, nullptr);
