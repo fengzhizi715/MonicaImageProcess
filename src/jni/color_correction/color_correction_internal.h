@@ -14,6 +14,8 @@ jintArray colorCorrectionInternal(JNIEnv* env, jbyteArray array, jobject jobj, j
 
 jintArray decodeRawAndColorCorrectionInternal(JNIEnv* env, jstring filePath, jlong nativePtr, jobject jobj, jlong ptr);
 
+jintArray colorCorrectionWithPyramidImageInternal(JNIEnv* env, jlong nativePtr, jobject jobj, jlong ptr);
+
 void deleteColorCorrectionInternal(JNIEnv* env, jlong ptr);
 
 #endif //MONICAIMAGEPROCESS_COLOR_CORRECTION_INTERNAL_H

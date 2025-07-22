@@ -460,6 +460,14 @@ JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decode
     return decodeRawAndColorCorrectionInternal(env, filePath, nativePtr, jobj, cppObjectPtr);
 }
 
+
+JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colorCorrectionWithPyramidImage
+        (JNIEnv *env, jobject obj, jlong nativePtr, jobject jobj, jlong cppObjectPtr) {
+
+    return colorCorrectionWithPyramidImageInternal(env, nativePtr, jobj, cppObjectPtr);
+}
+
+
 JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeHeif
         (JNIEnv *env, jobject obj, jstring filePath) {
     return decodeHeifInternal(env, filePath);

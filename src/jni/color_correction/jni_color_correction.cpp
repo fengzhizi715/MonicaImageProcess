@@ -124,7 +124,7 @@ jintArray decodeRawAndColorCorrectionInternal(JNIEnv* env, jstring filePath, jlo
         cv::Mat dst;
         colorCorrection->doColorCorrection(settings, dst);
 
-        // 更新金字塔
+        // 更新图像金字塔
         PyramidImage* pyramidImage = reinterpret_cast<PyramidImage*>(nativePtr);
         pyramidImage->updateImage(dst);
 
@@ -137,6 +137,31 @@ jintArray decodeRawAndColorCorrectionInternal(JNIEnv* env, jstring filePath, jlo
 }
 
 
+jintArray colorCorrectionWithPyramidImageInternal(JNIEnv* env, jlong nativePtr, jobject jobj, jlong cppObjectPtr) {
+    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+        if (nativePtr == 0 || cppObjectPtr == 0 || jobj == nullptr) {
+            return env->NewIntArray(0);
+        }
+
+        cacheColorCorrectionFields(env);  // 保证只初始化一次字段ID等
+
+        ColorCorrection* colorCorrection = reinterpret_cast<ColorCorrection*>(cppObjectPtr);
+        ColorCorrectionSettings settings = extractColorCorrectionSettings(env, jobj);
+
+        PyramidImage* pyramidImage = reinterpret_cast<PyramidImage*>(nativePtr);
+        Mat image = pyramidImage->getOriginal();
+
+        // 调色
+        colorCorrection->origin = image;
+        cv::Mat dst;
+        colorCorrection->doColorCorrection(settings, dst);
+
+        // 更新图像金字塔
+        pyramidImage->updateImage(dst);
+
+        return matToIntArray(env, dst);
+    }, env->NewIntArray(0));
+}
 
 void deleteColorCorrectionInternal(JNIEnv* env, jlong cppObjectPtr) {
     // 删除 C++对象，防止内存泄漏
