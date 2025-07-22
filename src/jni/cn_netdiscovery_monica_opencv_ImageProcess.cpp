@@ -469,6 +469,23 @@ JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colorC
 }
 
 
+JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getNativeImage
+        (JNIEnv *env, jobject obj, jlong nativePtr) {
+
+    PyramidImage* pyramidImage = reinterpret_cast<PyramidImage*>(nativePtr);
+    Mat image = pyramidImage->getOriginal();
+
+    // 创建 jintArray
+    jintArray pixelArray = matToIntArray(env, image);
+
+    // 构造 NativeImage 对象 (int width, int height, int[] pixels)
+    jclass cls = env->FindClass("cn/netdiscovery/monica/domain/NativeImage");
+    jmethodID constructor = env->GetMethodID(cls, "<init>", "(II[I)V");
+    jobject result = env->NewObject(cls, constructor, image.cols, image.rows, pixelArray);
+
+    return result;
+}
+
 JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_deletePyramidImage
         (JNIEnv *env, jobject obj, jlong nativePtr) {
     // 删除 C++对象，防止内存泄漏
