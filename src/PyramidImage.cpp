@@ -3,10 +3,8 @@
 //
 #include "../include/PyramidImage.h"
 #include <thread>
-#include <future>
 #include <algorithm>
-#include <stdexcept>
-#include <condition_variable>
+#include <iostream>  // 可用于调试日志
 
 PyramidImage::PyramidImage(const cv::Mat& image, int levels)
         : originalImage(image.clone()), numLevels(std::max(1, levels)) {
@@ -14,9 +12,11 @@ PyramidImage::PyramidImage(const cv::Mat& image, int levels)
 }
 
 void PyramidImage::updateImage(const cv::Mat& newImage) {
-    std::lock_guard<std::mutex> lock(pyramidMutex);
-    originalImage = newImage.clone();
-    buildPyramidAsync();  // 自动重建
+    {
+        std::lock_guard<std::mutex> lock(pyramidMutex);
+        originalImage = newImage.clone();
+    }
+    buildPyramidAsync();
 }
 
 void PyramidImage::waitForPyramid() const {
@@ -47,7 +47,7 @@ cv::Mat PyramidImage::getPreview() const {
     waitForPyramid();
     std::lock_guard<std::mutex> lock(pyramidMutex);
     if (pyramid.empty()) return cv::Mat();
-    return pyramid[std::min(1, static_cast<int>(pyramid.size()) - 1)].clone();
+    return pyramid[std::min(1, static_cast<int>(pyramid.size() - 1))].clone();
 }
 
 int PyramidImage::getLevelCount() const {
@@ -71,39 +71,55 @@ int PyramidImage::computeValidLevels(const cv::Mat& image, int maxLevel) const {
 void PyramidImage::buildPyramidAsync() {
     std::lock_guard<std::mutex> lock(pyramidMutex);
 
-    if (isBuilding.exchange(true)) return; // 🔒防止重复构建
+    if (isBuilding.exchange(true)) return;
 
     pyramidReadyPromise = std::make_shared<std::promise<void>>();
     pyramidReadyFuture = pyramidReadyPromise->get_future().share();
 
     cv::Mat base = originalImage.clone();
-    const int levels = computeValidLevels(base, numLevels);  // 🧠防止空图
+    const int levels = computeValidLevels(base, numLevels);
 
     std::thread([this, base, levels]() {
         std::vector<cv::Mat> levelsVec(levels);
 
-        if (base.empty()) {
-            isBuilding = false;
+        try {
+            if (base.empty()) {
+                std::cerr << "[Pyramid] base image empty\n";
+                pyramidReadyPromise->set_value();
+                isBuilding = false;
+                return;
+            }
+
+            levelsVec[0] = base;
+
+            for (int i = 1; i < levels; ++i) {
+                cv::Mat down;
+                cv::pyrDown(levelsVec[i - 1], down);
+
+                if (down.empty() || down.cols < 4 || down.rows < 4) {
+                    break;
+                }
+
+                levelsVec[i] = down;
+            }
+
+            {
+                std::lock_guard<std::mutex> lock(pyramidMutex);
+                pyramid = std::move(levelsVec);
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "[Pyramid] Exception: " << e.what() << std::endl;
+        } catch (...) {
+            std::cerr << "[Pyramid] Unknown exception\n";
+        }
+
+        try {
             pyramidReadyPromise->set_value();
-            return;
-        }
-
-        levelsVec[0] = base;
-
-        for (int i = 1; i < levels; ++i) {
-            cv::Mat down;
-            cv::pyrDown(levelsVec[i - 1], down);
-            if (down.empty() || down.cols < 4 || down.rows < 4) break;
-            levelsVec[i] = down;
-        }
-
-        {
-            std::lock_guard<std::mutex> lock(pyramidMutex);
-            pyramid = std::move(levelsVec);
+        } catch (...) {
+            // 防止重复 set_value 抛异常
         }
 
         isBuilding = false;
-        pyramidReadyPromise->set_value();
     }).detach();
 }
 

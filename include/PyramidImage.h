@@ -12,6 +12,7 @@
 #include <memory>
 #include <mutex>
 #include <future>
+#include <atomic>
 
 class PyramidImage {
 public:
@@ -39,14 +40,14 @@ public:
 
 private:
     void buildPyramidAsync();
-    cv::Mat downsample(const cv::Mat& input);
     int computeValidLevels(const cv::Mat& image, int maxLevel) const;
+    cv::Mat downsample(const cv::Mat& input);
 
     cv::Mat originalImage;
     std::vector<cv::Mat> pyramid;
     int numLevels;
-    mutable std::mutex pyramidMutex;
 
+    mutable std::mutex pyramidMutex;
     mutable std::shared_future<void> pyramidReadyFuture;
     mutable std::shared_ptr<std::promise<void>> pyramidReadyPromise;
 
