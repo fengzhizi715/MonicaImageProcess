@@ -151,6 +151,11 @@ jintArray colorCorrectionWithPyramidImageInternal(JNIEnv* env, jlong nativePtr, 
         PyramidImage* pyramidImage = reinterpret_cast<PyramidImage*>(nativePtr);
         Mat image = pyramidImage->getOriginal();
 
+        if (image.empty()) {
+            std::cerr << "[colorCorrectionWithPyramidImage] original image is empty" << std::endl;
+            return env->NewIntArray(0);
+        }
+
         // 调色
         colorCorrection->origin = image;
         cv::Mat dst;
