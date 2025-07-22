@@ -12,6 +12,7 @@
 #include "utils/jni_utils.h"
 #include "color_correction/color_correction_internal.h"
 #include "format_decoder/format_decoder_internal.h"
+#include "../../include/PyramidImage.h"
 
 MatchTemplate   *match_template = nullptr;
 
@@ -465,6 +466,15 @@ JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colorC
         (JNIEnv *env, jobject obj, jlong nativePtr, jobject jobj, jlong cppObjectPtr) {
 
     return colorCorrectionWithPyramidImageInternal(env, nativePtr, jobj, cppObjectPtr);
+}
+
+
+JNIEXPORT void JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_deletePyramidImage
+        (JNIEnv *env, jobject obj, jlong nativePtr) {
+    // 删除 C++对象，防止内存泄漏
+    if (nativePtr != 0) {
+        delete reinterpret_cast<PyramidImage*>(nativePtr);
+    }
 }
 
 
