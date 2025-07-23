@@ -1,7 +1,7 @@
 //
 // Created by Tony on 2025/7/20.
 //
-#include "../include/PyramidImage.h"
+#include "../../include/pyramid/PyramidImage.h"
 #include <thread>
 #include <algorithm>
 #include <iostream>  // 可用于调试日志

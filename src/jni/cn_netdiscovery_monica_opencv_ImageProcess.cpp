@@ -12,7 +12,7 @@
 #include "utils/jni_utils.h"
 #include "color_correction/color_correction_internal.h"
 #include "format_decoder/format_decoder_internal.h"
-#include "../../include/PyramidImage.h"
+#include "../../include/pyramid/PyramidImage.h"
 
 MatchTemplate   *match_template = nullptr;
 

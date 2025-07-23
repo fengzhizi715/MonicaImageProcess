@@ -5,7 +5,7 @@
 #include <libraw/libraw.h>
 #include <libheif/heif.h>
 #include <iostream>
-#include "../../../include/PyramidImage.h"
+#include "../../../include/pyramid/PyramidImage.h"
 #include "../utils/jni_utils.h"
 
 libraw_processed_image_t* decodeRawInternal(const char *path, jboolean isPreview) {

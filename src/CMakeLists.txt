@@ -70,8 +70,8 @@ set(SRC_FILES
         ${CMAKE_SOURCE_DIR}/include/library.h
         ${CMAKE_CURRENT_SOURCE_DIR}/library.cpp
 
-        ${CMAKE_SOURCE_DIR}/include/PyramidImage.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/PyramidImage.cpp
+        ${CMAKE_SOURCE_DIR}/include/pyramid/PyramidImage.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/pyramid/PyramidImage.cpp
 
         ${CMAKE_CURRENT_SOURCE_DIR}/jni/cn_netdiscovery_monica_opencv_ImageProcess.h
         ${CMAKE_CURRENT_SOURCE_DIR}/jni/cn_netdiscovery_monica_opencv_ImageProcess.cpp

@@ -5,7 +5,7 @@
 #include "../../../include/colorcorrection/ColorCorrection.h"
 #include "../utils/jni_utils.h"
 #include "../format_decoder/format_decoder_internal.h"
-#include "../../../include/PyramidImage.h"
+#include "../../../include/pyramid/PyramidImage.h"
 
 static std::once_flag g_fieldInitFlag;
 
