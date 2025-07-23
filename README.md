@@ -31,7 +31,8 @@ MonicaImageProcess/
 │       └── utils                    # jni 相关的工具类目录
 │   └── matchTemplate/               # 模版匹配模块
 │       └── MatchTemplate.cpp        # 模版匹配相关算法的源文件
-│   ├── pyramid/                     # 图像金字塔模块
+│   └── pyramid/                     # 图像金字塔模块
+│       └── PyramidImage.cpp         # 图像金字塔相关算法的源文件
 │   ├── utils/                       # 工具类模块
 │   ├── CMakeLists.txt               # 本地算法的构建脚本
 │   └── library.cpp                  # 常规使用 OpenCV 图像算法相关的源文件
