@@ -14,6 +14,7 @@ MonicaImageProcess/
 ├── include/                         # 项目公共头文件目录
 │   ├── colorcorrection/             # 图像调色相关算法模块的头文件目录
 │   ├── matchTemplate/               # 模版匹配的头文件目录
+│   ├── pyramid/                     # 图像金字塔模块的头文件目录
 │   └── utils/                       # 工具类模块的头文件目录
 ├── script/                          # 构建脚本
 │   ├── build_libheif_deps.sh        # 从源码编译 libheif 及其依赖的库
@@ -30,6 +31,7 @@ MonicaImageProcess/
 │       └── utils                    # jni 相关的工具类目录
 │   └── matchTemplate/               # 模版匹配模块
 │       └── MatchTemplate.cpp        # 模版匹配相关算法的源文件
+│   ├── pyramid/                     # 图像金字塔模块
 │   ├── utils/                       # 工具类模块
 │   ├── CMakeLists.txt               # 本地算法的构建脚本
 │   └── library.cpp                  # 常规使用 OpenCV 图像算法相关的源文件
@@ -156,6 +158,5 @@ https://github.com/fengzhizi715/MonicaImageProcessHttpServer
 
 # 五. TODO
 
-* 优化图像调色代码
 * 日志框架的集成
 * jni 相关代码拆分
