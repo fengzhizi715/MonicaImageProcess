@@ -12,7 +12,7 @@ jlong initColorCorrectionInternal(JNIEnv* env, jbyteArray array);
 
 jintArray colorCorrectionInternal(JNIEnv* env, jbyteArray array, jobject jobj, jlong cppObjectPtr);
 
-jintArray decodeRawAndColorCorrectionInternal(JNIEnv* env, jstring filePath, jlong nativePtr, jobject jobj, jlong cppObjectPtr);
+jobject decodeRawAndColorCorrectionInternal(JNIEnv* env, jstring filePath, jlong nativePtr, jobject jobj, jlong cppObjectPtr);
 
 jobject colorCorrectionWithPyramidImageInternal(JNIEnv* env, jlong nativePtr, jobject jobj, jlong cppObjectPtr);
 

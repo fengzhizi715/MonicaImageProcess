@@ -12,13 +12,18 @@ libraw_processed_image_t* decodeRawInternal(const char *path, jboolean isPreview
 
     LibRaw rawProcessor;
 
-    // 设置参数
-    rawProcessor.imgdata.params.half_size = (isPreview == JNI_TRUE) ? 1 : 0;
-    rawProcessor.imgdata.params.output_bps = (isPreview == JNI_TRUE) ? 8 : 16;
-    rawProcessor.imgdata.params.output_color = (isPreview == JNI_TRUE) ? 0 : 1;
-    rawProcessor.imgdata.params.use_camera_matrix = 0;
-    rawProcessor.imgdata.params.use_camera_wb = 1;
-    rawProcessor.imgdata.params.no_auto_bright = 1;
+    // 根据 isPreview 设置解码参数
+    if (isPreview == JNI_TRUE) {
+        rawProcessor.imgdata.params.half_size = 1;             // 快速预览模式（低分辨率）
+        rawProcessor.imgdata.params.output_color = 0;          // 禁用色彩空间转换
+        rawProcessor.imgdata.params.use_camera_matrix = 0;     // 禁用相机色彩矩阵转换
+    } else {
+        rawProcessor.imgdata.params.half_size = 0;             // 全尺寸解码
+    }
+
+    rawProcessor.imgdata.params.output_bps = 8;                // 输出 8-bit 图像（节省内存）
+    rawProcessor.imgdata.params.use_camera_wb = 1;             // 使用相机白平衡
+    rawProcessor.imgdata.params.no_auto_bright = 1;            // 禁用自动亮度增强
 
     if (rawProcessor.open_file(path) != LIBRAW_SUCCESS) {
         std::cerr << "LibRaw failed to open file: " << path << std::endl;

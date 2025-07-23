@@ -92,8 +92,8 @@ jintArray colorCorrectionInternal(JNIEnv* env, jbyteArray array, jobject jobj, j
     }, env->NewIntArray(0));
 }
 
-jintArray decodeRawAndColorCorrectionInternal(JNIEnv* env, jstring filePath, jlong nativePtr, jobject jobj, jlong cppObjectPtr) {
-    return safeJniCall<jintArray>(env, [&]() -> jintArray {
+jobject decodeRawAndColorCorrectionInternal(JNIEnv* env, jstring filePath, jlong nativePtr, jobject jobj, jlong cppObjectPtr) {
+    return safeJniCall<jobject>(env, [&]() -> jobject {
         if (nativePtr == 0 || cppObjectPtr == 0 || jobj == nullptr) {
             return env->NewIntArray(0);
         }
@@ -120,7 +120,7 @@ jintArray decodeRawAndColorCorrectionInternal(JNIEnv* env, jstring filePath, jlo
         cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
 
         // 调色
-        colorCorrection->origin = image;
+        colorCorrection->origin = image.clone();
         cv::Mat dst;
         colorCorrection->doColorCorrection(settings, dst);
 
@@ -128,12 +128,21 @@ jintArray decodeRawAndColorCorrectionInternal(JNIEnv* env, jstring filePath, jlo
         PyramidImage* pyramidImage = reinterpret_cast<PyramidImage*>(nativePtr);
         pyramidImage->updateImage(dst);
 
+        // 生成预览图并转换为 jintArray
+        cv::Mat preview = pyramidImage->getPreview();
+        jintArray previewArray = matToIntArray(env, preview);
+
+        // 构建 DecodedPreviewImage Java 对象
+        jclass cls = env->FindClass("cn/netdiscovery/monica/domain/DecodedPreviewImage");
+        jmethodID constructor = env->GetMethodID(cls, "<init>", "(JII[I)V");
+        jobject result = env->NewObject(cls, constructor, nativePtr, preview.cols, preview.rows, previewArray);
+
         // 清理资源
         LibRaw::dcraw_clear_mem(img);
         env->ReleaseStringUTFChars(filePath, path);
 
-        return matToIntArray(env, dst);
-    }, env->NewIntArray(0));
+        return result;
+    }, nullptr);
 }
 
 
