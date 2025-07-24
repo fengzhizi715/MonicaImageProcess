@@ -152,7 +152,7 @@ cmake --build .
 
 # 四. 模型的部署
 
-通过 http server 部署了几个模型，方便 Monica 通过调用 http 服务即可调用模型。
+通过 http server 部署了一些模型，方便 Monica 通过调用 http 服务即可调用模型的推理。
 
 相关源码地址：
 https://github.com/fengzhizi715/MonicaImageProcessHttpServer
