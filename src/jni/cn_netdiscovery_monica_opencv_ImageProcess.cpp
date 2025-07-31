@@ -18,7 +18,7 @@ MatchTemplate   *match_template = nullptr;
 
 JNIEXPORT jstring JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getVersion
         (JNIEnv* env, jobject) {
-    string version = "v0.2.3";
+    string version = "v0.2.4";
     return env->NewStringUTF(version.c_str());
 }
 
