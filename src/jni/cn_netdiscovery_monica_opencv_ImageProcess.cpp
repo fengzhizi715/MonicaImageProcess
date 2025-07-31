@@ -469,6 +469,35 @@ JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_colorC
 }
 
 
+JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_decodeLargeImageToBufferForPreView
+        (JNIEnv *env, jobject obj, jstring filePath) {
+
+    return safeJniCall<jobject>(env, [&]() -> jobject {
+
+            const char *path = env->GetStringUTFChars(filePath, nullptr);
+            Mat src = imread(path);
+
+            if (src.empty()) {
+                env->ReleaseStringUTFChars(filePath, path);
+                return nullptr;
+            }
+            // 构造 PyramidImage（内部是异步构建金字塔）
+            auto* pyramid = new PyramidImage(src);
+
+            // 获取预览图像并转 ARGB int array
+            cv::Mat preview = pyramid->getPreview();
+            jintArray previewArray = matToIntArray(env, preview);
+
+            jclass cls = env->FindClass("cn/netdiscovery/monica/domain/DecodedPreviewImage");
+            jmethodID constructor = env->GetMethodID(cls, "<init>", "(JII[I)V");
+            jobject result = env->NewObject(cls, constructor, reinterpret_cast<jlong>(pyramid), preview.cols, preview.rows, previewArray);
+
+            env->ReleaseStringUTFChars(filePath, path);
+
+            return result;
+    }, nullptr);
+}
+
 JNIEXPORT jobject JNICALL Java_cn_netdiscovery_monica_opencv_ImageProcess_getNativeImage
         (JNIEnv *env, jobject obj, jlong nativePtr) {
 
